@@ -1,7 +1,6 @@
 # Exclude large files and directories for Vercel deployment
 node_modules/
 backend/
-public/
 *.zip
 *.xlsx
 *.csv
