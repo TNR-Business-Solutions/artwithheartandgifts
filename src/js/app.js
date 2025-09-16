@@ -127,7 +127,7 @@ let _respManifest = null;
 async function loadResponsiveManifest() {
   if (_respManifest !== null) return _respManifest;
   try {
-    const r = await fetch("/images/responsive-manifest.json");
+    const r = await fetch("/public/images/responsive-manifest.json");
     if (!r.ok) return (_respManifest = {});
     _respManifest = await r.json();
     return _respManifest;

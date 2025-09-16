@@ -2,7 +2,7 @@ export async function loadProducts() {
   if (window.__PRODUCT_CACHE) return window.__PRODUCT_CACHE;
 
   try {
-    const response = await fetch("/data.json");
+    const response = await fetch("/public/data.json");
     if (!response.ok) {
       console.error("Failed to load data.json:", response.status);
       return [];
@@ -11,7 +11,7 @@ export async function loadProducts() {
 
     let story = [];
     try {
-      const storyResponse = await fetch("/data-story.json");
+      const storyResponse = await fetch("/public/data-story.json");
       if (storyResponse.ok) {
         story = await storyResponse.json();
       }
