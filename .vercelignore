@@ -1,0 +1,27 @@
+# Exclude large files and directories for Vercel deployment
+node_modules/
+backend/
+public/
+*.zip
+*.xlsx
+*.csv
+*.ps1
+*.cjs
+*.mjs
+scripts/
+.cursor/
+.vscode/
+.netlify/
+wix.lock
+railway.json
+netlify.toml
+wix.config.json
+test-*.jpg
+test-*.png
+*.md
+!README.md
+!DEPLOYMENT.md
+!vercel.json
+!package.json
+!package-lock.json
+!vite.config.js
