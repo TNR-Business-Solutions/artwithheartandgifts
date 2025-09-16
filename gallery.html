@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Visual Gallery – Art with Heart & Gifts</title>
+    <meta
+      name="description"
+      content="Browse the full artwork gallery: originals and prints from Art with Heart and Gifts in Florida."
+    />
+    <link rel="stylesheet" href="/src/styles/base.css" />
+    <link rel="icon" href="/vite.svg" />
+  </head>
+  <body data-page="gallery">
+    <header class="site-header">
+      <div class="brand">
+        <a href="/"
+          ><img
+            src="/images/Logo.png"
+            alt="Art with Heart & Gifts logo"
+            class="site-logo"
+        /></a>
+      </div>
+      <nav class="main-nav" aria-label="Primary">
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="navMenu"
+        >
+          ☰
+        </button>
+        <ul id="navMenu">
+          <li><a href="/">Home</a></li>
+          <li><a href="/gallery.html" aria-current="page">Gallery</a></li>
+          <li><a href="/shop.html">Shop</a></li>
+          <li><a href="/collections.html">Collections</a></li>
+          <li><a href="/commissions.html">Commissions</a></li>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="/healing.html">Healing</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <a
+              href="#"
+              onclick="document.getElementById('cart-modal').style.display='block'; return false;"
+              class="cart-icon"
+              >🛒<span id="cart-count">0</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main class="wrapper">
+      <h1>Full Visual Gallery</h1>
+      <p>Explore every available piece. Select a work to view details.</p>
+      <div id="galleryControlsTop" class="gallery-controls top-controls">
+        <!-- view size and page info inserted by JS -->
+      </div>
+      <div id="galleryGrid" class="masonry-grid" aria-live="polite"></div>
+      <div id="galleryControlsBottom" class="gallery-controls bottom-controls">
+        <!-- pagination inserted by JS -->
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid wrapper">
+        <div><strong>Art with Heart and Gifts</strong></div>
+      </div>
+      <p class="legal">© <span id="year"></span> Art with Heart and Gifts.</p>
+    </footer>
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="cart-modal">
+      <div class="cart-modal-content">
+        <div class="cart-modal-header">
+          <h2>Shopping Cart</h2>
+          <button
+            onclick="document.getElementById('cart-modal').style.display='none'"
+            class="close-btn"
+          >
+            &times;
+          </button>
+        </div>
+        <div id="cart-items" class="cart-items"></div>
+        <div class="cart-summary">
+          <div class="cart-breakdown">
+            <div class="cart-line">
+              <span>Subtotal:</span>
+              <span id="cart-subtotal">$0.00</span>
+            </div>
+            <div class="cart-line">
+              <span>Shipping:</span>
+              <span id="cart-shipping">$0.00</span>
+            </div>
+            <div class="cart-line">
+              <span>Tax (FL 6%):</span>
+              <span id="cart-tax">$0.00</span>
+            </div>
+            <div class="cart-line cart-total">
+              <span>Total:</span>
+              <span id="cart-total">$0.00</span>
+            </div>
+          </div>
+          <button class="checkout-btn" onclick="window.cart.checkout()">
+            Checkout with Swipe Simple
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gallery rendering handled by /src/js/app.js -> initGallery() -->
+    <script type="module" src="/src/js/cart.js"></script>
+    <script type="module" src="/src/js/app.js"></script>
+  </body>
+</html>

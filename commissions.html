@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Commissions & Murals – Art with Heart & Gifts</title>
+    <link rel="stylesheet" href="/src/styles/base.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <a href="/"
+          ><img
+            src="/images/Logo.png"
+            alt="Art with Heart & Gifts logo"
+            class="site-logo"
+        /></a>
+      </div>
+      <nav class="main-nav" aria-label="Primary">
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="navMenu"
+        >
+          ☰
+        </button>
+        <ul id="navMenu">
+          <li><a href="/">Home</a></li>
+          <li><a href="/gallery.html">Gallery</a></li>
+          <li><a href="/shop.html">Shop</a></li>
+          <li><a href="/collections.html">Collections</a></li>
+          <li>
+            <a href="/commissions.html" aria-current="page">Commissions</a>
+          </li>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="/healing.html">Healing</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <a
+              href="#"
+              onclick="document.getElementById('cart-modal').style.display='block'; return false;"
+              class="cart-icon"
+              >🛒<span id="cart-count">0</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main class="wrapper">
+      <div class="commissions-hero">
+        <h1>Custom Commissions & Murals</h1>
+        <p class="hero-subtitle">
+          Bring your story to life through a personalized painting or immersive
+          wall mural. Each commission is a unique collaboration between your
+          vision and my artistic journey.
+        </p>
+      </div>
+
+      <div class="commissions-content">
+        <section class="process-section">
+          <h2>How It Works</h2>
+          <div class="process-steps">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3>Initial Consultation</h3>
+                <p>
+                  Share your vision, inspiration, and space details. We'll
+                  discuss your story, color preferences, and artistic goals.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3>Concept & Sketch</h3>
+                <p>
+                  I'll create preliminary sketches and a detailed proposal. Once
+                  approved, we'll finalize the design and timeline.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3>Creation Process</h3>
+                <p>
+                  Watch your artwork come to life with regular progress updates
+                  and photos. You'll be part of the creative journey.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h3>Delivery & Installation</h3>
+                <p>
+                  Your finished piece is carefully packaged and delivered. For
+                  murals, I can provide installation guidance or services.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="commission-types">
+          <h2>Commission Types</h2>
+          <div class="types-grid">
+            <div class="type-card">
+              <div class="type-icon">🎨</div>
+              <h3>Canvas Originals</h3>
+              <p>
+                Custom paintings on canvas in your preferred size and style.
+                Perfect for homes, offices, or as meaningful gifts.
+              </p>
+              <div class="type-details">
+                <span class="detail">Starting at $200</span>
+                <span class="detail">2-4 weeks</span>
+                <span class="detail">Any size</span>
+              </div>
+            </div>
+            <div class="type-card">
+              <div class="type-icon">🏢</div>
+              <h3>Wall Murals</h3>
+              <p>
+                Transform any wall into a stunning work of art. From small
+                accent walls to large-scale installations.
+              </p>
+              <div class="type-details">
+                <span class="detail">Starting at $500</span>
+                <span class="detail">1-3 weeks</span>
+                <span class="detail">Custom sizing</span>
+              </div>
+            </div>
+            <div class="type-card">
+              <div class="type-icon">🖼️</div>
+              <h3>Print Collections</h3>
+              <p>
+                Limited edition prints of your commissioned artwork. Share your
+                story with multiple copies for family and friends.
+              </p>
+              <div class="type-details">
+                <span class="detail">Starting at $150</span>
+                <span class="detail">1-2 weeks</span>
+                <span class="detail">Multiple sizes</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="commission-form-section">
+          <div class="form-container">
+            <h2>Request Your Commission</h2>
+            <p class="form-intro">
+              Ready to bring your vision to life? Fill out the form below and
+              I'll get back to you within 24 hours with a personalized quote and
+              timeline.
+            </p>
+
+            <form class="commission-form" id="commissionForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name">Full Name *</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    placeholder="Your full name"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="email">Email Address *</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="phone">Phone Number</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="type">Project Type *</label>
+                  <select id="type" name="type" required>
+                    <option value="">Select project type</option>
+                    <option value="canvas">Canvas Original</option>
+                    <option value="mural">Wall Mural</option>
+                    <option value="prints">Print Collection</option>
+                    <option value="mixed">Mixed Media</option>
+                    <option value="other">Other (describe below)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="dimensions">Dimensions / Wall Size *</label>
+                <input
+                  type="text"
+                  id="dimensions"
+                  name="dimensions"
+                  required
+                  placeholder="e.g., 24×36 inches, 8×10 feet wall, etc."
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="theme">Theme, Story & Inspiration *</label>
+                <textarea
+                  id="theme"
+                  name="theme"
+                  rows="4"
+                  required
+                  placeholder="Tell me about your vision, the story you want to tell, colors you love, or any specific inspiration..."
+                ></textarea>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="budget">Budget Range</label>
+                  <select id="budget" name="budget">
+                    <option value="">Select budget range</option>
+                    <option value="under-500">Under $500</option>
+                    <option value="500-1000">$500 - $1,000</option>
+                    <option value="1000-2500">$1,000 - $2,500</option>
+                    <option value="2500-5000">$2,500 - $5,000</option>
+                    <option value="over-5000">Over $5,000</option>
+                    <option value="flexible">Flexible - let's discuss</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="timeline">Desired Timeline</label>
+                  <select id="timeline" name="timeline">
+                    <option value="">Select timeline</option>
+                    <option value="asap">ASAP (rush order)</option>
+                    <option value="1-month">Within 1 month</option>
+                    <option value="2-months">Within 2 months</option>
+                    <option value="3-months">Within 3 months</option>
+                    <option value="flexible">Flexible</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="location">Location (City, State)</label>
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  placeholder="e.g., Tampa, FL"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="additional">Additional Details</label>
+                <textarea
+                  id="additional"
+                  name="additional"
+                  rows="3"
+                  placeholder="Any other details, questions, or special requirements..."
+                ></textarea>
+              </div>
+
+              <div class="form-group checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" name="newsletter" value="yes" />
+                  <span class="checkmark"></span>
+                  I'd like to receive updates about new artwork and special
+                  offers
+                </label>
+              </div>
+
+              <button class="btn primary submit-btn" type="submit">
+                <span>Send Commission Request</span>
+                <span class="btn-icon">→</span>
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <section class="testimonial-section">
+          <h2>What Clients Say</h2>
+          <div class="testimonial">
+            <blockquote>
+              "Charmin brought my vision to life in ways I never imagined. The
+              healing mural she created for our wellness center has become the
+              heart of our space. Her process was collaborative and her
+              attention to detail is incredible."
+            </blockquote>
+            <cite>— Sarah M., Wellness Center Director</cite>
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid wrapper">
+        <div>
+          <strong>Art with Heart and Gifts</strong>
+          <p>Zephyrhills, Florida.</p>
+        </div>
+        <div>
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="/shop.html">All Art</a></li>
+            <li><a href="/shop.html#originals">Originals</a></li>
+            <li><a href="/shop.html#prints">Prints</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="/commissions.html">Commissions</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Policies</h4>
+          <ul>
+            <li><a href="/shipping.html">Shipping</a></li>
+            <li><a href="/returns.html">Returns</a></li>
+            <li><a href="/privacy.html">Privacy</a></li>
+            <li><a href="/terms.html">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="legal">© <span id="year"></span> Art with Heart and Gifts.</p>
+    </footer>
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="cart-modal">
+      <div class="cart-modal-content">
+        <div class="cart-modal-header">
+          <h2>Shopping Cart</h2>
+          <button
+            onclick="document.getElementById('cart-modal').style.display='none'"
+            class="close-btn"
+          >
+            &times;
+          </button>
+        </div>
+        <div id="cart-items" class="cart-items"></div>
+        <div class="cart-summary">
+          <div class="cart-breakdown">
+            <div class="cart-line">
+              <span>Subtotal:</span>
+              <span id="cart-subtotal">$0.00</span>
+            </div>
+            <div class="cart-line">
+              <span>Shipping:</span>
+              <span id="cart-shipping">$0.00</span>
+            </div>
+            <div class="cart-line">
+              <span>Tax (FL 6%):</span>
+              <span id="cart-tax">$0.00</span>
+            </div>
+            <div class="cart-line cart-total">
+              <span>Total:</span>
+              <span id="cart-total">$0.00</span>
+            </div>
+          </div>
+          <button class="checkout-btn" onclick="window.cart.checkout()">
+            Checkout with Swipe Simple
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/js/cart.js"></script>
+    <script type="module" src="/src/js/app.js"></script>
+  </body>
+</html>

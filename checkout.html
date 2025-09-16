@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Secure Checkout - Art with Heart & Gifts</title>
+    <link rel="stylesheet" href="src/style.css" />
+    <style>
+      .checkout-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .checkout-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #2c5530;
+      }
+
+      .checkout-header h1 {
+        color: #2c5530;
+        margin-bottom: 10px;
+      }
+
+      .checkout-form {
+        display: grid;
+        gap: 25px;
+      }
+
+      .form-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2c5530;
+      }
+
+      .form-section h3 {
+        color: #2c5530;
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group.full-width {
+        grid-column: 1 / -1;
+      }
+
+      .form-group label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #2c5530;
+      }
+
+      .required {
+        color: #e74c3c;
+      }
+
+      .cart-summary {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .cart-item:last-child {
+        border-bottom: none;
+      }
+
+      .cart-total {
+        font-size: 18px;
+        font-weight: bold;
+        color: #2c5530;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 2px solid #2c5530;
+      }
+
+      .security-notice {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+
+      .security-notice h4 {
+        color: #856404;
+        margin-top: 0;
+      }
+
+      .security-notice p {
+        color: #856404;
+        margin-bottom: 0;
+      }
+
+      .submit-btn {
+        background: #2c5530;
+        color: white;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 5px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        width: 100%;
+      }
+
+      .submit-btn:hover {
+        background: #1e3a22;
+      }
+
+      .submit-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      @media (max-width: 768px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .checkout-container {
+          margin: 10px;
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Include cart and checkout JavaScript -->
+    <script src="/src/js/cart.js"></script>
+    <script src="/src/js/swipe-simple-checkout.js"></script>
+    <script src="/src/js/checkout-fix.js"></script>
+    <div class="checkout-container">
+      <div class="checkout-header">
+        <h1>Secure Checkout</h1>
+        <p>Complete your order with secure payment information</p>
+      </div>
+
+      <div class="security-notice">
+        <h4>🔒 Secure Payment Processing</h4>
+        <p>
+          Your payment information is securely transmitted and processed
+          manually by our team. You will receive a confirmation email once your
+          payment is processed.
+        </p>
+      </div>
+
+      <div class="cart-summary" id="cartSummary">
+        <!-- Cart items will be populated by JavaScript -->
+      </div>
+
+      <form class="checkout-form" id="checkoutForm">
+        <!-- Customer Information -->
+        <div class="form-section">
+          <h3>Customer Information</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="customerName"
+                >Full Name <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="customerName"
+                name="customerName"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="customerEmail"
+                >Email Address <span class="required">*</span></label
+              >
+              <input
+                type="email"
+                id="customerEmail"
+                name="customerEmail"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="customerPhone"
+                >Phone Number <span class="required">*</span></label
+              >
+              <input
+                type="tel"
+                id="customerPhone"
+                name="customerPhone"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="shippingAddress"
+                >Shipping Address <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="shippingAddress"
+                name="shippingAddress"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">City <span class="required">*</span></label>
+              <input type="text" id="city" name="city" required />
+            </div>
+            <div class="form-group">
+              <label for="state">State <span class="required">*</span></label>
+              <input type="text" id="state" name="state" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="zipCode"
+                >ZIP Code <span class="required">*</span></label
+              >
+              <input type="text" id="zipCode" name="zipCode" required />
+            </div>
+            <div class="form-group">
+              <label for="referenceNumber">Reference Number (Optional)</label>
+              <input type="text" id="referenceNumber" name="referenceNumber" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Information -->
+        <div class="form-section">
+          <h3>Payment Information</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cardholderName"
+                >Cardholder Name <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="cardholderName"
+                name="cardholderName"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="cardNumber"
+                >Credit Card Number <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="cardNumber"
+                name="cardNumber"
+                required
+                placeholder="4111 1111 1111 1111"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expirationDate"
+                >Expiration Date <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                id="expirationDate"
+                name="expirationDate"
+                required
+                placeholder="MM/YY"
+              />
+            </div>
+            <div class="form-group">
+              <label for="cvv">CVV <span class="required">*</span></label>
+              <input
+                type="text"
+                id="cvv"
+                name="cvv"
+                required
+                placeholder="123"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="saveCard" name="saveCard" />
+              Save card for later use
+            </label>
+          </div>
+        </div>
+
+        <!-- Order Items -->
+        <div class="form-section">
+          <h3>Order Items</h3>
+          <div id="orderItems">
+            <!-- Order items will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="form-section">
+          <h3>Additional Information</h3>
+          <div class="form-group">
+            <label for="specialInstructions"
+              >Special Instructions (Optional)</label
+            >
+            <textarea
+              id="specialInstructions"
+              name="specialInstructions"
+              rows="3"
+              placeholder="Any special delivery instructions or notes..."
+            ></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          Submit Secure Order
+        </button>
+      </form>
+    </div>
+
+    <script>
+      // Load cart data from localStorage
+      function loadCartData() {
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        const cartSummary = document.getElementById("cartSummary");
+        const orderItems = document.getElementById("orderItems");
+
+        if (cart.length === 0) {
+          cartSummary.innerHTML = "<p>No items in cart</p>";
+          orderItems.innerHTML = "<p>No items to display</p>";
+          return;
+        }
+
+        let cartHtml = "<h4>Order Summary</h4>";
+        let orderItemsHtml = "";
+        let subtotal = 0;
+
+        cart.forEach((item, index) => {
+          const itemTotal = item.price * item.quantity;
+          subtotal += itemTotal;
+
+          cartHtml += `
+                    <div class="cart-item">
+                        <span>${item.title} (Qty: ${item.quantity})</span>
+                        <span>$${itemTotal.toFixed(2)}</span>
+                    </div>
+                `;
+
+          orderItemsHtml += `
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Item ${index + 1}</label>
+                            <input type="text" value="${item.title}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" value="${
+                              item.quantity
+                            }" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Unit Price</label>
+                            <input type="text" value="$${item.price.toFixed(
+                              2
+                            )}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="text" value="$${itemTotal.toFixed(
+                              2
+                            )}" readonly>
+                        </div>
+                    </div>
+                `;
+        });
+
+        const tax = subtotal * 0.06; // 6% Florida tax
+        const shipping = subtotal > 75 ? 0 : 8.99;
+        const total = subtotal + tax + shipping;
+
+        cartHtml += `
+                <div class="cart-item">
+                    <span>Subtotal</span>
+                    <span>$${subtotal.toFixed(2)}</span>
+                </div>
+                <div class="cart-item">
+                    <span>Tax (6%)</span>
+                    <span>$${tax.toFixed(2)}</span>
+                </div>
+                <div class="cart-item">
+                    <span>Shipping</span>
+                    <span>${
+                      shipping === 0 ? "FREE" : "$" + shipping.toFixed(2)
+                    }</span>
+                </div>
+                <div class="cart-total">
+                    <span>Total</span>
+                    <span>$${total.toFixed(2)}</span>
+                </div>
+            `;
+
+        cartSummary.innerHTML = cartHtml;
+        orderItems.innerHTML = orderItemsHtml;
+
+        // Store totals for form submission
+        window.orderTotals = {
+          subtotal: subtotal,
+          tax: tax,
+          shipping: shipping,
+          total: total,
+        };
+      }
+
+      // Handle form submission
+      document
+        .getElementById("checkoutForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const submitBtn = document.getElementById("submitBtn");
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Processing Order...";
+
+          try {
+            const formData = new FormData(this);
+            const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+            const orderData = {
+              customer: {
+                name: formData.get("customerName"),
+                email: formData.get("customerEmail"),
+                phone: formData.get("customerPhone"),
+                address: formData.get("shippingAddress"),
+                city: formData.get("city"),
+                state: formData.get("state"),
+                zipCode: formData.get("zipCode"),
+              },
+              payment: {
+                cardholderName: formData.get("cardholderName"),
+                cardNumber: formData.get("cardNumber"),
+                expirationDate: formData.get("expirationDate"),
+                cvv: formData.get("cvv"),
+                saveCard: formData.get("saveCard") === "on",
+              },
+              order: {
+                items: cart,
+                referenceNumber: formData.get("referenceNumber"),
+                specialInstructions: formData.get("specialInstructions"),
+                totals: window.orderTotals,
+              },
+            };
+
+            // Send to backend
+            const response = await fetch("/api/secure-checkout", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(orderData),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              // Clear cart
+              localStorage.removeItem("cart");
+
+              // Show success message
+              alert(
+                "Order submitted successfully! You will receive a confirmation email shortly."
+              );
+
+              // Redirect to home page
+              window.location.href = "/";
+            } else {
+              throw new Error(result.error || "Order submission failed");
+            }
+          } catch (error) {
+            console.error("Order submission error:", error);
+            alert(`Order submission failed: ${error.message}`);
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Submit Secure Order";
+          }
+        });
+
+      // Load cart data on page load
+      document.addEventListener("DOMContentLoaded", loadCartData);
+    </script>
+  </body>
+</html>

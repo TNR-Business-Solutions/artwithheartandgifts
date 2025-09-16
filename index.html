@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Art with Heart and Gifts – Healing Original Art & Prints</title>
+    <meta
+      name="description"
+      content="Florida artist offering healing-inspired original art, prints, murals, and gifts. Transform resilience into color."
+    />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="preload" as="image" href="/images/heroimage.png" />
+    <link rel="preload" as="image" href="/images/Logo.png" />
+    <link rel="stylesheet" href="/src/styles/base.css" />
+  </head>
+  <body data-page="home">
+    <header class="site-header">
+      <div class="brand">
+        <a href="/"
+          ><img
+            src="/images/Logo.png"
+            alt="Art with Heart & Gifts logo"
+            class="site-logo"
+        /></a>
+      </div>
+      <nav class="main-nav" aria-label="Primary">
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="navMenu"
+        >
+          ☰
+        </button>
+        <ul id="navMenu">
+          <li><a href="/" aria-current="page">Home</a></li>
+          <li><a href="/gallery.html">Gallery</a></li>
+          <li><a href="/shop.html">Shop</a></li>
+          <li><a href="/collections.html">Collections</a></li>
+          <li><a href="/commissions.html">Commissions</a></li>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="/healing.html">Healing</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <a
+              href="#"
+              onclick="document.getElementById('cart-modal').style.display='block'; return false;"
+              class="cart-icon"
+              >🛒<span id="cart-count">0</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <section class="hero" aria-label="Hero banner">
+      <div class="hero-container">
+        <div class="hero-logo-section">
+          <img
+            src="/images/Logo.png"
+            alt="Art with Heart & Gifts Logo"
+            class="hero-logo"
+          />
+          <div class="hero-decorative-elements">
+            <div class="decorative-circle circle-1"></div>
+            <div class="decorative-circle circle-2"></div>
+            <div class="decorative-circle circle-3"></div>
+            <div class="decorative-line line-1"></div>
+            <div class="decorative-line line-2"></div>
+          </div>
+        </div>
+        <div class="hero-content-section">
+          <div class="hero-content">
+            <h1>Art with Heart & Gifts</h1>
+            <p class="tagline">Creating Joy, One Brushstroke at a Time</p>
+            <p>
+              Original art, prints, murals, and heartfelt gifts handcrafted in
+              Florida—each piece born from resilience.
+            </p>
+            <div class="btn-row">
+              <a class="btn primary" href="/shop.html#originals"
+                >Shop Originals</a
+              >
+              <a class="btn secondary" href="/shop.html#prints"
+                >Explore Prints</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="cred-bar" aria-label="Highlights">
+      <ul>
+        <li>Florida Artist</li>
+        <li>Healing-Focused</li>
+        <li>Custom Murals</li>
+        <li>Prints & Gifts</li>
+      </ul>
+    </section>
+    <section class="featured-collections wrapper">
+      <h2>Featured Collections</h2>
+      <div class="alternating-layout">
+        <div class="alternating-item">
+          <div class="alternating-content">
+            <h2>Healing & Resilience</h2>
+            <p>
+              Art born from personal journeys through COPD and fibromyalgia—each
+              piece carries the strength of overcoming challenges and finding
+              hope through color. These works represent the transformative power
+              of art in healing.
+            </p>
+            <a href="/shop.html?collection=healing" class="btn primary"
+              >Explore Collection</a
+            >
+          </div>
+          <div class="alternating-image">
+            <img
+              src="/images/angels-set-of-3.jpg"
+              alt="Healing & Resilience collection"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <div class="alternating-item">
+          <div class="alternating-content">
+            <h2>Florida Inspirations</h2>
+            <p>
+              Sun-kissed coastal and inland color stories that capture the
+              essence of Florida's natural beauty. From lighthouse scenes to
+              beach days, these pieces bring the warmth and vibrancy of the
+              Sunshine State into your home.
+            </p>
+            <a href="/shop.html?collection=florida" class="btn primary"
+              >View Florida Art</a
+            >
+          </div>
+          <div class="alternating-image">
+            <img
+              src="/images/lighthouse-big-red.jpg"
+              alt="Florida Inspirations collection"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <div class="alternating-item">
+          <div class="alternating-content">
+            <h2>Custom Commissions</h2>
+            <p>
+              Transform your walls into immersive narratives with custom murals
+              and commissioned pieces. Each commission is a unique collaboration
+              between your vision and the artist's journey, creating meaningful
+              art for your space.
+            </p>
+            <a href="/commissions.html" class="btn primary"
+              >Request Commission</a
+            >
+          </div>
+          <div class="alternating-image">
+            <img
+              src="/images/pumpkin-man.jpg"
+              alt="Custom Commissions"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="new-arrivals wrapper">
+      <h2>New Arrivals</h2>
+      <div id="newProducts" class="product-grid" aria-live="polite"></div>
+      <div class="center">
+        <a href="/shop.html" class="btn ghost">View All Art</a>
+      </div>
+    </section>
+    <section class="story-teaser">
+      <div class="inner wrapper">
+        <h2>The Story Behind the Brush</h2>
+        <p>
+          From a basement mural that unlocked a deeper purpose to vibrant
+          canvases celebrating healing—every piece declares that beauty can
+          emerge from adversity.
+        </p>
+        <a class="btn secondary" href="/about.html">Read the Journey</a>
+      </div>
+    </section>
+    <section class="email-optin wrapper" aria-labelledby="optinHeading">
+      <h2 id="optinHeading">Stay Inspired</h2>
+      <p>
+        Get early access to releases, healing art insights, and special gift
+        offers.
+      </p>
+      <form class="inline-form" id="newsletterForm">
+        <label class="visually-hidden" for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="you@example.com"
+          required
+        />
+        <button class="btn primary" type="submit">Subscribe</button>
+      </form>
+    </section>
+    <main class="wrapper">
+      <!-- SEO: site introduction for people searching for art in the US -->
+      <section class="seo-intro">
+        <p>
+          Discover original art and affordable prints crafted by a local
+          American artist dedicated to bringing beauty and meaning into homes
+          across the United States. Whether you're searching for original
+          paintings, framed prints, or custom commissioned pieces, our gallery
+          makes it easy to buy art online with confidence. We feature a wide
+          selection of artwork suitable for living rooms, bedrooms, offices, and
+          public spaces — all created with professional materials and shipped
+          safely to addresses throughout the USA. For collectors and first-time
+          buyers alike, our site offers clear photos, honest descriptions, and
+          fast shipping so you can find the perfect piece of art for your space.
+        </p>
+
+        <p>
+          We understand that buying art is personal. That's why we showcase a
+          mix of small originals, limited-run prints, and bespoke commission
+          work that can be tailored to your vision. Search by theme, size, or
+          medium to find landscapes, abstracts, seascapes, and figurative work.
+          If you're looking for local artist-made art in the US, our pieces
+          combine contemporary style with timeless techniques — ideal for
+          interior designers, gift buyers, and anyone who wants meaningful wall
+          art. Our online shop supports secure payments, clear shipping
+          policies, and excellent customer service to make buying art online
+          simple and enjoyable.
+        </p>
+
+        <p>
+          From affordable prints for a starter collection to unique original
+          canvases for seasoned collectors, we aim to serve art lovers
+          nationwide. Browse curated collections, explore themed galleries, or
+          inquire about a commission to create a one-of-a-kind piece. Many
+          buyers search "art for sale USA", "buy art online", "original art near
+          me", and "affordable art prints" — and you'll find relevant,
+          searchable content and metadata across our site to help you discover
+          what you need. Join our mailing list for new arrivals, studio updates,
+          and exclusive offers. We look forward to helping you find art that
+          reflects your taste and lifts your space.
+        </p>
+      </section>
+
+      <!-- ...existing code... -->
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid wrapper">
+        <div>
+          <strong>Art with Heart and Gifts</strong>
+          <p>Zephyrhills, Florida – Sharing healing through color.</p>
+        </div>
+        <div>
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="/shop.html">All Art</a></li>
+            <li><a href="/shop.html#originals">Originals</a></li>
+            <li><a href="/shop.html#prints">Prints</a></li>
+            <li><a href="/collections.html">Collections</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="/commissions.html">Commissions</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+            <li>
+              <a
+                href="https://instagram.com/artwithheartandgifts"
+                target="_blank"
+                rel="noopener"
+                >Instagram</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4>Policies</h4>
+          <ul>
+            <li><a href="/shipping.html">Shipping</a></li>
+            <li><a href="/returns.html">Returns</a></li>
+            <li><a href="/privacy.html">Privacy</a></li>
+            <li><a href="/terms.html">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="legal">
+        © <span id="year"></span> Art with Heart and Gifts. All rights reserved.
+      </p>
+    </footer>
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="cart-modal">
+      <div class="cart-modal-content">
+        <div class="cart-modal-header">
+          <h2>Shopping Cart</h2>
+          <button
+            onclick="document.getElementById('cart-modal').style.display='none'"
+            class="close-btn"
+          >
+            &times;
+          </button>
+        </div>
+        <div id="cart-items" class="cart-items"></div>
+        <div class="cart-summary">
+          <div class="cart-breakdown">
+            <div class="cart-line">
+              <span>Subtotal:</span>
+              <span id="cart-subtotal">$0.00</span>
+            </div>
+            <div class="cart-line">
+              <span>Shipping:</span>
+              <span id="cart-shipping">$0.00</span>
+            </div>
+            <div class="cart-line">
+              <span>Tax (FL 6%):</span>
+              <span id="cart-tax">$0.00</span>
+            </div>
+            <div class="cart-line cart-total">
+              <span>Total:</span>
+              <span id="cart-total">$0.00</span>
+            </div>
+          </div>
+          <button class="checkout-btn" onclick="window.cart.checkout()">
+            Checkout with Swipe Simple
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/js/cart.js"></script>
+    <script type="module" src="/src/js/app.js"></script>
+  </body>
+</html>

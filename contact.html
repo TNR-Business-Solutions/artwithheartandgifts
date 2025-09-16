@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Contact – Art with Heart & Gifts</title>
+    <link rel="stylesheet" href="/src/styles/base.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <a href="/"
+          ><img
+            src="/images/Logo.png"
+            alt="Art with Heart & Gifts logo"
+            class="site-logo"
+        /></a>
+      </div>
+      <nav class="main-nav" aria-label="Primary">
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="navMenu"
+        >
+          ☰
+        </button>
+        <ul id="navMenu">
+          <li><a href="/">Home</a></li>
+          <li><a href="/gallery.html">Gallery</a></li>
+          <li><a href="/shop.html">Shop</a></li>
+          <li><a href="/collections.html">Collections</a></li>
+          <li><a href="/commissions.html">Commissions</a></li>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="/healing.html">Healing</a></li>
+          <li><a href="/contact.html" aria-current="page">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main class="wrapper">
+      <!-- Hero Section -->
+      <section class="contact-hero">
+        <div class="contact-hero-content">
+          <h1>Let's Connect</h1>
+          <p class="contact-subtitle">
+            Have questions about a piece, want to commission something special,
+            or just want to chat about art? I'd love to hear from you!
+          </p>
+        </div>
+        <div class="contact-hero-image">
+          <img
+            src="/images/love-tree.jpg"
+            alt="Artist at work"
+            loading="lazy"
+          />
+        </div>
+      </section>
+
+      <!-- Contact Information -->
+      <section class="contact-info">
+        <div class="contact-methods">
+          <div class="contact-method">
+            <div class="contact-icon">📞</div>
+            <h3>Call Me</h3>
+            <p>Ready to chat? Give me a call!</p>
+            <a href="tel:239-878-9849" class="contact-link phone-link">
+              (239) 878-9849
+            </a>
+          </div>
+
+          <div class="contact-method">
+            <div class="contact-icon">✉️</div>
+            <h3>Email Me</h3>
+            <p>Send me a message anytime</p>
+            <a
+              href="mailto:Artwithheartandgifts@yahoo.com"
+              class="contact-link email-link"
+            >
+              Artwithheartandgifts@yahoo.com
+            </a>
+          </div>
+
+          <div class="contact-method">
+            <div class="contact-icon">📍</div>
+            <h3>Visit Me</h3>
+            <p>Located in beautiful Florida</p>
+            <span class="contact-detail">Zephyrhills, Florida</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Form -->
+      <section class="contact-form-section">
+        <div class="form-container">
+          <h2>Send Me a Message</h2>
+          <p class="form-intro">
+            Whether you're interested in a specific piece, want to discuss a
+            commission, or have questions about prints and shipping, I'd love to
+            hear from you. Fill out the form below and I'll get back to you
+            within 24 hours.
+          </p>
+
+          <form class="contact-form" id="contactForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contactName">Full Name *</label>
+                <input
+                  type="text"
+                  id="contactName"
+                  name="name"
+                  required
+                  placeholder="Your full name"
+                />
+              </div>
+              <div class="form-group">
+                <label for="contactEmail">Email Address *</label>
+                <input
+                  type="email"
+                  id="contactEmail"
+                  name="email"
+                  required
+                  placeholder="your.email@example.com"
+                />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contactPhone">Phone Number</label>
+                <input
+                  type="tel"
+                  id="contactPhone"
+                  name="phone"
+                  placeholder="(239) 555-0123"
+                />
+              </div>
+              <div class="form-group">
+                <label for="contactSubject">Subject *</label>
+                <select id="contactSubject" name="subject" required>
+                  <option value="">Select a topic</option>
+                  <option value="general">General Question</option>
+                  <option value="commission">Commission Inquiry</option>
+                  <option value="purchase">Purchase Question</option>
+                  <option value="shipping">Shipping & Returns</option>
+                  <option value="healing">Healing Art Discussion</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="contactMessage">Message *</label>
+              <textarea
+                id="contactMessage"
+                name="message"
+                required
+                rows="6"
+                placeholder="Tell me about your question, commission idea, or how I can help you..."
+              ></textarea>
+            </div>
+
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" name="newsletter" value="yes" />
+                <span class="checkmark"></span>
+                I'd like to receive updates about new artwork and special offers
+              </label>
+            </div>
+
+            <button class="btn primary submit-btn" type="submit">
+              <span>Send Message</span>
+              <span class="btn-icon">→</span>
+            </button>
+          </form>
+
+          <!-- Payment Inquiry Section -->
+          <div id="payment-inquiry" class="payment-inquiry">
+            <h3>Payment Information</h3>
+            <div class="payment-details">
+              <p>
+                <strong>Product:</strong> <span id="payment-product"></span>
+              </p>
+              <p><strong>Amount:</strong> <span id="payment-amount"></span></p>
+              <p class="payment-note">
+                I'll send you a secure Swipe Simple payment link to complete
+                your purchase.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Response Time & FAQ -->
+      <section class="contact-faq">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>How quickly do you respond?</h3>
+            <p>
+              I typically respond to all messages within 24 hours, often much
+              sooner!
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Do you offer custom commissions?</h3>
+            <p>
+              Absolutely! I love creating custom pieces. Check out my
+              <a href="/commissions.html">commissions page</a> for more details.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Can I see a piece in person?</h3>
+            <p>
+              Yes! If you're in the Florida area, I'm happy to arrange a
+              viewing. Just let me know in your message.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Do you ship internationally?</h3>
+            <p>
+              I primarily ship within the US, but I'm happy to discuss
+              international shipping for special pieces.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid wrapper">
+        <div>
+          <strong>Art with Heart and Gifts</strong>
+          <p>Zephyrhills, Florida.</p>
+        </div>
+        <div>
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="/shop.html">All Art</a></li>
+            <li><a href="/shop.html#originals">Originals</a></li>
+            <li><a href="/shop.html#prints">Prints</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="/commissions.html">Commissions</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Policies</h4>
+          <ul>
+            <li><a href="/shipping.html">Shipping</a></li>
+            <li><a href="/returns.html">Returns</a></li>
+            <li><a href="/privacy.html">Privacy</a></li>
+            <li><a href="/terms.html">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="legal">© <span id="year"></span> Art with Heart and Gifts.</p>
+    </footer>
+    <script type="module" src="/src/js/app.js"></script>
+    <script>
+      // Handle payment inquiries
+      document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const subject = urlParams.get("subject");
+        const amount = urlParams.get("amount");
+
+        if (subject && subject.includes("Payment Inquiry")) {
+          // Pre-fill the subject
+          const subjectSelect = document.getElementById("contactSubject");
+          if (subjectSelect) {
+            subjectSelect.value = "payment";
+          }
+
+          // Show payment inquiry section
+          const paymentInquiry = document.getElementById("payment-inquiry");
+          const paymentProduct = document.getElementById("payment-product");
+          const paymentAmount = document.getElementById("payment-amount");
+
+          if (paymentInquiry && paymentProduct && paymentAmount) {
+            paymentProduct.textContent = subject.replace(
+              "Payment Inquiry: ",
+              ""
+            );
+            paymentAmount.textContent = amount
+              ? `$${amount}`
+              : "Contact for Price";
+            paymentInquiry.style.display = "block";
+          }
+        }
+
+        // Check for stored payment inquiry
+        const storedPayment = sessionStorage.getItem("paymentInquiry");
+        if (storedPayment) {
+          try {
+            const paymentData = JSON.parse(storedPayment);
+            const paymentInquiry = document.getElementById("payment-inquiry");
+            const paymentProduct = document.getElementById("payment-product");
+            const paymentAmount = document.getElementById("payment-amount");
+
+            if (paymentInquiry && paymentProduct && paymentAmount) {
+              paymentProduct.textContent = paymentData.product;
+              paymentAmount.textContent = `$${paymentData.amount}`;
+              paymentInquiry.style.display = "block";
+
+              // Pre-fill the subject
+              const subjectSelect = document.getElementById("contactSubject");
+              if (subjectSelect) {
+                subjectSelect.value = "payment";
+              }
+
+              // Clear stored data
+              sessionStorage.removeItem("paymentInquiry");
+            }
+          } catch (error) {
+            console.error("Error processing stored payment inquiry:", error);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

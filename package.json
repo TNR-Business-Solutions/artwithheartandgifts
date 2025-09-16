@@ -1,0 +1,19 @@
+{
+  "name": "artwithheartandgifts",
+  "version": "1.0.0",
+  "description": "Art with Heart & Gifts - Handcrafted Art & Gifts",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "vercel dev",
+    "build": "echo 'Static site - no build required'",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.7",
+    "cors": "^2.8.5",
+    "uuid": "^9.0.1"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}

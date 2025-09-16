@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Shop Art – Art with Heart & Gifts</title>
+    <link rel="stylesheet" href="/src/styles/base.css" />
+  </head>
+  <body data-page="shop">
+    <header class="site-header">
+      <div class="brand">
+        <a href="/"
+          ><img
+            src="/images/Logo.png"
+            alt="Art with Heart & Gifts logo"
+            class="site-logo"
+        /></a>
+      </div>
+      <nav class="main-nav" aria-label="Primary">
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="navMenu"
+        >
+          ☰
+        </button>
+        <ul id="navMenu">
+          <li><a href="/">Home</a></li>
+          <li><a href="/gallery.html">Gallery</a></li>
+          <li><a href="/shop.html" aria-current="page">Shop</a></li>
+          <li><a href="/collections.html">Collections</a></li>
+          <li><a href="/commissions.html">Commissions</a></li>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="/healing.html">Healing</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <a
+              href="#"
+              onclick="document.getElementById('cart-modal').style.display='block'; return false;"
+              class="cart-icon"
+              >🛒<span id="cart-count">0</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main class="wrapper">
+      <h1>Shop Art</h1>
+      <form id="filters" class="filters" aria-label="Product Filters">
+        <label for="filterType" class="sr-only">Filter by Type</label>
+        <select id="filterType" title="Filter by Type">
+          <option value="">All Types</option>
+          <option value="original">Originals</option>
+          <option value="print">Prints</option></select
+        ><label for="filterCollection" class="sr-only"
+          >Filter by Collection</label
+        >
+        <select id="filterCollection" title="Filter by Collection">
+          <option value="">All Collections</option>
+          <option value="healing">Healing & Resilience</option>
+          <option value="florida">Florida Inspirations</option>
+          <option value="abstract">Abstract Energy</option></select
+        ><label for="sort" class="sr-only">Sort Products</label>
+        <select id="sort" title="Sort Products">
+          <option value="newest">Newest</option>
+          <option value="priceLow">Price: Low → High</option>
+          <option value="priceHigh">Price: High → Low</option>
+        </select>
+      </form>
+      <div id="productGrid" class="product-grid" aria-live="polite"></div>
+
+      <!-- Pagination Controls -->
+      <div id="pagination" class="pagination" aria-label="Product pagination">
+        <button id="prevPage" class="pagination-btn" disabled>
+          <span aria-hidden="true">←</span> Previous
+        </button>
+        <div id="pageNumbers" class="page-numbers"></div>
+        <button id="nextPage" class="pagination-btn">
+          Next <span aria-hidden="true">→</span>
+        </button>
+      </div>
+
+      <div class="pagination-info">
+        <span id="paginationInfo">Showing 1-24 of 24 products</span>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid wrapper">
+        <div>
+          <strong>Art with Heart and Gifts</strong>
+          <p>Zephyrhills, Florida – Sharing healing through color.</p>
+        </div>
+        <div>
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="/shop.html">All Art</a></li>
+            <li><a href="/shop.html#originals">Originals</a></li>
+            <li><a href="/shop.html#prints">Prints</a></li>
+            <li><a href="/collections.html">Collections</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="/commissions.html">Commissions</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Policies</h4>
+          <ul>
+            <li><a href="/shipping.html">Shipping</a></li>
+            <li><a href="/returns.html">Returns</a></li>
+            <li><a href="/privacy.html">Privacy</a></li>
+            <li><a href="/terms.html">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="legal">© <span id="year"></span> Art with Heart and Gifts.</p>
+    </footer>
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="cart-modal">
+      <div class="cart-modal-content">
+        <div class="cart-modal-header">
+          <h2>Shopping Cart</h2>
+          <button
+            onclick="document.getElementById('cart-modal').style.display='none'"
+            class="close-btn"
+          >
+            &times;
+          </button>
+        </div>
+        <div id="cart-items" class="cart-items"></div>
+        <div class="cart-summary">
+          <div class="cart-breakdown">
+            <div class="cart-line">
+              <span>Subtotal:</span>
+              <span id="cart-subtotal">$0.00</span>
+            </div>
+            <div class="cart-line">
+              <span>Shipping:</span>
+              <span id="cart-shipping">$0.00</span>
+            </div>
+            <div class="cart-line">
+              <span>Tax (FL 6%):</span>
+              <span id="cart-tax">$0.00</span>
+            </div>
+            <div class="cart-line cart-total">
+              <span>Total:</span>
+              <span id="cart-total">$0.00</span>
+            </div>
+          </div>
+          <button class="checkout-btn" onclick="window.cart.checkout()">
+            Checkout with Swipe Simple
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/js/cart.js"></script>
+    <script type="module" src="/src/js/app.js"></script>
+  </body>
+</html>

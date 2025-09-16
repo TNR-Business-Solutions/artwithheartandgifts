@@ -1,0 +1,11 @@
+# JSON files - serve as static files
+/data.json /data.json 200
+/data-gallery.json /data-gallery.json 200
+/data-collections.json /data-collections.json 200
+/data-story.json /data-story.json 200
+
+# Images - serve as static files
+/images/* /images/:splat 200
+
+# SPA fallback for all other routes
+/* /index.html 200

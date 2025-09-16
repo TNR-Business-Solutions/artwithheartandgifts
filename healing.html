@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Healing & Awareness – Art with Heart & Gifts</title>
+    <link rel="stylesheet" href="/src/styles/base.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <a href="/"
+          ><img
+            src="/images/Logo.png"
+            alt="Art with Heart & Gifts logo"
+            class="site-logo"
+        /></a>
+      </div>
+      <nav class="main-nav" aria-label="Primary">
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="navMenu"
+        >
+          ☰
+        </button>
+        <ul id="navMenu">
+          <li><a href="/">Home</a></li>
+          <li><a href="/gallery.html">Gallery</a></li>
+          <li><a href="/shop.html">Shop</a></li>
+          <li><a href="/collections.html">Collections</a></li>
+          <li><a href="/commissions.html">Commissions</a></li>
+          <li><a href="/about.html">About</a></li>
+          <li><a href="/healing.html" aria-current="page">Healing</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li>
+            <a
+              href="#"
+              onclick="document.getElementById('cart-modal').style.display='block'; return false;"
+              class="cart-icon"
+              >🛒<span id="cart-count">0</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main class="wrapper">
+      <!-- Hero Section -->
+      <section class="healing-hero">
+        <div class="healing-hero-content">
+          <h1>Healing Through Art</h1>
+          <p class="healing-subtitle">
+            A journey of resilience, transformation, and hope—where every
+            brushstroke tells a story of overcoming challenges and finding
+            beauty in the struggle.
+          </p>
+        </div>
+        <div class="healing-hero-image">
+          <img
+            src="/images/angels-set-of-3.jpg"
+            alt="Healing art journey"
+            loading="lazy"
+          />
+        </div>
+      </section>
+
+      <!-- Personal Journey Section -->
+      <section class="healing-journey">
+        <div class="journey-grid">
+          <div class="journey-card">
+            <div class="journey-image">
+              <img
+                src="/images/love-tree.jpg"
+                alt="COPD recovery journey"
+                loading="lazy"
+              />
+            </div>
+            <div class="journey-content">
+              <h2>COPD Recovery Journey</h2>
+              <p>
+                After 26 years of smoking, the decision to quit wasn't just
+                about health—it was about reclaiming life. Each breath became
+                precious, each moment a gift. The art that emerged from this
+                journey carries the weight of that transformation, the relief of
+                lungs finally breathing freely, and the hope that comes with
+                second chances.
+              </p>
+              <div class="journey-stats">
+                <span class="stat">26 years</span>
+                <span class="stat">1 decision</span>
+                <span class="stat">∞ possibilities</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="journey-card">
+            <div class="journey-image">
+              <img
+                src="/images/sunshine.jpg"
+                alt="Fibromyalgia healing through art"
+                loading="lazy"
+              />
+            </div>
+            <div class="journey-content">
+              <h2>Fibromyalgia & Creative Flow</h2>
+              <p>
+                When chronic pain becomes a constant companion, creativity
+                becomes a lifeline. Each brushstroke is a meditation, each color
+                a form of therapy. The gentle movement of the brush provides
+                relief that medication cannot, and the act of creation
+                transforms pain into something beautiful and meaningful.
+              </p>
+              <div class="journey-stats">
+                <span class="stat">Mindful</span>
+                <span class="stat">Therapeutic</span>
+                <span class="stat">Healing</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Healing Art Gallery -->
+      <section class="healing-gallery">
+        <h2>Featured Healing Pieces</h2>
+        <p class="gallery-intro">
+          Each piece in our healing collection is created with intention—to
+          bring peace, inspire hope, and remind you that beauty can emerge from
+          even the most difficult journeys.
+        </p>
+        <div id="healingGrid" class="masonry-grid"></div>
+      </section>
+
+      <!-- Healing Benefits Section -->
+      <section class="healing-benefits">
+        <h2>How Art Supports Healing</h2>
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <div class="benefit-icon">🎨</div>
+            <h3>Creative Expression</h3>
+            <p>
+              Art provides a safe space to process emotions and experiences that
+              words cannot capture.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">🧘</div>
+            <h3>Mindful Practice</h3>
+            <p>
+              The focused attention required for painting creates a meditative
+              state that reduces stress and anxiety.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">💪</div>
+            <h3>Empowerment</h3>
+            <p>
+              Creating something beautiful from struggle transforms pain into
+              power and hope.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">🤝</div>
+            <h3>Connection</h3>
+            <p>
+              Sharing healing art creates connections with others who understand
+              the journey.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">🌱</div>
+            <h3>Growth</h3>
+            <p>
+              Each piece represents a step forward, a moment of growth, and a
+              reminder of how far you've come.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">✨</div>
+            <h3>Transformation</h3>
+            <p>
+              Art transforms pain into beauty, struggle into strength, and
+              darkness into light through the power of creation.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Call to Action -->
+      <section class="healing-cta">
+        <h2>Ready to Begin Your Healing Journey?</h2>
+        <p>
+          Whether you're looking for art to support your own healing or want to
+          commission a piece that tells your story, we're here to help.
+        </p>
+        <div class="cta-buttons">
+          <a href="/shop.html?collection=healing" class="btn primary"
+            >Explore Healing Art</a
+          >
+          <a href="/commissions.html" class="btn secondary"
+            >Commission Your Story</a
+          >
+          <a href="/contact.html" class="btn ghost">Get Support</a>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-grid wrapper">
+        <div>
+          <strong>Art with Heart and Gifts</strong>
+          <p>Zephyrhills, Florida.</p>
+        </div>
+        <div>
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="/shop.html">All Art</a></li>
+            <li><a href="/shop.html#originals">Originals</a></li>
+            <li><a href="/shop.html#prints">Prints</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="/commissions.html">Commissions</a></li>
+            <li><a href="/contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Policies</h4>
+          <ul>
+            <li><a href="/shipping.html">Shipping</a></li>
+            <li><a href="/returns.html">Returns</a></li>
+            <li><a href="/privacy.html">Privacy</a></li>
+            <li><a href="/terms.html">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="legal">© <span id="year"></span> Art with Heart and Gifts.</p>
+    </footer>
+    <script type="module" src="/src/js/app.js"></script>
+    <script type="module">
+      import { loadProducts } from "/src/js/products.js";
+      (async () => {
+        const products = await loadProducts();
+        const grid = document.getElementById("healingGrid");
+        if (!grid) return;
+        products
+          .filter((p) => (p.collections || []).includes("healing"))
+          .forEach((p) => {
+            const a = document.createElement("article");
+            a.className = "product-card";
+            a.innerHTML = `<img src='${p.image}' alt='${p.alt}'><h3>${
+              p.title
+            }</h3><div class='price'>$${(p.price || 0).toFixed(
+              2
+            )}</div><a class='btn ghost' href='/product.html?id=${
+              p.id
+            }'>Details</a>`;
+            grid.appendChild(a);
+          });
+      })();
+    </script>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="cart-modal">
+      <div class="cart-modal-content">
+        <div class="cart-modal-header">
+          <h2>Shopping Cart</h2>
+          <button
+            onclick="document.getElementById('cart-modal').style.display='none'"
+            class="close-btn"
+          >
+            &times;
+          </button>
+        </div>
+        <div id="cart-items" class="cart-items"></div>
+        <div class="cart-summary">
+          <div class="cart-breakdown">
+            <div class="cart-line">
+              <span>Subtotal:</span>
+              <span id="cart-subtotal">$0.00</span>
+            </div>
+            <div class="cart-line">
+              <span>Shipping:</span>
+              <span id="cart-shipping">$0.00</span>
+            </div>
+            <div class="cart-line">
+              <span>Tax (FL 6%):</span>
+              <span id="cart-tax">$0.00</span>
+            </div>
+            <div class="cart-line cart-total">
+              <span>Total:</span>
+              <span id="cart-total">$0.00</span>
+            </div>
+          </div>
+          <button class="checkout-btn" onclick="window.cart.checkout()">
+            Checkout with Swipe Simple
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/js/cart.js"></script>
+  </body>
+</html>
