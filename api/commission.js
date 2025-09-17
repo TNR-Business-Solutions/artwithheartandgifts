@@ -127,7 +127,8 @@ export default async function handler(req, res) {
     console.error("Error stack:", error.stack);
     return res.status(500).json({
       error: "Failed to submit commission request. Please try again later.",
-      details: process.env.NODE_ENV === "development" ? error.message : undefined,
+      details:
+        process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 }
