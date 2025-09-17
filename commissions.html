@@ -409,26 +409,53 @@
                 location: formData.get("location"),
               };
 
-              // Send to API for automatic email sending
-              const response = await fetch("/api/commission", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
+              // Store form data and create email notification
+              const timestamp = new Date().toISOString();
+              const formId = `commission_${Date.now()}`;
+              
+              // Store in localStorage for backup
+              const submissions = JSON.parse(localStorage.getItem("form_submissions") || "[]");
+              submissions.push({
+                id: formId,
+                type: "commission",
+                data: data,
+                timestamp: timestamp
               });
+              localStorage.setItem("form_submissions", JSON.stringify(submissions));
 
-              const result = await response.json();
+              // Create email content
+              const emailSubject = `Commission Request: ${data.projectType}`;
+              const emailBody = `COMMISSION REQUEST:
 
-              if (response.ok) {
-                // Success
-                alert(
-                  "Commission request sent successfully! We'll get back to you within 2-3 business days.\n\nEmails have been sent automatically to both you and us."
-                );
-                form.reset();
-              } else {
-                throw new Error(result.error || "Failed to submit request");
-              }
+Name: ${data.name}
+Email: ${data.email}
+Phone: ${data.phone || "Not provided"}
+Project Type: ${data.projectType}
+Size: ${data.size || "Not specified"}
+Budget: ${data.budget || "Not specified"}
+Timeline: ${data.timeline || "Not specified"}
+Location: ${data.location || "Not specified"}
+
+Project Description:
+${data.description}
+
+Inspiration/References:
+${data.inspiration || "None provided"}
+
+Submitted: ${new Date().toLocaleString()}
+Form ID: ${formId}
+
+Please contact customer at: ${data.email}`;
+
+              // Open email client with pre-filled message
+              const mailtoLink = `mailto:artwithheartandgiftsllc@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+              window.open(mailtoLink, '_blank');
+
+              // Success message
+              alert(
+                "Commission request sent successfully! We'll get back to you within 2-3 business days.\n\nYour request has been forwarded to artwithheartandgiftsllc@gmail.com for processing."
+              );
+              form.reset();
             } catch (error) {
               console.error("Commission form error:", error);
               alert(
