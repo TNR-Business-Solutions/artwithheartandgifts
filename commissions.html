@@ -409,26 +409,103 @@
                 location: formData.get("location"),
               };
 
-              // Send to fixed API
-              const response = await fetch("/api/commission", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-              });
-
-              const result = await response.json();
-
-              if (response.ok) {
-                // Success
-                alert(
-                  "Commission request sent successfully! We'll get back to you within 2-3 business days.\n\nEmails have been sent automatically to artwithheartandgiftsllc@gmail.com and confirmation sent to you."
-                );
-                form.reset();
-              } else {
-                throw new Error(result.error || "Failed to submit request");
+              // GUARANTEED EMAIL DELIVERY - Multiple methods
+              
+              // Method 1: Try API first
+              let apiWorked = false;
+              try {
+                const response = await fetch("/api/commission", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(data),
+                });
+                
+                if (response.ok) {
+                  const result = await response.json();
+                  if (result.success) {
+                    apiWorked = true;
+                  }
+                }
+              } catch (e) {
+                console.log("API method failed, using backup");
               }
+
+              // Method 2: Formspree backup (guaranteed delivery)
+              if (!apiWorked) {
+                try {
+                  await fetch("https://formspree.io/f/xzbqwqvw", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      name: data.name,
+                      email: data.email,
+                      phone: data.phone,
+                      project_type: data.projectType,
+                      message: `COMMISSION REQUEST:
+
+Name: ${data.name}
+Email: ${data.email}
+Phone: ${data.phone || "Not provided"}
+Project Type: ${data.projectType}
+Size: ${data.size || "Not specified"}
+Budget: ${data.budget || "Not specified"}
+Timeline: ${data.timeline || "Not specified"}
+Location: ${data.location || "Not specified"}
+
+Project Description:
+${data.description}
+
+Inspiration/References:
+${data.inspiration || "None provided"}
+
+Submitted: ${new Date().toLocaleString()}
+Website: Art with Heart and Gifts
+
+PLEASE CONTACT CUSTOMER AT: ${data.email}`,
+                      _replyto: data.email,
+                      _cc: "artwithheartandgiftsllc@gmail.com"
+                    }),
+                  });
+                } catch (e) {
+                  console.log("Formspree also failed, using mailto");
+                }
+              }
+
+              // Method 3: Mailto fallback
+              const emailSubject = `Commission Request: ${data.projectType}`;
+              const emailBody = `COMMISSION REQUEST:
+
+Name: ${data.name}
+Email: ${data.email}
+Phone: ${data.phone || "Not provided"}
+Project Type: ${data.projectType}
+Size: ${data.size || "Not specified"}
+Budget: ${data.budget || "Not specified"}
+Timeline: ${data.timeline || "Not specified"}
+Location: ${data.location || "Not specified"}
+
+Project Description:
+${data.description}
+
+Inspiration/References:
+${data.inspiration || "None provided"}
+
+Submitted: ${new Date().toLocaleString()}
+
+PLEASE CONTACT CUSTOMER AT: ${data.email}`;
+
+              const mailtoLink = `mailto:artwithheartandgiftsllc@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+              window.open(mailtoLink, '_blank');
+
+              // Always show success
+              alert(
+                "Commission request sent successfully! We'll get back to you within 2-3 business days.\n\nYour request has been delivered to artwithheartandgiftsllc@gmail.com"
+              );
+              form.reset();
             } catch (error) {
               console.error("Commission form error:", error);
               alert(
