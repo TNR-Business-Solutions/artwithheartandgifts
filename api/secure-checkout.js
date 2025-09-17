@@ -19,10 +19,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Parse request body if it's a string
-    let body = req.body;
-    if (typeof body === 'string') {
-      body = JSON.parse(body);
+    // Proper Vercel serverless request body handling
+    let body;
+    if (req.body) {
+      body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    } else {
+      // Handle raw body parsing for Vercel
+      const rawBody = await new Promise((resolve) => {
+        let data = '';
+        req.on('data', chunk => data += chunk);
+        req.on('end', () => resolve(data));
+      });
+      body = JSON.parse(rawBody);
     }
     
     const {
@@ -62,13 +70,18 @@ export default async function handler(req, res) {
       minute: "2-digit",
     });
 
-    // Create transporter
-    const transporter = nodemailer.createTransporter({
-      service: "gmail",
+    // Create transporter with explicit Gmail SMTP settings for Vercel
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // Use STARTTLS
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
+      tls: {
+        rejectUnauthorized: false
+      }
     });
 
     // Generate order summary HTML

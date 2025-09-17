@@ -285,46 +285,26 @@
                 message: formData.get("message"),
               };
 
-              // Store form data and create email notification
-              const timestamp = new Date().toISOString();
-              const formId = `contact_${Date.now()}`;
-              
-              // Store in localStorage for backup
-              const submissions = JSON.parse(localStorage.getItem("form_submissions") || "[]");
-              submissions.push({
-                id: formId,
-                type: "contact",
-                data: data,
-                timestamp: timestamp
+              // Send to fixed API
+              const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
               });
-              localStorage.setItem("form_submissions", JSON.stringify(submissions));
 
-              // Create email content
-              const emailSubject = `Contact Form: ${data.subject || "New Message"}`;
-              const emailBody = `CONTACT FORM SUBMISSION:
+              const result = await response.json();
 
-Name: ${data.name}
-Email: ${data.email}
-Phone: ${data.phone || "Not provided"}
-Subject: ${data.subject || "No subject"}
-
-Message:
-${data.message}
-
-Submitted: ${new Date().toLocaleString()}
-Form ID: ${formId}
-
-Please respond to customer at: ${data.email}`;
-
-              // Open email client with pre-filled message
-              const mailtoLink = `mailto:artwithheartandgiftsllc@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-              window.open(mailtoLink, '_blank');
-
-              // Success message
-              alert(
-                "Message sent successfully! We'll get back to you within 24 hours.\n\nYour message has been forwarded to artwithheartandgiftsllc@gmail.com for processing."
-              );
-              form.reset();
+              if (response.ok) {
+                // Success
+                alert(
+                  "Message sent successfully! We'll get back to you within 24 hours.\n\nEmails have been sent automatically to artwithheartandgiftsllc@gmail.com and confirmation sent to you."
+                );
+                form.reset();
+              } else {
+                throw new Error(result.error || "Failed to send message");
+              }
             } catch (error) {
               console.error("Contact form error:", error);
               alert("Error: Failed to send message. Please try again later.");
