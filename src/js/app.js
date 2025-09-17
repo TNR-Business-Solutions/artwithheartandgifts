@@ -387,7 +387,7 @@ async function initGallery() {
   // Load gallery data directly from data-gallery.json
   let galleryData = [];
   try {
-    const response = await fetch("/data-gallery.json");
+    const response = await fetch(`/data-gallery.json?v=${Date.now()}`);
     galleryData = await response.json();
   } catch (error) {
     console.error("Error loading gallery data:", error);

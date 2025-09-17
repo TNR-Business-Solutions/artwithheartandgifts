@@ -523,38 +523,39 @@
 
             console.log("Submitting order:", orderData);
 
-            // Store order data and show success
-            console.log("Order submitted:", orderData);
-
-            // Store order in localStorage for reference
-            const existingOrders = JSON.parse(
-              localStorage.getItem("orders") || "[]"
-            );
-            existingOrders.push({
-              ...orderData,
-              status: "pending",
-              createdAt: new Date().toISOString(),
+            // Send to backend
+            const response = await fetch("/api/secure-checkout", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(orderData),
             });
-            localStorage.setItem("orders", JSON.stringify(existingOrders));
 
-            // Clear cart
-            localStorage.removeItem("artwithheartandgifts_cart");
+            console.log("Response status:", response.status);
 
-            // Show success message
-            alert(
-              `Order submitted successfully! Order ID: ${
-                orderData.orderId
-              }\n\nOrder Details:\n- Total: $${orderData.totalAmount.toFixed(
-                2
-              )}\n- Payment: ${
-                orderData.paymentInfo.method
-              }\n- Card: **** **** **** ${orderData.paymentInfo.cardNumber.slice(
-                -4
-              )}\n\nYou will receive a confirmation email shortly.`
-            );
+            if (!response.ok) {
+              const errorText = await response.text();
+              console.error("Server error response:", errorText);
+              throw new Error(`Server error: ${response.status} - ${errorText}`);
+            }
 
-            // Redirect to home page
-            window.location.href = "/";
+            const result = await response.json();
+
+            if (result.success) {
+              // Clear cart
+              localStorage.removeItem("artwithheartandgifts_cart");
+
+              // Show success message
+              alert(
+                `Order submitted successfully! Order ID: ${result.orderId || orderData.orderId}\n\nOrder Details:\n- Total: $${orderData.totalAmount.toFixed(2)}\n- Payment: ${orderData.paymentInfo.method}\n- Card: **** **** **** ${orderData.paymentInfo.cardNumber.slice(-4)}\n\nYou will receive a confirmation email shortly.`
+              );
+
+              // Redirect to home page
+              window.location.href = "/";
+            } else {
+              throw new Error(result.error || "Order submission failed");
+            }
           } catch (error) {
             console.error("Order submission error:", error);
             alert(`Order submission failed: ${error.message}`);
