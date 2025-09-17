@@ -374,7 +374,9 @@
 
       // Load cart data from localStorage
       function loadCartData() {
-        const cart = JSON.parse(localStorage.getItem("artwithheartandgifts_cart") || "[]");
+        const cart = JSON.parse(
+          localStorage.getItem("artwithheartandgifts_cart") || "[]"
+        );
         const cartSummary = document.getElementById("cartSummary");
         const orderItems = document.getElementById("orderItems");
 
@@ -532,60 +534,39 @@
 
             console.log("Submitting order:", orderData);
 
-            // Store order and send email notification
-            console.log("Order submitted:", orderData);
-            
-            // Store order in localStorage for reference
-            const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
-            existingOrders.push({
-              ...orderData,
-              status: "pending",
-              createdAt: new Date().toISOString(),
+            // Send to backend API for automatic email sending
+            const response = await fetch("/api/secure-checkout", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(orderData),
             });
-            localStorage.setItem("orders", JSON.stringify(existingOrders));
 
-            // Send email notification using mailto (opens user's email client)
-            const emailSubject = `New Order #${orderData.orderId} - $${orderData.totalAmount.toFixed(2)}`;
-            const emailBody = `New order received:
+            console.log("Response status:", response.status);
 
-Order ID: ${orderData.orderId}
-Customer: ${orderData.customerInfo.firstName} ${orderData.customerInfo.lastName}
-Email: ${orderData.customerInfo.email}
-Phone: ${orderData.customerInfo.phone}
-Address: ${orderData.customerInfo.address}, ${orderData.customerInfo.city}, ${orderData.customerInfo.state} ${orderData.customerInfo.zipCode}
+            if (!response.ok) {
+              const errorText = await response.text();
+              console.error("Server error response:", errorText);
+              throw new Error(`Server error: ${response.status} - ${errorText}`);
+            }
 
-Order Items:
-${orderData.cartItems.map(item => `- ${item.title} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`).join('\n')}
+            const result = await response.json();
 
-Subtotal: $${(orderData.totalAmount / 1.06 - (orderData.totalAmount > 75 ? 0 : 8.99)).toFixed(2)}
-Tax: $${(orderData.totalAmount * 0.06 / 1.06).toFixed(2)}
-Shipping: ${orderData.totalAmount > 75 ? 'FREE' : '$8.99'}
-Total: $${orderData.totalAmount.toFixed(2)}
+            if (result.success) {
+              // Clear cart
+              localStorage.removeItem("artwithheartandgifts_cart");
 
-Payment Method: ${orderData.paymentInfo.method}
-Card: **** **** **** ${orderData.paymentInfo.cardNumber.slice(-4)}
+              // Show success message
+              alert(
+                `Order submitted successfully! Order ID: ${result.orderId || orderData.orderId}\n\nOrder Details:\n- Total: $${orderData.totalAmount.toFixed(2)}\n- Payment: ${orderData.paymentInfo.method}\n- Card: **** **** **** ${orderData.paymentInfo.cardNumber.slice(-4)}\n\nEmails have been sent automatically to both you and the customer.`
+              );
 
-Special Instructions: ${orderData.customerInfo.specialInstructions || 'None'}
-Reference Number: ${orderData.referenceNumber || 'None'}
-
-Please process this order and send confirmation to customer.`;
-
-            // Open email client for business notification
-            const mailtoLink = `mailto:artwithheartandgiftsllc@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-            window.open(mailtoLink, '_blank');
-
-            // Clear cart
-            localStorage.removeItem("artwithheartandgifts_cart");
-
-            // Show success message
-            alert(
-              `Order submitted successfully! Order ID: ${orderData.orderId}\n\nOrder Details:\n- Total: $${orderData.totalAmount.toFixed(2)}\n- Payment: ${orderData.paymentInfo.method}\n- Card: **** **** **** ${orderData.paymentInfo.cardNumber.slice(-4)}\n\nAn email notification has been sent to process your order.\nYou will receive a confirmation email shortly.`
-            );
-
-            // Redirect to home page
-            setTimeout(() => {
+              // Redirect to home page
               window.location.href = "/";
-            }, 2000);
+            } else {
+              throw new Error(result.error || "Order submission failed");
+            }
           } catch (error) {
             console.error("Order submission error:", error);
             alert(`Order submission failed: ${error.message}`);

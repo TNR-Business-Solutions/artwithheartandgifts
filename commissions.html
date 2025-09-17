@@ -409,38 +409,26 @@
                 location: formData.get("location"),
               };
 
-              // Create email notification
-              const emailSubject = `Commission Request: ${data.projectType}`;
-              const emailBody = `New commission request received:
+              // Send to API for automatic email sending
+              const response = await fetch("/api/commission", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+              });
 
-Name: ${data.name}
-Email: ${data.email}
-Phone: ${data.phone || "Not provided"}
-Project Type: ${data.projectType}
-Size: ${data.size || "Not specified"}
-Budget: ${data.budget || "Not specified"}
-Timeline: ${data.timeline || "Not specified"}
-Location: ${data.location || "Not specified"}
+              const result = await response.json();
 
-Project Description:
-${data.description}
-
-Inspiration/References:
-${data.inspiration || "None provided"}
-
-Submitted on: ${new Date().toLocaleString()}
-
-Please contact the customer to discuss their commission request.`;
-
-              // Open email client for business notification
-              const mailtoLink = `mailto:artwithheartandgiftsllc@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-              window.open(mailtoLink, '_blank');
-
-              // Success
-              alert(
-                "Commission request sent successfully! We'll get back to you within 2-3 business days.\n\nAn email notification has been sent for processing."
-              );
-              form.reset();
+              if (response.ok) {
+                // Success
+                alert(
+                  "Commission request sent successfully! We'll get back to you within 2-3 business days.\n\nEmails have been sent automatically to both you and us."
+                );
+                form.reset();
+              } else {
+                throw new Error(result.error || "Failed to submit request");
+              }
             } catch (error) {
               console.error("Commission form error:", error);
               alert(

@@ -285,31 +285,27 @@
                 message: formData.get("message"),
               };
 
-              // Create email notification
-              const emailSubject = `Contact Form: ${data.subject || "New Message"}`;
-              const emailBody = `New contact form submission:
+              // Send to API for automatic email sending
+              const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+              });
 
-Name: ${data.name}
-Email: ${data.email}
-Phone: ${data.phone || "Not provided"}
-Subject: ${data.subject || "No subject"}
+              const result = await response.json();
 
-Message:
-${data.message}
-
-Submitted on: ${new Date().toLocaleString()}
-
-Please respond to the customer at their email address.`;
-
-              // Open email client for business notification
-              const mailtoLink = `mailto:artwithheartandgiftsllc@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-              window.open(mailtoLink, '_blank');
-
-              // Success
-              alert(
-                "Message sent successfully! We'll get back to you within 24 hours.\n\nAn email notification has been sent for processing."
-              );
-              form.reset();
+              if (response.ok) {
+                // Success
+                alert(
+                  "Message sent successfully! We'll get back to you within 24 hours.\n\nEmails have been sent automatically to both you and us."
+                );
+                form.reset();
+              } else {
+                // Error
+                alert("Error: " + (result.error || "Failed to send message"));
+              }
             } catch (error) {
               console.error("Contact form error:", error);
               alert("Error: Failed to send message. Please try again later.");
