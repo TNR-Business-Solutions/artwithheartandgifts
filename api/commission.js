@@ -18,6 +18,12 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Parse request body if it's a string
+    let body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    
     const {
       name,
       email,
@@ -29,7 +35,7 @@ export default async function handler(req, res) {
       description,
       inspiration,
       location,
-    } = req.body;
+    } = body;
 
     // Validate required fields
     if (!name || !email || !projectType || !description) {

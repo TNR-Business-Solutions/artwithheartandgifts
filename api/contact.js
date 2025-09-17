@@ -18,7 +18,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, subject, message, phone } = req.body;
+    // Parse request body if it's a string
+    let body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    
+    const { name, email, subject, message, phone } = body;
 
     // Validate required fields
     if (!name || !email || !message) {

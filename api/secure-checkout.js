@@ -19,6 +19,12 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Parse request body if it's a string
+    let body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    
     const {
       customerInfo,
       cartItems,
@@ -26,7 +32,7 @@ export default async function handler(req, res) {
       totalAmount,
       orderId,
       referenceNumber,
-    } = req.body;
+    } = body;
 
     // Validate required fields
     if (!customerInfo || !cartItems || !totalAmount || !paymentInfo) {
