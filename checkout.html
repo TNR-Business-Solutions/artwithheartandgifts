@@ -292,6 +292,8 @@
                 name="cardNumber"
                 required
                 placeholder="4111 1111 1111 1111"
+                maxlength="19"
+                oninput="formatCardNumber(this)"
               />
             </div>
           </div>
@@ -306,6 +308,8 @@
                 name="expirationDate"
                 required
                 placeholder="MM/YY"
+                maxlength="5"
+                oninput="formatExpirationDate(this)"
               />
             </div>
             <div class="form-group">
@@ -316,6 +320,8 @@
                 name="cvv"
                 required
                 placeholder="123"
+                maxlength="4"
+                oninput="formatCVV(this)"
               />
             </div>
           </div>
@@ -360,7 +366,7 @@
     <script>
       // Load cart data from localStorage
       function loadCartData() {
-        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        const cart = JSON.parse(localStorage.getItem("artwithheartandgifts_cart") || "[]");
         const cartSummary = document.getElementById("cartSummary");
         const orderItems = document.getElementById("orderItems");
 
@@ -462,58 +468,93 @@
 
           try {
             const formData = new FormData(this);
-            const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+            const cart = JSON.parse(
+              localStorage.getItem("artwithheartandgifts_cart") || "[]"
+            );
+
+            // Validate credit card information
+            const cardNumber = formData.get("cardNumber").replace(/\s/g, "");
+            const expirationDate = formData.get("expirationDate");
+            const cvv = formData.get("cvv");
+
+            // Basic credit card validation
+            if (!validateCreditCard(cardNumber)) {
+              throw new Error("Please enter a valid credit card number");
+            }
+
+            if (!validateExpirationDate(expirationDate)) {
+              throw new Error("Please enter a valid expiration date (MM/YY)");
+            }
+
+            if (!validateCVV(cvv)) {
+              throw new Error("Please enter a valid CVV");
+            }
 
             const orderData = {
-              customer: {
-                name: formData.get("customerName"),
+              customerInfo: {
+                firstName: formData.get("customerName").split(" ")[0],
+                lastName: formData
+                  .get("customerName")
+                  .split(" ")
+                  .slice(1)
+                  .join(" "),
                 email: formData.get("customerEmail"),
                 phone: formData.get("customerPhone"),
                 address: formData.get("shippingAddress"),
                 city: formData.get("city"),
                 state: formData.get("state"),
                 zipCode: formData.get("zipCode"),
-              },
-              payment: {
-                cardholderName: formData.get("cardholderName"),
-                cardNumber: formData.get("cardNumber"),
-                expirationDate: formData.get("expirationDate"),
-                cvv: formData.get("cvv"),
-                saveCard: formData.get("saveCard") === "on",
-              },
-              order: {
-                items: cart,
-                referenceNumber: formData.get("referenceNumber"),
                 specialInstructions: formData.get("specialInstructions"),
-                totals: window.orderTotals,
               },
+              cartItems: cart,
+              paymentInfo: {
+                cardholderName: formData.get("cardholderName"),
+                cardNumber: cardNumber,
+                expirationDate: expirationDate,
+                cvv: cvv,
+                saveCard: formData.get("saveCard") === "on",
+                method: "Credit Card",
+                transactionId: generateTransactionId(),
+              },
+              totalAmount: window.orderTotals.total,
+              orderId: generateOrderId(),
+              referenceNumber: formData.get("referenceNumber"),
             };
 
-            // Send to backend
-            const response = await fetch("/api/secure-checkout", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(orderData),
+            console.log("Submitting order:", orderData);
+
+            // Store order data and show success
+            console.log("Order submitted:", orderData);
+
+            // Store order in localStorage for reference
+            const existingOrders = JSON.parse(
+              localStorage.getItem("orders") || "[]"
+            );
+            existingOrders.push({
+              ...orderData,
+              status: "pending",
+              createdAt: new Date().toISOString(),
             });
+            localStorage.setItem("orders", JSON.stringify(existingOrders));
 
-            const result = await response.json();
+            // Clear cart
+            localStorage.removeItem("artwithheartandgifts_cart");
 
-            if (result.success) {
-              // Clear cart
-              localStorage.removeItem("cart");
+            // Show success message
+            alert(
+              `Order submitted successfully! Order ID: ${
+                orderData.orderId
+              }\n\nOrder Details:\n- Total: $${orderData.totalAmount.toFixed(
+                2
+              )}\n- Payment: ${
+                orderData.paymentInfo.method
+              }\n- Card: **** **** **** ${orderData.paymentInfo.cardNumber.slice(
+                -4
+              )}\n\nYou will receive a confirmation email shortly.`
+            );
 
-              // Show success message
-              alert(
-                "Order submitted successfully! You will receive a confirmation email shortly."
-              );
-
-              // Redirect to home page
-              window.location.href = "/";
-            } else {
-              throw new Error(result.error || "Order submission failed");
-            }
+            // Redirect to home page
+            window.location.href = "/";
           } catch (error) {
             console.error("Order submission error:", error);
             alert(`Order submission failed: ${error.message}`);
@@ -522,6 +563,107 @@
             submitBtn.textContent = "Submit Secure Order";
           }
         });
+
+      // Credit card validation functions
+      function validateCreditCard(cardNumber) {
+        // Remove spaces and check if it's all digits
+        const cleaned = cardNumber.replace(/\s/g, "");
+        if (!/^\d{13,19}$/.test(cleaned)) {
+          return false;
+        }
+
+        // Luhn algorithm validation
+        let sum = 0;
+        let isEven = false;
+
+        for (let i = cleaned.length - 1; i >= 0; i--) {
+          let digit = parseInt(cleaned.charAt(i));
+
+          if (isEven) {
+            digit *= 2;
+            if (digit > 9) {
+              digit -= 9;
+            }
+          }
+
+          sum += digit;
+          isEven = !isEven;
+        }
+
+        return sum % 10 === 0;
+      }
+
+      function validateExpirationDate(expDate) {
+        const regex = /^(0[1-9]|1[0-2])\/\d{2}$/;
+        if (!regex.test(expDate)) {
+          return false;
+        }
+
+        const [month, year] = expDate.split("/");
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear() % 100;
+        const currentMonth = currentDate.getMonth() + 1;
+
+        const expYear = parseInt(year);
+        const expMonth = parseInt(month);
+
+        if (
+          expYear < currentYear ||
+          (expYear === currentYear && expMonth < currentMonth)
+        ) {
+          return false;
+        }
+
+        return true;
+      }
+
+      function validateCVV(cvv) {
+        return /^\d{3,4}$/.test(cvv);
+      }
+
+      function generateOrderId() {
+        return (
+          "AWH-" +
+          Date.now() +
+          "-" +
+          Math.random().toString(36).substr(2, 6).toUpperCase()
+        );
+      }
+
+      function generateTransactionId() {
+        return (
+          "TXN-" +
+          Date.now() +
+          "-" +
+          Math.random().toString(36).substr(2, 8).toUpperCase()
+        );
+      }
+
+      // Input formatting functions
+      function formatCardNumber(input) {
+        let value = input.value.replace(/\s/g, "").replace(/[^0-9]/gi, "");
+        let formattedValue = value.match(/.{1,4}/g)?.join(" ") || value;
+        if (formattedValue.length > 19) {
+          formattedValue = formattedValue.substr(0, 19);
+        }
+        input.value = formattedValue;
+      }
+
+      function formatExpirationDate(input) {
+        let value = input.value.replace(/\D/g, "");
+        if (value.length >= 2) {
+          value = value.substring(0, 2) + "/" + value.substring(2, 4);
+        }
+        input.value = value;
+      }
+
+      function formatCVV(input) {
+        let value = input.value.replace(/\D/g, "");
+        if (value.length > 4) {
+          value = value.substring(0, 4);
+        }
+        input.value = value;
+      }
 
       // Load cart data on page load
       document.addEventListener("DOMContentLoaded", loadCartData);

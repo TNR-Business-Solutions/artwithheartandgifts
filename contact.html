@@ -258,6 +258,67 @@
       <p class="legal">© <span id="year"></span> Art with Heart and Gifts.</p>
     </footer>
     <script type="module" src="/src/js/app.js"></script>
+
+    <script>
+      // Contact form submission
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("contactForm");
+        if (form) {
+          form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const submitBtn = form.querySelector(".submit-btn");
+            const originalText = submitBtn.innerHTML;
+
+            try {
+              // Show loading state
+              submitBtn.innerHTML = "<span>Sending...</span>";
+              submitBtn.disabled = true;
+
+              // Collect form data
+              const formData = new FormData(form);
+              const data = {
+                name: formData.get("name"),
+                email: formData.get("email"),
+                phone: formData.get("phone"),
+                subject: formData.get("subject"),
+                message: formData.get("message"),
+              };
+
+              // Send to API
+              const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+              });
+
+              const result = await response.json();
+
+              if (response.ok) {
+                // Success
+                alert(
+                  "Message sent successfully! We'll get back to you within 24 hours."
+                );
+                form.reset();
+              } else {
+                // Error
+                alert("Error: " + (result.error || "Failed to send message"));
+              }
+            } catch (error) {
+              console.error("Contact form error:", error);
+              alert("Error: Failed to send message. Please try again later.");
+            } finally {
+              // Reset button
+              submitBtn.innerHTML = originalText;
+              submitBtn.disabled = false;
+            }
+          });
+        }
+      });
+    </script>
+
     <script>
       // Handle payment inquiries
       document.addEventListener("DOMContentLoaded", function () {

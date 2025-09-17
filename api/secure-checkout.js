@@ -2,12 +2,15 @@ import nodemailer from "nodemailer";
 import { v4 as uuidv4 } from "uuid";
 
 export default async function handler(req, res) {
+  // Set CORS headers for all responses
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Content-Type", "application/json");
+
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    return res.status(200).end();
+    return res.status(200).json({ message: "CORS preflight successful" });
   }
 
   // Only allow POST requests
@@ -19,15 +22,28 @@ export default async function handler(req, res) {
     const {
       customerInfo,
       cartItems,
-      paymentMethod,
+      paymentInfo,
       totalAmount,
+      orderId,
       referenceNumber,
     } = req.body;
 
     // Validate required fields
-    if (!customerInfo || !cartItems || !totalAmount) {
+    if (!customerInfo || !cartItems || !totalAmount || !paymentInfo) {
       return res.status(400).json({
         error: "Missing required checkout information",
+      });
+    }
+
+    // Validate payment information
+    if (
+      !paymentInfo.cardholderName ||
+      !paymentInfo.cardNumber ||
+      !paymentInfo.expirationDate ||
+      !paymentInfo.cvv
+    ) {
+      return res.status(400).json({
+        error: "Missing required payment information",
       });
     }
 
@@ -124,8 +140,14 @@ export default async function handler(req, res) {
         
         <h3>Payment Information</h3>
         <p><strong>Payment Method:</strong> ${
-          paymentMethod || "Credit Card"
+          paymentInfo.method || "Credit Card"
         }</p>
+        <p><strong>Cardholder Name:</strong> ${paymentInfo.cardholderName}</p>
+        <p><strong>Card Number:</strong> **** **** **** ${paymentInfo.cardNumber.slice(
+          -4
+        )}</p>
+        <p><strong>Expiration:</strong> ${paymentInfo.expirationDate}</p>
+        <p><strong>Transaction ID:</strong> ${paymentInfo.transactionId}</p>
         <p><strong>Status:</strong> Pending Confirmation</p>
         
         ${
@@ -193,13 +215,18 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       success: true,
-      orderId: orderNumber,
+      orderId: orderId || orderNumber,
       message: "Order processed successfully!",
+      paymentStatus: "pending",
+      transactionId: paymentInfo.transactionId,
     });
   } catch (error) {
     console.error("Secure checkout error:", error);
     return res.status(500).json({
+      success: false,
       error: "Failed to process order. Please try again later.",
+      details:
+        process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 }

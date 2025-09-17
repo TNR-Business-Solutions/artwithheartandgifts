@@ -29,7 +29,7 @@ export const galleryItems = [
   {
     "id": "basement1",
     "title": "basement1",
-    "image": "/images/basement1.jpg",
+    "image": "/images/charmin-55.jpg",
     "alt": "basement1 painting",
     "size": "",
     "type": "original",
@@ -38,7 +38,7 @@ export const galleryItems = [
   {
     "id": "basement10",
     "title": "basement10",
-    "image": "/images/basement10.jpg",
+    "image": "/images/charmin-74.jpg",
     "alt": "basement10 painting",
     "size": "",
     "type": "original",
@@ -47,7 +47,7 @@ export const galleryItems = [
   {
     "id": "basement11",
     "title": "basement11",
-    "image": "/images/basement11.jpg",
+    "image": "/images/charmin-75.jpg",
     "alt": "basement11 painting",
     "size": "",
     "type": "original",
@@ -56,7 +56,7 @@ export const galleryItems = [
   {
     "id": "basement12",
     "title": "basement12",
-    "image": "/images/basement12.jpg",
+    "image": "/images/charmin-76.jpg",
     "alt": "basement12 painting",
     "size": "",
     "type": "original",
@@ -65,7 +65,7 @@ export const galleryItems = [
   {
     "id": "basement13",
     "title": "basement13",
-    "image": "/images/basement13.jpg",
+    "image": "/images/charmin-77.jpg",
     "alt": "basement13 painting",
     "size": "",
     "type": "original",
@@ -74,7 +74,7 @@ export const galleryItems = [
   {
     "id": "basement14",
     "title": "basement14",
-    "image": "/images/basement14.jpg",
+    "image": "/images/charmin-79.jpg",
     "alt": "basement14 painting",
     "size": "",
     "type": "original",
@@ -83,7 +83,7 @@ export const galleryItems = [
   {
     "id": "basement15",
     "title": "basement15",
-    "image": "/images/basement15.jpg",
+    "image": "/images/charmin-80.jpg",
     "alt": "basement15 painting",
     "size": "",
     "type": "original",
@@ -92,7 +92,7 @@ export const galleryItems = [
   {
     "id": "basement16",
     "title": "basement16",
-    "image": "/images/basement16.jpg",
+    "image": "/images/charmin-81.jpg",
     "alt": "basement16 painting",
     "size": "",
     "type": "original",
@@ -101,7 +101,7 @@ export const galleryItems = [
   {
     "id": "basement17",
     "title": "basement17",
-    "image": "/images/basement17.jpg",
+    "image": "/images/charmin-82.jpg",
     "alt": "basement17 painting",
     "size": "",
     "type": "original",
@@ -110,7 +110,7 @@ export const galleryItems = [
   {
     "id": "basement18",
     "title": "basement18",
-    "image": "/images/basement18.jpg",
+    "image": "/images/charmin-83.jpg",
     "alt": "basement18 painting",
     "size": "",
     "type": "original",
@@ -119,7 +119,7 @@ export const galleryItems = [
   {
     "id": "basement19",
     "title": "basement19",
-    "image": "/images/basement19.jpg",
+    "image": "/images/charmin-84.jpg",
     "alt": "basement19 painting",
     "size": "",
     "type": "original",
@@ -155,7 +155,7 @@ export const galleryItems = [
   {
     "id": "basement5",
     "title": "basement5",
-    "image": "/images/basement5.jpg",
+    "image": "/images/charmin-60.jpg",
     "alt": "basement5 painting",
     "size": "",
     "type": "original",
@@ -254,7 +254,7 @@ export const galleryItems = [
   {
     "id": "canvas",
     "title": "canvas",
-    "image": "/images/canvas.jpg",
+    "image": "/images/charmin-85.jpg",
     "alt": "canvas painting",
     "size": "",
     "type": "original",
@@ -1037,7 +1037,7 @@ export const galleryItems = [
   {
     "id": "charminandherpuppies",
     "title": "Charminandherpuppies",
-    "image": "/images/Charminandherpuppies.jpg",
+    "image": "/images/charmin-86.jpg",
     "alt": "Charminandherpuppies painting",
     "size": "",
     "type": "original",
@@ -1046,7 +1046,7 @@ export const galleryItems = [
   {
     "id": "charmintimwedding",
     "title": "charmintimwedding",
-    "image": "/images/charmintimwedding.jpg",
+    "image": "/images/charmin-87.jpg",
     "alt": "charmintimwedding painting",
     "size": "",
     "type": "original",
@@ -1055,18 +1055,9 @@ export const galleryItems = [
   {
     "id": "charminwpaintings",
     "title": "Charminwpaintings",
-    "image": "/images/Charminwpaintings.jpg",
+    "image": "/images/charmin-88.jpg",
     "alt": "Charminwpaintings painting",
     "size": "",
-    "type": "original",
-    "category": "Gallery"
-  },
-  {
-    "id": "corey-s-turtle-prints-only-10-00",
-    "title": "Corey's Turtle Prints only 10.00",
-    "image": "/images/10. Corey's Turtle Prints only 10.00 8in x 10in.jpg",
-    "alt": "Corey's Turtle Prints only 10.00 painting",
-    "size": "8x10",
     "type": "original",
     "category": "Gallery"
   },
@@ -1082,7 +1073,7 @@ export const galleryItems = [
   {
     "id": "funinthebasement",
     "title": "funinthebasement",
-    "image": "/images/funinthebasement.jpg",
+    "image": "/images/charmin-29.jpg",
     "alt": "funinthebasement painting",
     "size": "",
     "type": "original",
@@ -1271,7 +1262,7 @@ export const galleryItems = [
   {
     "id": "workspace1",
     "title": "workspace1",
-    "image": "/images/workspace1.jpg",
+    "image": "/images/charmin-89.jpg",
     "alt": "workspace1 painting",
     "size": "",
     "type": "original",
@@ -1280,7 +1271,7 @@ export const galleryItems = [
   {
     "id": "workspace2",
     "title": "workspace2",
-    "image": "/images/workspace2.jpg",
+    "image": "/images/charmin-90.jpg",
     "alt": "workspace2 painting",
     "size": "",
     "type": "original",
@@ -1289,7 +1280,7 @@ export const galleryItems = [
   {
     "id": "workspace3",
     "title": "workspace3",
-    "image": "/images/workspace3.jpg",
+    "image": "/images/charmin-92.jpg",
     "alt": "workspace3 painting",
     "size": "",
     "type": "original",
@@ -1298,7 +1289,7 @@ export const galleryItems = [
   {
     "id": "workspace4",
     "title": "workspace4",
-    "image": "/images/workspace4.jpg",
+    "image": "/images/charmin-93.jpg",
     "alt": "workspace4 painting",
     "size": "",
     "type": "original",
@@ -1307,7 +1298,7 @@ export const galleryItems = [
   {
     "id": "workspace5",
     "title": "workspace5",
-    "image": "/images/workspace5.jpg",
+    "image": "/images/charmin-95.jpg",
     "alt": "workspace5 painting",
     "size": "",
     "type": "original",
@@ -1316,7 +1307,7 @@ export const galleryItems = [
   {
     "id": "workspace6",
     "title": "workspace6",
-    "image": "/images/workspace6.jpg",
+    "image": "/images/charmin-96.jpg",
     "alt": "workspace6 painting",
     "size": "",
     "type": "original",
@@ -1325,7 +1316,7 @@ export const galleryItems = [
   {
     "id": "workspace7",
     "title": "workspace7",
-    "image": "/images/workspace7.jpg",
+    "image": "/images/charmin-97.jpg",
     "alt": "workspace7 painting",
     "size": "",
     "type": "original",
@@ -1334,7 +1325,7 @@ export const galleryItems = [
   {
     "id": "workspace8",
     "title": "workspace8",
-    "image": "/images/workspace8.jpg",
+    "image": "/images/charmin-98.jpg",
     "alt": "workspace8 painting",
     "size": "",
     "type": "original",

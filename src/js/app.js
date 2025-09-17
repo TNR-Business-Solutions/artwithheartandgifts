@@ -383,26 +383,19 @@ function addToCartAndCheckout(productId, productTitle, productPrice) {
 async function initGallery() {
   if (document.body.dataset.page !== "gallery") return;
   const grid = document.getElementById("galleryGrid");
-  // Build gallery from both authored galleryData and any runtime product feed.
-  const products = await loadProducts();
-  // Use only the clean product data from data.json and data-story.json
-  let gallerySeed = [];
 
-  // Use the clean product data directly - include all items for gallery display
-  // Filter to show gallery items (price 0) and other items that should be in gallery
-  let listAll = products.filter((p) => {
-    // Include gallery items (price 0)
-    if (p.price === 0) return true;
+  // Load gallery data directly from data-gallery.json
+  let galleryData = [];
+  try {
+    const response = await fetch("/data-gallery.json");
+    galleryData = await response.json();
+  } catch (error) {
+    console.error("Error loading gallery data:", error);
+    return;
+  }
 
-    // Include items with type "gallery"
-    if (p.type === "gallery") return true;
-
-    // Include items with "Charmin's Artwork" in title (these are gallery items)
-    if (p.title && p.title.includes("Charmin's Artwork")) return true;
-
-    // Include other items that might be gallery-worthy (you can adjust this logic)
-    return false;
-  });
+  // Use all gallery items
+  let listAll = galleryData;
 
   // Check for collection filter in URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -415,18 +408,61 @@ async function initGallery() {
       const collections = await collectionsResponse.json();
       const collection = collections.find((c) => c.id === collectionId);
 
-      if (collection && collection.galleryItems) {
-        // Use collection gallery items directly instead of filtering products
-        listAll = collection.galleryItems.map((item) => ({
-          id: item.id,
-          title: item.title,
-          image: item.image,
-          alt: item.alt,
-          price: 0, // Studio life items are not for sale
-          size: "Various",
-          type: "gallery",
-          category: "Gallery",
-        }));
+      if (collection) {
+        // Filter products by collection theme and category
+        const theme = collection.theme;
+        listAll = listAll.filter((p) => {
+          // Filter by category
+          if (
+            p.category &&
+            p.category.toLowerCase().includes(theme.toLowerCase())
+          ) {
+            return true;
+          }
+          // Filter by collection field if it exists
+          if (p.collection && p.collection.includes(collectionId)) {
+            return true;
+          }
+          // Special handling for specific collections
+          if (
+            collectionId === "healing-journey" &&
+            (p.category === "healing" || p.collection === "healing-journey")
+          ) {
+            return true;
+          }
+          if (
+            collectionId === "workspace-collection" &&
+            (p.collection === "workspace-collection" ||
+              p.title.includes("workspace"))
+          ) {
+            return true;
+          }
+          if (
+            collectionId === "family-moments" &&
+            (p.category === "family" ||
+              p.collection === "family-moments" ||
+              p.title.includes("charmin"))
+          ) {
+            return true;
+          }
+          if (
+            collectionId === "nature-inspired" &&
+            (p.category === "nature" || p.collection === "florida-inspirations")
+          ) {
+            return true;
+          }
+          if (
+            collectionId === "abstract-expressions" &&
+            (p.category === "abstract" ||
+              p.collection === "abstract-expressions")
+          ) {
+            return true;
+          }
+          if (collectionId === "featured-collection" && p.featured === true) {
+            return true;
+          }
+          return false;
+        });
 
         // Update page title to show collection name
         document.title = `${collection.title} Collection – Art with Heart & Gifts`;

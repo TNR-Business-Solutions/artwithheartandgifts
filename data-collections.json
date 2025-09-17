@@ -1,0 +1,57 @@
+[
+  {
+    "id": "featured-collection",
+    "title": "Featured Collection",
+    "description": "Our most popular and beloved artworks, carefully selected to showcase the best of our artistic journey.",
+    "image": "/images/angels-set-of-3.jpg",
+    "galleryCount": 8,
+    "theme": "Featured",
+    "featured": true
+  },
+  {
+    "id": "healing-journey",
+    "title": "Healing Journey",
+    "description": "A deeply personal collection that tells the story of resilience, hope, and the transformative power of art.",
+    "image": "/images/charmin-20.jpg",
+    "galleryCount": 12,
+    "theme": "Healing",
+    "featured": true
+  },
+  {
+    "id": "workspace-collection",
+    "title": "Artist's Workspace",
+    "description": "Behind-the-scenes glimpses into the creative process, showing the artist at work in their studio.",
+    "image": "/images/charmin-21.jpg",
+    "galleryCount": 8,
+    "theme": "Studio",
+    "featured": false
+  },
+  {
+    "id": "family-moments",
+    "title": "Family Moments",
+    "description": "Intimate portraits and candid moments capturing the warmth and love of family connections.",
+    "image": "/images/charmin-22.jpg",
+    "galleryCount": 15,
+    "theme": "Family",
+    "featured": false
+  },
+  {
+    "id": "nature-inspired",
+    "title": "Nature Inspired",
+    "description": "Artworks that celebrate the beauty of the natural world, from serene landscapes to vibrant wildlife.",
+    "image": "/images/lighthouse-big-red.jpg",
+    "galleryCount": 10,
+    "theme": "Nature",
+    "featured": true
+  },
+  {
+    "id": "abstract-expressions",
+    "title": "Abstract Expressions",
+    "description": "Bold, contemporary pieces that explore color, form, and emotion through abstract artistic expression.",
+    "image": "/images/blue-sparkel.jpg",
+    "galleryCount": 6,
+    "theme": "Abstract",
+    "featured": false
+  }
+]
+

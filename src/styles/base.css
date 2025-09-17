@@ -2784,17 +2784,18 @@ body[data-page="gallery"] .product-card .meta {
 
 .basement-slideshow-container {
   position: relative;
-  max-width: 700px; /* Decreased from 1000px for better quality */
+  max-width: 900px; /* Increased for better visibility */
   margin: 0 auto 2rem;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  background: #f8f9fa;
 }
 
 .basement-slideshow {
   position: relative;
   width: 100%;
-  height: 450px; /* Decreased from 600px for better quality */
+  height: 600px; /* Increased for better visibility */
   overflow: hidden;
 }
 
@@ -2916,7 +2917,7 @@ body[data-page="gallery"] .product-card .meta {
   }
 
   .basement-slideshow {
-    height: 300px; /* Decreased from 400px for better mobile quality */
+    height: 400px; /* Increased for better mobile visibility */
   }
 
   .slideshow-btn {
