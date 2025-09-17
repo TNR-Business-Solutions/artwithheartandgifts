@@ -1,14 +1,12 @@
-import cors from "cors";
 import nodemailer from "nodemailer";
 
-// Initialize CORS middleware
-const corsHandler = cors({
-  origin: "*",
-  methods: ["POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type"],
-});
-
 export default async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Content-Type", "application/json");
+
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return res.status(200).end();
@@ -125,8 +123,11 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error("Commission form error:", error);
+    console.error("Error details:", error.message);
+    console.error("Error stack:", error.stack);
     return res.status(500).json({
       error: "Failed to submit commission request. Please try again later.",
+      details: process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
 }
