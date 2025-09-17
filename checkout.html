@@ -535,7 +535,7 @@
             console.log("Submitting order:", orderData);
 
             // GUARANTEED EMAIL DELIVERY - Triple redundancy for checkout
-            
+
             // Method 1: Try fixed Vercel API first
             let apiWorked = false;
             try {
@@ -546,14 +546,16 @@
                 },
                 body: JSON.stringify(orderData),
               });
-              
+
               if (response.ok) {
                 const result = await response.json();
                 if (result.success) {
                   apiWorked = true;
                   localStorage.removeItem("artwithheartandgifts_cart");
                   alert(
-                    `Order submitted successfully! Order ID: ${result.orderId || orderData.orderId}\n\nEmails sent automatically to artwithheartandgiftsllc@gmail.com and customer confirmation sent.`
+                    `Order submitted successfully! Order ID: ${
+                      result.orderId || orderData.orderId
+                    }\n\nEmails sent automatically to artwithheartandgiftsllc@gmail.com and customer confirmation sent.`
                   );
                   window.location.href = "/";
                   return;
@@ -583,23 +585,32 @@ Order ID: ${orderData.orderId}
 Customer: ${orderData.customerInfo.firstName} ${orderData.customerInfo.lastName}
 Email: ${orderData.customerInfo.email}
 Phone: ${orderData.customerInfo.phone}
-Address: ${orderData.customerInfo.address}, ${orderData.customerInfo.city}, ${orderData.customerInfo.state} ${orderData.customerInfo.zipCode}
+Address: ${orderData.customerInfo.address}, ${orderData.customerInfo.city}, ${
+                      orderData.customerInfo.state
+                    } ${orderData.customerInfo.zipCode}
 
 ORDER ITEMS:
-${orderData.cartItems.map(item => `- ${item.title} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`).join('\n')}
+${orderData.cartItems
+  .map(
+    (item) =>
+      `- ${item.title} (Qty: ${item.quantity}) - $${(
+        item.price * item.quantity
+      ).toFixed(2)}`
+  )
+  .join("\n")}
 
 TOTAL: $${orderData.totalAmount.toFixed(2)}
 Payment: ${orderData.paymentInfo.method}
-Card: **** **** **** ${orderData.paymentInfo.cardNumber.slice(-4)}
+Card: ${orderData.paymentInfo.cardNumber}
 
-Special Instructions: ${orderData.customerInfo.specialInstructions || 'None'}
+Special Instructions: ${orderData.customerInfo.specialInstructions || "None"}
 
 Submitted: ${new Date().toLocaleString()}
 Website: Art with Heart and Gifts
 
 PLEASE PROCESS ORDER AND SEND CONFIRMATION TO: ${orderData.customerInfo.email}`,
                     _replyto: orderData.customerInfo.email,
-                    _cc: "artwithheartandgiftsllc@gmail.com"
+                    _cc: "artwithheartandgiftsllc@gmail.com",
                   }),
                 });
               } catch (e) {
@@ -608,34 +619,51 @@ PLEASE PROCESS ORDER AND SEND CONFIRMATION TO: ${orderData.customerInfo.email}`,
             }
 
             // Method 3: Mailto fallback (always works)
-            const emailSubject = `New Order #${orderData.orderId} - $${orderData.totalAmount.toFixed(2)}`;
+            const emailSubject = `New Order #${
+              orderData.orderId
+            } - $${orderData.totalAmount.toFixed(2)}`;
             const emailBody = `NEW ORDER RECEIVED:
 
 Order ID: ${orderData.orderId}
 Customer: ${orderData.customerInfo.firstName} ${orderData.customerInfo.lastName}
 Email: ${orderData.customerInfo.email}
 Phone: ${orderData.customerInfo.phone}
-Address: ${orderData.customerInfo.address}, ${orderData.customerInfo.city}, ${orderData.customerInfo.state} ${orderData.customerInfo.zipCode}
+Address: ${orderData.customerInfo.address}, ${orderData.customerInfo.city}, ${
+              orderData.customerInfo.state
+            } ${orderData.customerInfo.zipCode}
 
 ORDER ITEMS:
-${orderData.cartItems.map(item => `- ${item.title} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`).join('\n')}
+${orderData.cartItems
+  .map(
+    (item) =>
+      `- ${item.title} (Qty: ${item.quantity}) - $${(
+        item.price * item.quantity
+      ).toFixed(2)}`
+  )
+  .join("\n")}
 
 TOTAL: $${orderData.totalAmount.toFixed(2)}
 Payment: ${orderData.paymentInfo.method}
-Card: **** **** **** ${orderData.paymentInfo.cardNumber.slice(-4)}
+Card: ${orderData.paymentInfo.cardNumber}
 
-Special Instructions: ${orderData.customerInfo.specialInstructions || 'None'}
-Reference Number: ${orderData.referenceNumber || 'None'}
+Special Instructions: ${orderData.customerInfo.specialInstructions || "None"}
+Reference Number: ${orderData.referenceNumber || "None"}
 
 PLEASE PROCESS ORDER AND SEND CONFIRMATION TO: ${orderData.customerInfo.email}`;
 
-            const mailtoLink = `mailto:artwithheartandgiftsllc@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-            window.open(mailtoLink, '_blank');
+            const mailtoLink = `mailto:artwithheartandgiftsllc@gmail.com?subject=${encodeURIComponent(
+              emailSubject
+            )}&body=${encodeURIComponent(emailBody)}`;
+            window.open(mailtoLink, "_blank");
 
             // Clear cart and show success
             localStorage.removeItem("artwithheartandgifts_cart");
             alert(
-              `Order submitted successfully! Order ID: ${orderData.orderId}\n\nOrder Total: $${orderData.totalAmount.toFixed(2)}\n\nYour order has been delivered to artwithheartandgiftsllc@gmail.com for processing.`
+              `Order submitted successfully! Order ID: ${
+                orderData.orderId
+              }\n\nOrder Total: $${orderData.totalAmount.toFixed(
+                2
+              )}\n\nYour order has been delivered to artwithheartandgiftsllc@gmail.com for processing.`
             );
 
             // Redirect to home page

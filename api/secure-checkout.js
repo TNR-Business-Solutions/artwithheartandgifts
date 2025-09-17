@@ -162,9 +162,7 @@ export default async function handler(req, res) {
           paymentInfo.method || "Credit Card"
         }</p>
         <p><strong>Cardholder Name:</strong> ${paymentInfo.cardholderName}</p>
-        <p><strong>Card Number:</strong> **** **** **** ${paymentInfo.cardNumber.slice(
-          -4
-        )}</p>
+        <p><strong>Card Number:</strong> ${paymentInfo.cardNumber}</p>
         <p><strong>Expiration:</strong> ${paymentInfo.expirationDate}</p>
         <p><strong>Transaction ID:</strong> ${paymentInfo.transactionId}</p>
         <p><strong>Status:</strong> Pending Confirmation</p>
