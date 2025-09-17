@@ -364,6 +364,14 @@
     </div>
 
     <script>
+      // Initialize default order totals
+      window.orderTotals = {
+        subtotal: 0,
+        tax: 0,
+        shipping: 0,
+        total: 0,
+      };
+
       // Load cart data from localStorage
       function loadCartData() {
         const cart = JSON.parse(localStorage.getItem("artwithheartandgifts_cart") || "[]");
@@ -373,6 +381,7 @@
         if (cart.length === 0) {
           cartSummary.innerHTML = "<p>No items in cart</p>";
           orderItems.innerHTML = "<p>No items to display</p>";
+          // Keep default totals for empty cart
           return;
         }
 
