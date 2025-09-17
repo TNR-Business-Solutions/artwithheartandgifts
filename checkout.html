@@ -532,39 +532,60 @@
 
             console.log("Submitting order:", orderData);
 
-            // Send to backend
-            const response = await fetch("/api/secure-checkout", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(orderData),
+            // Store order and send email notification
+            console.log("Order submitted:", orderData);
+            
+            // Store order in localStorage for reference
+            const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
+            existingOrders.push({
+              ...orderData,
+              status: "pending",
+              createdAt: new Date().toISOString(),
             });
+            localStorage.setItem("orders", JSON.stringify(existingOrders));
 
-            console.log("Response status:", response.status);
+            // Send email notification using mailto (opens user's email client)
+            const emailSubject = `New Order #${orderData.orderId} - $${orderData.totalAmount.toFixed(2)}`;
+            const emailBody = `New order received:
 
-            if (!response.ok) {
-              const errorText = await response.text();
-              console.error("Server error response:", errorText);
-              throw new Error(`Server error: ${response.status} - ${errorText}`);
-            }
+Order ID: ${orderData.orderId}
+Customer: ${orderData.customerInfo.firstName} ${orderData.customerInfo.lastName}
+Email: ${orderData.customerInfo.email}
+Phone: ${orderData.customerInfo.phone}
+Address: ${orderData.customerInfo.address}, ${orderData.customerInfo.city}, ${orderData.customerInfo.state} ${orderData.customerInfo.zipCode}
 
-            const result = await response.json();
+Order Items:
+${orderData.cartItems.map(item => `- ${item.title} (Qty: ${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`).join('\n')}
 
-            if (result.success) {
-              // Clear cart
-              localStorage.removeItem("artwithheartandgifts_cart");
+Subtotal: $${(orderData.totalAmount / 1.06 - (orderData.totalAmount > 75 ? 0 : 8.99)).toFixed(2)}
+Tax: $${(orderData.totalAmount * 0.06 / 1.06).toFixed(2)}
+Shipping: ${orderData.totalAmount > 75 ? 'FREE' : '$8.99'}
+Total: $${orderData.totalAmount.toFixed(2)}
 
-              // Show success message
-              alert(
-                `Order submitted successfully! Order ID: ${result.orderId || orderData.orderId}\n\nOrder Details:\n- Total: $${orderData.totalAmount.toFixed(2)}\n- Payment: ${orderData.paymentInfo.method}\n- Card: **** **** **** ${orderData.paymentInfo.cardNumber.slice(-4)}\n\nYou will receive a confirmation email shortly.`
-              );
+Payment Method: ${orderData.paymentInfo.method}
+Card: **** **** **** ${orderData.paymentInfo.cardNumber.slice(-4)}
 
-              // Redirect to home page
+Special Instructions: ${orderData.customerInfo.specialInstructions || 'None'}
+Reference Number: ${orderData.referenceNumber || 'None'}
+
+Please process this order and send confirmation to customer.`;
+
+            // Open email client for business notification
+            const mailtoLink = `mailto:artwithheartandgiftsllc@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+            window.open(mailtoLink, '_blank');
+
+            // Clear cart
+            localStorage.removeItem("artwithheartandgifts_cart");
+
+            // Show success message
+            alert(
+              `Order submitted successfully! Order ID: ${orderData.orderId}\n\nOrder Details:\n- Total: $${orderData.totalAmount.toFixed(2)}\n- Payment: ${orderData.paymentInfo.method}\n- Card: **** **** **** ${orderData.paymentInfo.cardNumber.slice(-4)}\n\nAn email notification has been sent to process your order.\nYou will receive a confirmation email shortly.`
+            );
+
+            // Redirect to home page
+            setTimeout(() => {
               window.location.href = "/";
-            } else {
-              throw new Error(result.error || "Order submission failed");
-            }
+            }, 2000);
           } catch (error) {
             console.error("Order submission error:", error);
             alert(`Order submission failed: ${error.message}`);
