@@ -308,41 +308,42 @@
                 console.log("API method failed, using backup");
               }
 
-              // Method 2: Formspree backup (guaranteed delivery)
+              // Method 2: Direct email via hidden form submission
               if (!apiWorked) {
                 try {
-                  // Use working Formspree endpoint  
-                  const formData = new FormData();
-                  formData.append('name', data.name);
-                  formData.append('email', data.email);
-                  formData.append('phone', data.phone || '');
-                  formData.append('subject', data.subject || 'Contact Form');
-                  formData.append('message', `Contact Form from Art with Heart & Gifts:
-
-Name: ${data.name}
-Email: ${data.email}
-Phone: ${data.phone || 'Not provided'}
-Subject: ${data.subject || 'No subject'}
-
-Message:
-${data.message}
-
-Please respond to: ${data.email}
-Submitted: ${new Date().toLocaleString()}`);
-
-                  const response = await fetch("https://formspree.io/f/mwpkgdqr", {
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                      "Accept": "application/json"
-                    }
+                  // Create and submit a form directly to your email
+                  const hiddenForm = document.createElement('form');
+                  hiddenForm.method = 'POST';
+                  hiddenForm.action = 'https://formsubmit.co/artwithheartandgiftsllc@gmail.com';
+                  hiddenForm.style.display = 'none';
+                  
+                  // Add form fields
+                  const fields = {
+                    '_subject': `Contact Form: ${data.subject || 'New Message'}`,
+                    '_next': window.location.href,
+                    '_captcha': 'false',
+                    'name': data.name,
+                    'email': data.email,
+                    'phone': data.phone || '',
+                    'subject': data.subject || '',
+                    'message': data.message
+                  };
+                  
+                  Object.keys(fields).forEach(key => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = fields[key];
+                    hiddenForm.appendChild(input);
                   });
                   
-                  if (response.ok) {
-                    console.log("Formspree backup sent successfully");
-                  }
+                  document.body.appendChild(hiddenForm);
+                  hiddenForm.submit();
+                  
+                  // Don't continue to mailto since form submission will redirect
+                  return;
                 } catch (e) {
-                  console.log("Formspree backup failed, using mailto");
+                  console.log("Form submission failed, using mailto");
                 }
               }
 
