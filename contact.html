@@ -311,36 +311,38 @@
               // Method 2: Formspree backup (guaranteed delivery)
               if (!apiWorked) {
                 try {
-                  await fetch("https://formspree.io/f/xpwaaabr", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      name: data.name,
-                      email: data.email,
-                      phone: data.phone,
-                      subject: data.subject,
-                      message: `CONTACT FORM SUBMISSION:
+                  // Use working Formspree endpoint  
+                  const formData = new FormData();
+                  formData.append('name', data.name);
+                  formData.append('email', data.email);
+                  formData.append('phone', data.phone || '');
+                  formData.append('subject', data.subject || 'Contact Form');
+                  formData.append('message', `Contact Form from Art with Heart & Gifts:
 
 Name: ${data.name}
 Email: ${data.email}
-Phone: ${data.phone || "Not provided"}
-Subject: ${data.subject || "No subject"}
+Phone: ${data.phone || 'Not provided'}
+Subject: ${data.subject || 'No subject'}
 
 Message:
 ${data.message}
 
-Submitted: ${new Date().toLocaleString()}
-Website: Art with Heart and Gifts
+Please respond to: ${data.email}
+Submitted: ${new Date().toLocaleString()}`);
 
-PLEASE RESPOND TO CUSTOMER AT: ${data.email}`,
-                      _replyto: data.email,
-                      _cc: "artwithheartandgiftsllc@gmail.com"
-                    }),
+                  const response = await fetch("https://formspree.io/f/mwpkgdqr", {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                      "Accept": "application/json"
+                    }
                   });
+                  
+                  if (response.ok) {
+                    console.log("Formspree backup sent successfully");
+                  }
                 } catch (e) {
-                  console.log("Formspree also failed, using mailto");
+                  console.log("Formspree backup failed, using mailto");
                 }
               }
 
