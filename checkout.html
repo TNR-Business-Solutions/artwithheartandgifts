@@ -484,7 +484,12 @@
             );
 
             // Validate credit card information
-            const cardNumber = formData.get("cardNumber").replace(/\s/g, "");
+            const cardNumberRaw = formData.get("cardNumber");
+            if (!cardNumberRaw || cardNumberRaw.trim() === "") {
+              throw new Error("Please enter a credit card number");
+            }
+            
+            const cardNumber = cardNumberRaw.replace(/\s/g, "");
             const expirationDate = formData.get("expirationDate");
             const cvv = formData.get("cvv");
 
@@ -493,12 +498,20 @@
               throw new Error("Please enter a valid credit card number");
             }
 
+            if (!expirationDate || expirationDate.trim() === "") {
+              throw new Error("Please enter an expiration date");
+            }
+            
             if (!validateExpirationDate(expirationDate)) {
               throw new Error("Please enter a valid expiration date (MM/YY)");
             }
 
+            if (!cvv || cvv.trim() === "") {
+              throw new Error("Please enter a CVV");
+            }
+            
             if (!validateCVV(cvv)) {
-              throw new Error("Please enter a valid CVV");
+              throw new Error("Please enter a valid CVV (3-4 digits)");
             }
 
             const orderData = {
@@ -681,6 +694,11 @@ PLEASE PROCESS ORDER AND SEND CONFIRMATION TO: ${orderData.customerInfo.email}`;
 
       // Credit card validation functions
       function validateCreditCard(cardNumber) {
+        // Handle null/undefined/empty cases
+        if (!cardNumber) {
+          return false;
+        }
+        
         // Remove spaces and check if it's all digits
         const cleaned = cardNumber.replace(/\s/g, "");
         if (!/^\d{13,19}$/.test(cleaned)) {
