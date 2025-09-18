@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mailto Test</title>
+  </head>
+  <body>
+    <h1>Test Mailto Links</h1>
+
+    <button onclick="testContactMailto()">Test Contact Mailto</button>
+    <button onclick="testCommissionMailto()">Test Commission Mailto</button>
+    <button onclick="testCheckoutMailto()">Test Checkout Mailto</button>
+
+    <script>
+      function testContactMailto() {
+        const emailSubject = "Contact Form: Test";
+        const emailBody = `CONTACT FORM SUBMISSION:
+
+Name: Test User
+Email: test@example.com
+Phone: 555-1234
+Subject: Test
+
+Message:
+This is a test message
+
+Submitted: ${new Date().toLocaleString()}
+
+PLEASE RESPOND TO: test@example.com`;
+
+        const mailtoLink = `mailto:artwithheartandgifts@yahoo.com?subject=${encodeURIComponent(
+          emailSubject
+        )}&body=${encodeURIComponent(emailBody)}`;
+        console.log("Contact mailto link:", mailtoLink);
+        window.open(mailtoLink, "_blank");
+      }
+
+      function testCommissionMailto() {
+        const emailSubject = "Commission Request: painting";
+        const emailBody = `COMMISSION REQUEST:
+
+Name: Test User
+Email: test@example.com
+Phone: 555-1234
+Project Type: painting
+Size: 12x16
+Budget: $500
+Timeline: 2 weeks
+Location: Test City
+
+Project Description:
+Test commission description
+
+Inspiration/References:
+Test inspiration
+
+Submitted: ${new Date().toLocaleString()}
+
+PLEASE CONTACT CUSTOMER AT: test@example.com`;
+
+        const mailtoLink = `mailto:artwithheartandgifts@yahoo.com?subject=${encodeURIComponent(
+          emailSubject
+        )}&body=${encodeURIComponent(emailBody)}`;
+        console.log("Commission mailto link:", mailtoLink);
+        window.open(mailtoLink, "_blank");
+      }
+
+      function testCheckoutMailto() {
+        const emailSubject = "New Order #TEST-123 - $42.39";
+        const emailBody = `NEW ORDER RECEIVED:
+
+Order ID: TEST-123
+Customer: Test User
+Email: test@example.com
+Phone: 555-1234
+Address: 123 Test St, Test City, TS 12345
+
+ORDER ITEMS:
+- Test Product (Qty: 1) - $40.00
+
+TOTAL: $42.39
+Payment: Credit Card
+Card: 4111111111111111
+
+Special Instructions: Test order
+Reference Number: TEST123
+
+PLEASE PROCESS ORDER AND SEND CONFIRMATION TO: test@example.com`;
+
+        const mailtoLink = `mailto:artwithheartandgifts@yahoo.com?subject=${encodeURIComponent(
+          emailSubject
+        )}&body=${encodeURIComponent(emailBody)}`;
+        console.log("Checkout mailto link:", mailtoLink);
+        window.open(mailtoLink, "_blank");
+      }
+    </script>
+  </body>
+</html>

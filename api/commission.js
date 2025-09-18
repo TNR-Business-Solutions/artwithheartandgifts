@@ -53,14 +53,17 @@ export default async function handler(req, res) {
       });
     }
 
-    // Create transporter with correct Yahoo SMTP settings for Vercel
+    // Create transporter with Gmail SMTP settings for Vercel
     const transporter = nodemailer.createTransport({
-      host: "smtp.mail.yahoo.com",
-      port: 465,
-      secure: true, // Use SSL
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // Use STARTTLS
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     });
 
