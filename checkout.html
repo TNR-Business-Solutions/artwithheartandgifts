@@ -555,7 +555,7 @@
                   alert(
                     `Order submitted successfully! Order ID: ${
                       result.orderId || orderData.orderId
-                    }\n\nEmails sent automatically to artwithheartandgiftsllc@gmail.com and customer confirmation sent.`
+                    }\n\nEmails sent automatically to artwithheartandgifts@yahoo.com and customer confirmation sent.`
                   );
                   window.location.href = "/";
                   return;
@@ -610,7 +610,7 @@ Website: Art with Heart and Gifts
 
 PLEASE PROCESS ORDER AND SEND CONFIRMATION TO: ${orderData.customerInfo.email}`,
                     _replyto: orderData.customerInfo.email,
-                    _cc: "artwithheartandgiftsllc@gmail.com",
+                    _cc: "artwithheartandgifts@yahoo.com",
                   }),
                 });
               } catch (e) {
@@ -651,7 +651,7 @@ Reference Number: ${orderData.referenceNumber || "None"}
 
 PLEASE PROCESS ORDER AND SEND CONFIRMATION TO: ${orderData.customerInfo.email}`;
 
-            const mailtoLink = `mailto:artwithheartandgiftsllc@gmail.com?subject=${encodeURIComponent(
+            const mailtoLink = `mailto:artwithheartandgifts@yahoo.com?subject=${encodeURIComponent(
               emailSubject
             )}&body=${encodeURIComponent(emailBody)}`;
             window.open(mailtoLink, "_blank");
@@ -663,7 +663,7 @@ PLEASE PROCESS ORDER AND SEND CONFIRMATION TO: ${orderData.customerInfo.email}`;
                 orderData.orderId
               }\n\nOrder Total: $${orderData.totalAmount.toFixed(
                 2
-              )}\n\nYour order has been delivered to artwithheartandgiftsllc@gmail.com for processing.`
+              )}\n\nYour order has been delivered to artwithheartandgifts@yahoo.com for processing.`
             );
 
             // Redirect to home page

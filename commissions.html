@@ -467,7 +467,7 @@ Website: Art with Heart and Gifts
 
 PLEASE CONTACT CUSTOMER AT: ${data.email}`,
                       _replyto: data.email,
-                      _cc: "artwithheartandgiftsllc@gmail.com"
+                      _cc: "artwithheartandgifts@yahoo.com"
                     }),
                   });
                 } catch (e) {
@@ -498,12 +498,12 @@ Submitted: ${new Date().toLocaleString()}
 
 PLEASE CONTACT CUSTOMER AT: ${data.email}`;
 
-              const mailtoLink = `mailto:artwithheartandgiftsllc@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+              const mailtoLink = `mailto:artwithheartandgifts@yahoo.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
               window.open(mailtoLink, '_blank');
 
               // Always show success
               alert(
-                "Commission request sent successfully! We'll get back to you within 2-3 business days.\n\nYour request has been delivered to artwithheartandgiftsllc@gmail.com"
+                "Commission request sent successfully! We'll get back to you within 2-3 business days.\n\nYour request has been delivered to artwithheartandgifts@yahoo.com"
               );
               form.reset();
             } catch (error) {

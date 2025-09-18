@@ -336,7 +336,7 @@ Website: Art with Heart and Gifts
 
 PLEASE RESPOND TO CUSTOMER AT: ${data.email}`,
                       _replyto: data.email,
-                      _cc: "artwithheartandgiftsllc@gmail.com"
+                      _cc: "artwithheartandgifts@yahoo.com"
                     }),
                   });
                 } catch (e) {
@@ -360,12 +360,12 @@ Submitted: ${new Date().toLocaleString()}
 
 PLEASE RESPOND TO: ${data.email}`;
 
-              const mailtoLink = `mailto:artwithheartandgiftsllc@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+              const mailtoLink = `mailto:artwithheartandgifts@yahoo.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
               window.open(mailtoLink, '_blank');
 
               // Always show success
               alert(
-                "Message sent successfully! We'll get back to you within 24 hours.\n\nYour message has been delivered to artwithheartandgiftsllc@gmail.com"
+                "Message sent successfully! We'll get back to you within 24 hours.\n\nYour message has been delivered to artwithheartandgifts@yahoo.com"
               );
               form.reset();
             } catch (error) {
