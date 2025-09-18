@@ -70,7 +70,7 @@ export default async function handler(req, res) {
       minute: "2-digit",
     });
 
-    // Create transporter with Gmail SMTP settings for Vercel
+    // Create transporter with Gmail SMTP settings for Vercel (working configuration)
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
