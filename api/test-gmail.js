@@ -20,8 +20,16 @@ export default async function handler(req, res) {
   try {
     console.log("Testing Gmail SMTP connection...");
     console.log("EMAIL_USER:", process.env.EMAIL_USER ? "SET" : "NOT SET");
-    console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "SET (length: " + process.env.EMAIL_PASS.length + ")" : "NOT SET");
-    console.log("RECIPIENT_EMAIL:", process.env.RECIPIENT_EMAIL ? "SET" : "NOT SET");
+    console.log(
+      "EMAIL_PASS:",
+      process.env.EMAIL_PASS
+        ? "SET (length: " + process.env.EMAIL_PASS.length + ")"
+        : "NOT SET"
+    );
+    console.log(
+      "RECIPIENT_EMAIL:",
+      process.env.RECIPIENT_EMAIL ? "SET" : "NOT SET"
+    );
 
     // Create transporter with Gmail SMTP settings
     const transporter = nodemailer.createTransport({
@@ -33,10 +41,10 @@ export default async function handler(req, res) {
         pass: process.env.EMAIL_PASS,
       },
       tls: {
-        rejectUnauthorized: false
+        rejectUnauthorized: false,
       },
       logger: true,
-      debug: true
+      debug: true,
     });
 
     // Verify connection
@@ -56,7 +64,7 @@ export default async function handler(req, res) {
         <p><strong>From:</strong> ${process.env.EMAIL_USER}</p>
         <p><strong>To:</strong> ${process.env.RECIPIENT_EMAIL}</p>
         <p>If you receive this email, the Gmail SMTP configuration is working correctly!</p>
-      `
+      `,
     };
 
     console.log("Sending test email...");
@@ -68,21 +76,20 @@ export default async function handler(req, res) {
       message: "Gmail SMTP test successful!",
       messageId: result.messageId,
       from: process.env.EMAIL_USER,
-      to: process.env.RECIPIENT_EMAIL
+      to: process.env.RECIPIENT_EMAIL,
     });
-
   } catch (error) {
     console.error("Gmail SMTP test failed:", error);
     console.error("Error code:", error.code);
     console.error("Error command:", error.command);
     console.error("Error response:", error.response);
-    
+
     return res.status(500).json({
       error: "Gmail SMTP test failed",
       details: error.message,
       code: error.code,
       command: error.command,
-      response: error.response
+      response: error.response,
     });
   }
 }
