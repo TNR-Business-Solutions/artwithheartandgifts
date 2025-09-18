@@ -41,18 +41,17 @@ export default async function handler(req, res) {
       });
     }
 
-    // Create transporter with Gmail SMTP settings for Vercel
+    // Create transporter with Gmail SMTP settings for Vercel (SSL version)
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
-      port: 587,
-      secure: false, // Use STARTTLS
+      port: 465,
+      secure: true, // Use SSL
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
-      tls: {
-        rejectUnauthorized: false
-      }
+      logger: true,
+      debug: true
     });
 
     // Email content
@@ -104,10 +103,17 @@ export default async function handler(req, res) {
     console.error("Contact form error:", error);
     console.error("Error details:", error.message);
     console.error("Error stack:", error.stack);
+    console.error("Error code:", error.code);
+    console.error("Error command:", error.command);
+    console.error("Environment variables check:");
+    console.error("EMAIL_USER:", process.env.EMAIL_USER ? "SET" : "NOT SET");
+    console.error("EMAIL_PASS:", process.env.EMAIL_PASS ? "SET" : "NOT SET");
+    console.error("RECIPIENT_EMAIL:", process.env.RECIPIENT_EMAIL ? "SET" : "NOT SET");
+    
     return res.status(500).json({
       error: "Failed to send message. Please try again later.",
-      details:
-        process.env.NODE_ENV === "development" ? error.message : undefined,
+      details: error.message,
+      code: error.code,
     });
   }
 }
