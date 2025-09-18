@@ -483,12 +483,21 @@
               localStorage.getItem("artwithheartandgifts_cart") || "[]"
             );
 
+            // Calculate totals directly to ensure accuracy
+            let subtotal = 0;
+            cart.forEach(item => {
+              subtotal += item.price * item.quantity;
+            });
+            const tax = subtotal * 0.06; // 6% Florida tax
+            const shipping = subtotal > 75 ? 0 : 8.99;
+            const total = subtotal + tax + shipping;
+
             // Validate credit card information
             const cardNumberRaw = formData.get("cardNumber");
             if (!cardNumberRaw || cardNumberRaw.trim() === "") {
               throw new Error("Please enter a credit card number");
             }
-            
+
             const cardNumber = cardNumberRaw.replace(/\s/g, "");
             const expirationDate = formData.get("expirationDate");
             const cvv = formData.get("cvv");
@@ -501,7 +510,7 @@
             if (!expirationDate || expirationDate.trim() === "") {
               throw new Error("Please enter an expiration date");
             }
-            
+
             if (!validateExpirationDate(expirationDate)) {
               throw new Error("Please enter a valid expiration date (MM/YY)");
             }
@@ -509,7 +518,7 @@
             if (!cvv || cvv.trim() === "") {
               throw new Error("Please enter a CVV");
             }
-            
+
             if (!validateCVV(cvv)) {
               throw new Error("Please enter a valid CVV (3-4 digits)");
             }
@@ -540,7 +549,7 @@
                 method: "Credit Card",
                 transactionId: generateTransactionId(),
               },
-              totalAmount: window.orderTotals.total,
+              totalAmount: total,
               orderId: generateOrderId(),
               referenceNumber: formData.get("referenceNumber"),
             };
@@ -698,7 +707,7 @@ PLEASE PROCESS ORDER AND SEND CONFIRMATION TO: ${orderData.customerInfo.email}`;
         if (!cardNumber) {
           return false;
         }
-        
+
         // Remove spaces and check if it's all digits
         const cleaned = cardNumber.replace(/\s/g, "");
         if (!/^\d{13,19}$/.test(cleaned)) {
