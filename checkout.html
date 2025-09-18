@@ -603,26 +603,28 @@
             // Method 2: Formspree backup (guaranteed delivery)
             if (!apiWorked) {
               try {
-                await fetch("https://formsubmit.co/artwithheartandgiftsllc@gmail.com", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    order_id: orderData.orderId,
-                    customer_name: `${orderData.customerInfo.firstName} ${orderData.customerInfo.lastName}`,
-                    customer_email: orderData.customerInfo.email,
-                    customer_phone: orderData.customerInfo.phone,
-                    total_amount: orderData.totalAmount,
-                    message: `NEW ORDER RECEIVED:
+                await fetch(
+                  "https://formsubmit.co/artwithheartandgiftsllc@gmail.com",
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      order_id: orderData.orderId,
+                      customer_name: `${orderData.customerInfo.firstName} ${orderData.customerInfo.lastName}`,
+                      customer_email: orderData.customerInfo.email,
+                      customer_phone: orderData.customerInfo.phone,
+                      total_amount: orderData.totalAmount,
+                      message: `NEW ORDER RECEIVED:
 
 Order ID: ${orderData.orderId}
 Customer: ${orderData.customerInfo.firstName} ${orderData.customerInfo.lastName}
 Email: ${orderData.customerInfo.email}
 Phone: ${orderData.customerInfo.phone}
 Address: ${orderData.customerInfo.address}, ${orderData.customerInfo.city}, ${
-                      orderData.customerInfo.state
-                    } ${orderData.customerInfo.zipCode}
+                        orderData.customerInfo.state
+                      } ${orderData.customerInfo.zipCode}
 
 ORDER ITEMS:
 ${orderData.cartItems
@@ -644,10 +646,11 @@ Submitted: ${new Date().toLocaleString()}
 Website: Art with Heart and Gifts
 
 PLEASE PROCESS ORDER AND SEND CONFIRMATION TO: ${orderData.customerInfo.email}`,
-                    _replyto: orderData.customerInfo.email,
-                    _cc: "artwithheartandgiftsllc@gmail.com",
-                  }),
-                });
+                      _replyto: orderData.customerInfo.email,
+                      _cc: "artwithheartandgiftsllc@gmail.com",
+                    }),
+                  }
+                );
               } catch (e) {
                 console.log("Formspree also failed, using mailto");
               }
