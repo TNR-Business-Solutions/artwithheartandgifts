@@ -576,7 +576,8 @@
             // Method 1: Try fixed Vercel API first
             let apiWorked = false;
             try {
-              const response = await fetch("/api/secure-checkout", {
+              console.log("Attempting checkout API call to /api/secure-checkout");
+              const response = await fetch("https://artwithheartandgifts-bz7l9nu3w-tnr-business-solutions-projects.vercel.app/api/secure-checkout", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -584,22 +585,22 @@
                 body: JSON.stringify(orderData),
               });
 
-              if (response.ok) {
-                const result = await response.json();
-                if (result.success) {
-                  apiWorked = true;
-                  localStorage.removeItem("artwithheartandgifts_cart");
-                  alert(
-                    `Order submitted successfully! Order ID: ${
-                      result.orderId || orderData.orderId
-                    }\n\nEmails sent automatically to artwithheartandgiftsllc@gmail.com and customer confirmation sent.`
-                  );
-                  window.location.href = "/";
-                  return;
-                }
+              console.log("Checkout API response status:", response.status);
+              const result = await response.json();
+              console.log("Checkout API response:", result);
+
+              if (response.ok && result.success) {
+                apiWorked = true;
+                localStorage.removeItem("artwithheartandgifts_cart");
+                showOrderSuccessModal(result.orderId || orderData.orderId, orderData.totalAmount);
+                console.log("Checkout API call successful!");
+                return;
+              } else {
+                console.error("Checkout API call failed:", result.error || result.details);
               }
             } catch (e) {
-              console.log("API method failed, using backup");
+              console.error("Checkout API method failed:", e);
+              console.log("Falling back to FormSubmit");
             }
 
             // Method 2: Formspree backup (guaranteed delivery)

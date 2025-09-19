@@ -136,7 +136,9 @@ module.exports = async function handler(req, res) {
 
     try {
       console.log("Sending commission confirmation email to:", email);
-      const confirmationResult = await transporter.sendMail(confirmationOptions);
+      const confirmationResult = await transporter.sendMail(
+        confirmationOptions
+      );
       console.log(
         "Commission confirmation email sent successfully:",
         confirmationResult.messageId

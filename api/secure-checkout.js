@@ -226,17 +226,37 @@ module.exports = async function handler(req, res) {
       `,
     };
 
-    // Send both emails
-    console.log("Sending business email to:", process.env.RECIPIENT_EMAIL);
-    const businessResult = await transporter.sendMail(businessEmailOptions);
-    console.log("Business email sent successfully:", businessResult.messageId);
-
-    console.log("Sending customer confirmation email to:", customerInfo.email);
-    const customerResult = await transporter.sendMail(customerEmailOptions);
-    console.log(
-      "Customer confirmation email sent successfully:",
-      customerResult.messageId
-    );
+    // Send both emails with error handling
+    let businessEmailSent = false;
+    let customerEmailSent = false;
+    
+    try {
+      console.log("Sending business email to:", process.env.RECIPIENT_EMAIL);
+      const businessResult = await transporter.sendMail(businessEmailOptions);
+      console.log("Business email sent successfully:", businessResult.messageId);
+      businessEmailSent = true;
+    } catch (businessError) {
+      console.error("Failed to send business email:", businessError);
+      console.error("Business email error details:", businessError.message);
+    }
+    
+    try {
+      console.log("Sending customer confirmation email to:", customerInfo.email);
+      const customerResult = await transporter.sendMail(customerEmailOptions);
+      console.log("Customer confirmation email sent successfully:", customerResult.messageId);
+      customerEmailSent = true;
+    } catch (customerError) {
+      console.error("Failed to send customer confirmation email:", customerError);
+      console.error("Customer email error details:", customerError.message);
+    }
+    
+    // Log email sending status
+    console.log("Email sending status:", {
+      businessEmailSent,
+      customerEmailSent,
+      businessEmail: process.env.RECIPIENT_EMAIL,
+      customerEmail: customerInfo.email
+    });
 
     return res.status(200).json({
       success: true,

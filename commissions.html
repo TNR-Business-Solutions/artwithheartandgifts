@@ -418,13 +418,16 @@
               let apiWorked = false;
               try {
                 console.log("Attempting API call to /api/commission");
-                const response = await fetch("https://artwithheartandgifts-bz7l9nu3w-tnr-business-solutions-projects.vercel.app/api/commission", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(data),
-                });
+                const response = await fetch(
+                  "https://artwithheartandgifts-bz7l9nu3w-tnr-business-solutions-projects.vercel.app/api/commission",
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                  }
+                );
 
                 console.log("API response status:", response.status);
                 const result = await response.json();
@@ -434,7 +437,10 @@
                   apiWorked = true;
                   console.log("API call successful!");
                 } else {
-                  console.error("API call failed:", result.error || result.details);
+                  console.error(
+                    "API call failed:",
+                    result.error || result.details
+                  );
                 }
               } catch (e) {
                 console.error("API method failed:", e);
@@ -445,39 +451,40 @@
               if (!apiWorked) {
                 try {
                   // Create and submit a form directly to your email
-                  const hiddenForm = document.createElement('form');
-                  hiddenForm.method = 'POST';
-                  hiddenForm.action = 'https://formsubmit.co/artwithheartandgiftsllc@gmail.com';
-                  hiddenForm.style.display = 'none';
-                  
+                  const hiddenForm = document.createElement("form");
+                  hiddenForm.method = "POST";
+                  hiddenForm.action =
+                    "https://formsubmit.co/artwithheartandgiftsllc@gmail.com";
+                  hiddenForm.style.display = "none";
+
                   // Add form fields
                   const fields = {
-                    '_subject': `Commission Request: ${data.projectType}`,
-                    '_next': window.location.href,
-                    '_captcha': 'false',
-                    'name': data.name,
-                    'email': data.email,
-                    'phone': data.phone || '',
-                    'project_type': data.projectType,
-                    'size': data.size || '',
-                    'budget': data.budget || '',
-                    'timeline': data.timeline || '',
-                    'location': data.location || '',
-                    'description': data.description,
-                    'inspiration': data.inspiration || ''
+                    _subject: `Commission Request: ${data.projectType}`,
+                    _next: window.location.href,
+                    _captcha: "false",
+                    name: data.name,
+                    email: data.email,
+                    phone: data.phone || "",
+                    project_type: data.projectType,
+                    size: data.size || "",
+                    budget: data.budget || "",
+                    timeline: data.timeline || "",
+                    location: data.location || "",
+                    description: data.description,
+                    inspiration: data.inspiration || "",
                   };
-                  
-                  Object.keys(fields).forEach(key => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
+
+                  Object.keys(fields).forEach((key) => {
+                    const input = document.createElement("input");
+                    input.type = "hidden";
                     input.name = key;
                     input.value = fields[key];
                     hiddenForm.appendChild(input);
                   });
-                  
+
                   document.body.appendChild(hiddenForm);
                   hiddenForm.submit();
-                  
+
                   // Don't continue to mailto since form submission will redirect
                   return;
                 } catch (e) {
