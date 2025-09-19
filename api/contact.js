@@ -94,9 +94,18 @@ module.exports = async function handler(req, res) {
       `,
     };
 
-    console.log("Sending confirmation email to:", email);
-    const confirmationResult = await transporter.sendMail(confirmationOptions);
-    console.log("Confirmation email sent successfully:", confirmationResult.messageId);
+    try {
+      console.log("Sending confirmation email to:", email);
+      const confirmationResult = await transporter.sendMail(confirmationOptions);
+      console.log(
+        "Confirmation email sent successfully:",
+        confirmationResult.messageId
+      );
+    } catch (emailError) {
+      console.error("Failed to send confirmation email:", emailError);
+      console.error("Confirmation email error details:", emailError.message);
+      // Don't fail the entire request if confirmation email fails
+    }
 
     return res.status(200).json({
       success: true,

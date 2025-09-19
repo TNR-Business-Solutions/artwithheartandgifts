@@ -27,6 +27,7 @@ const testGmail = require("./api/test-gmail.js");
 const contact = require("./api/contact.js");
 const commission = require("./api/commission.js");
 const orders = require("./api/orders.js");
+const paymentComplete = require("./api/payment/complete.js");
 
 // API Routes
 app.post("/api/secure-checkout", secureCheckout);
@@ -34,6 +35,7 @@ app.post("/api/test-gmail", testGmail);
 app.post("/api/contact", contact);
 app.post("/api/commission", commission);
 app.post("/api/orders", orders);
+app.post("/api/payment/complete", paymentComplete);
 
 // Serve static files
 app.get("*", (req, res) => {

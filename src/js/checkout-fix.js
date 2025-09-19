@@ -103,8 +103,8 @@ async function handleCheckoutSubmit(event) {
       },
       body: JSON.stringify({
         customerInfo: {
-          firstName: customer.name.split(' ')[0] || customer.name,
-          lastName: customer.name.split(' ').slice(1).join(' ') || '',
+          firstName: customer.name.split(" ")[0] || customer.name,
+          lastName: customer.name.split(" ").slice(1).join(" ") || "",
           email: customer.email,
           phone: customer.phone,
           address: customer.address,
@@ -121,7 +121,7 @@ async function handleCheckoutSubmit(event) {
           expirationDate: payment.expirationDate,
           cvv: payment.cvv,
           saveCard: payment.saveCard,
-          method: "Credit Card"
+          method: "Credit Card",
         },
         orderId: null, // Let the API generate one
         referenceNumber: formData.get("referenceNumber") || null,

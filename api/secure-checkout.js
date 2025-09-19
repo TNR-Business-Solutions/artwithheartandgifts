@@ -230,10 +230,13 @@ module.exports = async function handler(req, res) {
     console.log("Sending business email to:", process.env.RECIPIENT_EMAIL);
     const businessResult = await transporter.sendMail(businessEmailOptions);
     console.log("Business email sent successfully:", businessResult.messageId);
-    
+
     console.log("Sending customer confirmation email to:", customerInfo.email);
     const customerResult = await transporter.sendMail(customerEmailOptions);
-    console.log("Customer confirmation email sent successfully:", customerResult.messageId);
+    console.log(
+      "Customer confirmation email sent successfully:",
+      customerResult.messageId
+    );
 
     return res.status(200).json({
       success: true,
