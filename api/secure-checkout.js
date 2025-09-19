@@ -33,6 +33,8 @@ module.exports = async function handler(req, res) {
       body = JSON.parse(rawBody);
     }
 
+    console.log("Received checkout request body:", JSON.stringify(body, null, 2));
+
     const {
       customerInfo,
       cartItems,
@@ -42,10 +44,35 @@ module.exports = async function handler(req, res) {
       referenceNumber,
     } = body;
 
-    // Validate required fields
+    // Validate required fields with detailed logging
+    console.log("Validating checkout data:");
+    console.log("customerInfo:", customerInfo ? "PRESENT" : "MISSING");
+    console.log("cartItems:", cartItems ? "PRESENT" : "MISSING");
+    console.log("totalAmount:", totalAmount);
+    console.log("paymentInfo:", paymentInfo ? "PRESENT" : "MISSING");
+
     if (!customerInfo || !cartItems || !totalAmount || !paymentInfo) {
+      console.error("Validation failed - missing required fields");
       return res.status(400).json({
         error: "Missing required checkout information",
+        details: {
+          customerInfo: !!customerInfo,
+          cartItems: !!cartItems,
+          totalAmount: !!totalAmount,
+          paymentInfo: !!paymentInfo
+        }
+      });
+    }
+
+    // Validate customer info structure
+    if (!customerInfo.email || !customerInfo.firstName) {
+      console.error("Validation failed - missing customer email or firstName");
+      return res.status(400).json({
+        error: "Missing customer email or name",
+        details: {
+          email: !!customerInfo.email,
+          firstName: !!customerInfo.firstName
+        }
       });
     }
 
@@ -229,33 +256,45 @@ module.exports = async function handler(req, res) {
     // Send both emails with error handling
     let businessEmailSent = false;
     let customerEmailSent = false;
-    
+
     try {
       console.log("Sending business email to:", process.env.RECIPIENT_EMAIL);
       const businessResult = await transporter.sendMail(businessEmailOptions);
-      console.log("Business email sent successfully:", businessResult.messageId);
+      console.log(
+        "Business email sent successfully:",
+        businessResult.messageId
+      );
       businessEmailSent = true;
     } catch (businessError) {
       console.error("Failed to send business email:", businessError);
       console.error("Business email error details:", businessError.message);
     }
-    
+
     try {
-      console.log("Sending customer confirmation email to:", customerInfo.email);
+      console.log(
+        "Sending customer confirmation email to:",
+        customerInfo.email
+      );
       const customerResult = await transporter.sendMail(customerEmailOptions);
-      console.log("Customer confirmation email sent successfully:", customerResult.messageId);
+      console.log(
+        "Customer confirmation email sent successfully:",
+        customerResult.messageId
+      );
       customerEmailSent = true;
     } catch (customerError) {
-      console.error("Failed to send customer confirmation email:", customerError);
+      console.error(
+        "Failed to send customer confirmation email:",
+        customerError
+      );
       console.error("Customer email error details:", customerError.message);
     }
-    
+
     // Log email sending status
     console.log("Email sending status:", {
       businessEmailSent,
       customerEmailSent,
       businessEmail: process.env.RECIPIENT_EMAIL,
-      customerEmail: customerInfo.email
+      customerEmail: customerInfo.email,
     });
 
     return res.status(200).json({
@@ -267,11 +306,19 @@ module.exports = async function handler(req, res) {
     });
   } catch (error) {
     console.error("Secure checkout error:", error);
+    console.error("Error details:", error.message);
+    console.error("Error stack:", error.stack);
+    console.error("Environment variables check:");
+    console.error("EMAIL_USER:", process.env.EMAIL_USER ? "SET" : "NOT SET");
+    console.error("EMAIL_PASS:", process.env.EMAIL_PASS ? "SET" : "NOT SET");
+    console.error("RECIPIENT_EMAIL:", process.env.RECIPIENT_EMAIL ? "SET" : "NOT SET");
+    
     return res.status(500).json({
       success: false,
       error: "Failed to process order. Please try again later.",
-      details:
-        process.env.NODE_ENV === "development" ? error.message : undefined,
+      details: error.message,
+      code: error.code,
+      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
