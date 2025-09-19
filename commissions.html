@@ -409,12 +409,16 @@
                 location: formData.get("location"),
               };
 
+              // Debug: Log the data being sent
+              console.log("Commission form data:", data);
+
               // GUARANTEED EMAIL DELIVERY - Multiple methods
 
               // Method 1: Try API first
               let apiWorked = false;
               try {
-                const response = await fetch("/api/commission", {
+                console.log("Attempting API call to /api/commission");
+                const response = await fetch("https://artwithheartandgifts-bz7l9nu3w-tnr-business-solutions-projects.vercel.app/api/commission", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
@@ -422,14 +426,19 @@
                   body: JSON.stringify(data),
                 });
 
-                if (response.ok) {
-                  const result = await response.json();
-                  if (result.success) {
-                    apiWorked = true;
-                  }
+                console.log("API response status:", response.status);
+                const result = await response.json();
+                console.log("API response:", result);
+
+                if (response.ok && result.success) {
+                  apiWorked = true;
+                  console.log("API call successful!");
+                } else {
+                  console.error("API call failed:", result.error || result.details);
                 }
               } catch (e) {
-                console.log("API method failed, using backup");
+                console.error("API method failed:", e);
+                console.log("Falling back to FormSubmit");
               }
 
               // Method 2: Direct email via hidden form submission
