@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Art with Heart & Gifts - Handcrafted Art & Gifts",
   "scripts": {
-    "dev": "vercel dev",
-    "start": "vercel dev",
+    "dev": "node server.js",
+    "start": "node server.js",
     "build": "echo 'Static site - no build required'",
     "deploy": "vercel --prod"
   },

@@ -1,7 +1,7 @@
-import nodemailer from "nodemailer";
-import { v4 as uuidv4 } from "uuid";
+const nodemailer = require("nodemailer");
+const { v4: uuidv4 } = require("uuid");
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Set CORS headers for all responses
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -22,17 +22,17 @@ export default async function handler(req, res) {
     // Proper Vercel serverless request body handling
     let body;
     if (req.body) {
-      body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+      body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
     } else {
       // Handle raw body parsing for Vercel
       const rawBody = await new Promise((resolve) => {
-        let data = '';
-        req.on('data', chunk => data += chunk);
-        req.on('end', () => resolve(data));
+        let data = "";
+        req.on("data", (chunk) => (data += chunk));
+        req.on("end", () => resolve(data));
       });
       body = JSON.parse(rawBody);
     }
-    
+
     const {
       customerInfo,
       cartItems,
@@ -80,8 +80,8 @@ export default async function handler(req, res) {
         pass: process.env.EMAIL_PASS,
       },
       tls: {
-        rejectUnauthorized: false
-      }
+        rejectUnauthorized: false,
+      },
     });
 
     // Generate order summary HTML
@@ -246,4 +246,4 @@ export default async function handler(req, res) {
         process.env.NODE_ENV === "development" ? error.message : undefined,
     });
   }
-}
+};

@@ -1,6 +1,6 @@
-import nodemailer from "nodemailer";
+const nodemailer = require("nodemailer");
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Set CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -21,17 +21,17 @@ export default async function handler(req, res) {
     // Proper Vercel serverless request body handling
     let body;
     if (req.body) {
-      body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+      body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
     } else {
       // Handle raw body parsing for Vercel
       const rawBody = await new Promise((resolve) => {
-        let data = '';
-        req.on('data', chunk => data += chunk);
-        req.on('end', () => resolve(data));
+        let data = "";
+        req.on("data", (chunk) => (data += chunk));
+        req.on("end", () => resolve(data));
       });
       body = JSON.parse(rawBody);
     }
-    
+
     const { name, email, subject, message, phone } = body;
 
     // Validate required fields
@@ -51,8 +51,8 @@ export default async function handler(req, res) {
         pass: process.env.EMAIL_PASS,
       },
       tls: {
-        rejectUnauthorized: false
-      }
+        rejectUnauthorized: false,
+      },
     });
 
     // Email content
@@ -109,12 +109,15 @@ export default async function handler(req, res) {
     console.error("Environment variables check:");
     console.error("EMAIL_USER:", process.env.EMAIL_USER ? "SET" : "NOT SET");
     console.error("EMAIL_PASS:", process.env.EMAIL_PASS ? "SET" : "NOT SET");
-    console.error("RECIPIENT_EMAIL:", process.env.RECIPIENT_EMAIL ? "SET" : "NOT SET");
-    
+    console.error(
+      "RECIPIENT_EMAIL:",
+      process.env.RECIPIENT_EMAIL ? "SET" : "NOT SET"
+    );
+
     return res.status(500).json({
       error: "Failed to send message. Please try again later.",
       details: error.message,
       code: error.code,
     });
   }
-}
+};
