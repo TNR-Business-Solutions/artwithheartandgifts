@@ -178,6 +178,7 @@
 
       <button onclick="testCheckoutAPI()">Test Checkout API</button>
       <button onclick="testDirectEmail()">Test Direct Email</button>
+      <button onclick="debugAPI()" style="background: #dc3545;">🔍 Debug API Issues</button>
 
       <div id="result" class="result"></div>
     </div>
@@ -339,6 +340,124 @@
             "error"
           );
         }
+      }
+
+      async function debugAPI() {
+        showResult("🔍 Running comprehensive API debug tests...", "loading");
+        
+        let debugResults = "<h3>🔍 API Debug Results</h3>";
+        
+        // Test 1: Environment Variables
+        try {
+          debugResults += "<h4>1. Testing Environment Variables...</h4>";
+          const envResponse = await fetch(
+            "https://artwithheartandgifts-bz7l9nu3w-tnr-business-solutions-projects.vercel.app/api/test-gmail",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                testEmail: "royturner1489@gmail.com",
+                message: "Debug test for environment variables"
+              }),
+            }
+          );
+          
+          const envResult = await envResponse.json();
+          debugResults += `<p><strong>Status:</strong> ${envResponse.status}</p>`;
+          debugResults += `<p><strong>Result:</strong> ${envResult.success ? '✅ SUCCESS' : '❌ FAILED'}</p>`;
+          if (envResult.error) debugResults += `<p><strong>Error:</strong> ${envResult.error}</p>`;
+          
+        } catch (error) {
+          debugResults += `<p><strong>❌ Environment Test Failed:</strong> ${error.message}</p>`;
+        }
+        
+        // Test 2: Minimal Checkout
+        try {
+          debugResults += "<h4>2. Testing Minimal Checkout Data...</h4>";
+          const minimalData = {
+            customerInfo: {
+              firstName: "Test",
+              lastName: "User", 
+              email: "royturner1489@gmail.com",
+              phone: "555-123-4567",
+              address: "123 Test St",
+              city: "Test City",
+              state: "FL",
+              zipCode: "12345"
+            },
+            cartItems: [{
+              id: "test-1",
+              title: "Test Artwork",
+              price: 10.00,
+              quantity: 1,
+              type: "Canvas",
+              size: "8x10"
+            }],
+            totalAmount: 10.00,
+            paymentInfo: {
+              cardholderName: "Test User",
+              cardNumber: "4111111111111111",
+              expirationDate: "12/25",
+              cvv: "123",
+              method: "Credit Card",
+              transactionId: "DEBUG-" + Date.now()
+            },
+            orderId: "DEBUG-" + Date.now()
+          };
+          
+          console.log("Debug - Sending minimal data:", minimalData);
+          const checkoutResponse = await fetch(
+            "https://artwithheartandgifts-bz7l9nu3w-tnr-business-solutions-projects.vercel.app/api/secure-checkout",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(minimalData)
+            }
+          );
+          
+          const responseText = await checkoutResponse.text();
+          console.log("Debug - Raw response:", responseText);
+          
+          let checkoutResult;
+          try {
+            checkoutResult = JSON.parse(responseText);
+          } catch (e) {
+            checkoutResult = { error: 'Invalid JSON', rawResponse: responseText };
+          }
+          
+          debugResults += `<p><strong>Status:</strong> ${checkoutResponse.status}</p>`;
+          debugResults += `<p><strong>Success:</strong> ${checkoutResult.success ? '✅ YES' : '❌ NO'}</p>`;
+          if (checkoutResult.error) debugResults += `<p><strong>Error:</strong> ${checkoutResult.error}</p>`;
+          if (checkoutResult.details) debugResults += `<p><strong>Details:</strong> ${checkoutResult.details}</p>`;
+          if (checkoutResult.code) debugResults += `<p><strong>Code:</strong> ${checkoutResult.code}</p>`;
+          
+        } catch (error) {
+          debugResults += `<p><strong>❌ Minimal Checkout Failed:</strong> ${error.message}</p>`;
+        }
+        
+        // Test 3: API Endpoint Check
+        try {
+          debugResults += "<h4>3. Testing API Endpoint Availability...</h4>";
+          const endpointResponse = await fetch(
+            "https://artwithheartandgifts-bz7l9nu3w-tnr-business-solutions-projects.vercel.app/api/secure-checkout",
+            { method: "OPTIONS" }
+          );
+          
+          debugResults += `<p><strong>OPTIONS Status:</strong> ${endpointResponse.status}</p>`;
+          debugResults += `<p><strong>Headers:</strong> ${JSON.stringify(Object.fromEntries(endpointResponse.headers.entries()))}</p>`;
+          
+        } catch (error) {
+          debugResults += `<p><strong>❌ Endpoint Test Failed:</strong> ${error.message}</p>`;
+        }
+        
+        debugResults += "<hr><p><strong>📋 Next Steps:</strong></p>";
+        debugResults += "<ul>";
+        debugResults += "<li>Check Vercel function logs for detailed debugging info</li>";
+        debugResults += "<li>Verify environment variables are set correctly</li>";
+        debugResults += "<li>Check if emails are being sent despite API errors</li>";
+        debugResults += "</ul>";
+        
+        showResult(debugResults, "info");
       }
     </script>
   </body>
