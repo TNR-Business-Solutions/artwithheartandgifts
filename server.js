@@ -21,23 +21,15 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.static("."));
 
-// Import API routes
+// Import API routes (minimal set for Vercel Hobby limit)
 const secureCheckout = require("./api/secure-checkout.js");
-const testGmail = require("./api/test-gmail.js");
 const enhancedCheckout = require("./api/enhanced-checkout.js");
-const reliableCheckout = require("./api/reliable-checkout.js");
-const enhancedContact = require("./api/enhanced-contact.js");
-const enhancedCommission = require("./api/enhanced-commission.js");
-const health = require("./api/health.js");
 
-// API Routes
+// API Routes (only essential ones)
 app.post("/api/secure-checkout", secureCheckout);
-app.post("/api/test-gmail", testGmail);
 app.post("/api/enhanced-checkout", enhancedCheckout);
-app.post("/api/reliable-checkout", reliableCheckout);
-app.post("/api/contact", enhancedContact);
-app.post("/api/commission", enhancedCommission);
-app.get("/api/health", health);
+app.post("/api/contact", enhancedCheckout); // Reuse enhanced-checkout for contact
+app.post("/api/commission", enhancedCheckout); // Reuse enhanced-checkout for commission
 
 // Serve static files
 app.get("*", (req, res) => {

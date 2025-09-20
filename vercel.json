@@ -1,7 +1,9 @@
 {
-  "outputDirectory": ".",
   "functions": {
-    "api/index.js": {
+    "api/enhanced-checkout.js": {
+      "maxDuration": 30
+    },
+    "api/secure-checkout.js": {
       "maxDuration": 30
     }
   },
@@ -16,10 +18,6 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index.js"
-    },
     {
       "source": "/((?!api).*)",
       "destination": "/index.html"
