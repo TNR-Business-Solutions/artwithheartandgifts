@@ -1,16 +1,7 @@
 {
   "functions": {
-    "api/secure-checkout.js": {
+    "api/index.js": {
       "maxDuration": 30
-    },
-    "api/enhanced-checkout.js": {
-      "maxDuration": 30
-    },
-    "api/test-gmail.js": {
-      "maxDuration": 30
-    },
-    "api/health.js": {
-      "maxDuration": 10
     }
   },
   "headers": [
@@ -24,6 +15,10 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
     {
       "source": "/((?!api).*)",
       "destination": "/index.html"

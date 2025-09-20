@@ -1,0 +1,258 @@
+require("dotenv").config();
+const { v4: uuidv4 } = require("uuid");
+const EmailManager = require("./utils/email-manager");
+const ErrorHandler = require("./utils/error-handler");
+const logger = require("./utils/logger");
+const emailConfig = require("./config/email-config");
+
+const errorHandler = new ErrorHandler();
+
+module.exports = async function handler(req, res) {
+  // Set CORS headers
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Content-Type", "application/json");
+
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") {
+    return errorHandler.handleCorsPreflight(res);
+  }
+
+  try {
+    const { url, method } = req;
+    const startTime = Date.now();
+
+    // Route based on URL path
+    if (url.includes('/api/health') && method === 'GET') {
+      return await handleHealth(req, res, startTime);
+    }
+    
+    if (url.includes('/api/enhanced-checkout') && method === 'POST') {
+      return await handleEnhancedCheckout(req, res, startTime);
+    }
+    
+    if (url.includes('/api/secure-checkout') && method === 'POST') {
+      return await handleSecureCheckout(req, res, startTime);
+    }
+    
+    if (url.includes('/api/contact') && method === 'POST') {
+      return await handleContact(req, res, startTime);
+    }
+    
+    if (url.includes('/api/commission') && method === 'POST') {
+      return await handleCommission(req, res, startTime);
+    }
+    
+    if (url.includes('/api/test-gmail') && method === 'POST') {
+      return await handleTestGmail(req, res, startTime);
+    }
+
+    // Default 404 for unknown endpoints
+    return res.status(404).json({
+      success: false,
+      error: { message: "API endpoint not found", code: 404 }
+    });
+
+  } catch (error) {
+    logger.error("api-router", error);
+    const errorResponse = errorHandler.handleSystemError(error);
+    res.status(500).json(errorResponse);
+  }
+};
+
+// Health Check Handler
+async function handleHealth(req, res, startTime) {
+  logger.api("/api/health", "GET", "STARTED", "Health check initiated");
+
+  const emailManager = new EmailManager();
+  const providerTests = {};
+  const enabledProviders = emailConfig.getEnabledProviders();
+
+  for (const provider of enabledProviders) {
+    try {
+      const testResult = await emailManager.testProvider(provider.name);
+      providerTests[provider.name] = {
+        ...testResult,
+        config: emailConfig.getProviderHealth(provider.name),
+        responseTime: Date.now() - startTime,
+      };
+      emailConfig.updateProviderStatus(provider.name, testResult.success);
+    } catch (error) {
+      providerTests[provider.name] = {
+        success: false,
+        provider: provider.name,
+        error: error.message,
+        config: emailConfig.getProviderHealth(provider.name),
+        responseTime: Date.now() - startTime,
+      };
+      emailConfig.updateProviderStatus(provider.name, false);
+    }
+  }
+
+  const overallHealth = {
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || "development",
+    providers: {
+      total: Object.keys(emailConfig.config.providers).length,
+      enabled: enabledProviders.length,
+      healthy: Object.values(providerTests).filter((p) => p.success).length,
+    },
+    configuration: {
+      fallbackEnabled: emailConfig.getFallbackConfig().enabled,
+      primaryProvider: emailConfig.getFallbackConfig().primaryProvider,
+      fallbackProvider: emailConfig.getFallbackConfig().fallbackProvider,
+      retryAttempts: emailConfig.getRetryConfig().attempts,
+    },
+  };
+
+  const healthyProviders = Object.values(providerTests).filter((p) => p.success).length;
+  if (healthyProviders === 0) {
+    overallHealth.status = "critical";
+  } else if (healthyProviders < enabledProviders.length) {
+    overallHealth.status = "degraded";
+  }
+
+  const response = errorHandler.createSuccessResponse(
+    {
+      overall: overallHealth,
+      providers: providerTests,
+      config: emailConfig.getFullConfig(),
+    },
+    {
+      responseTime: Date.now() - startTime,
+      requestId: errorHandler.generateRequestId(),
+    }
+  );
+
+  logger.api("/api/health", "GET", "COMPLETED", `Health check completed in ${Date.now() - startTime}ms`);
+
+  const statusCode = overallHealth.status === "critical" ? 503 : 200;
+  res.status(statusCode).json(response);
+}
+
+// Enhanced Checkout Handler
+async function handleEnhancedCheckout(req, res, startTime) {
+  logger.api("/api/enhanced-checkout", "POST", "STARTED", "Enhanced checkout request received");
+
+  // Parse request body
+  let body;
+  if (req.body) {
+    body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  } else {
+    const rawBody = await new Promise((resolve) => {
+      let data = "";
+      req.on("data", (chunk) => (data += chunk));
+      req.on("end", () => resolve(data));
+    });
+    body = JSON.parse(rawBody);
+  }
+
+  // Validate request
+  const validation = errorHandler.validateCheckoutRequest(body);
+  if (!validation.valid) {
+    logger.api("/api/enhanced-checkout", "POST", "VALIDATION_FAILED", "Invalid request data");
+    return res.status(validation.error.error.code).json(validation.error);
+  }
+
+  const { customerInfo, cartItems, paymentInfo, totalAmount, orderId, referenceNumber } = body;
+
+  // Generate order details
+  const orderNumber = `AWH-${uuidv4().substring(0, 8).toUpperCase()}`;
+  const orderDate = new Date().toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  logger.order(orderNumber, "CREATED", `Order created for ${customerInfo.firstName} ${customerInfo.lastName || ""}`);
+
+  // Prepare order data for email manager
+  const orderData = {
+    customerInfo,
+    cartItems,
+    paymentInfo,
+    totalAmount,
+    orderNumber,
+    orderDate,
+    referenceNumber,
+    orderId: orderId || orderNumber,
+  };
+
+  // Send emails using EmailManager
+  const emailManager = new EmailManager();
+  let emailResult;
+
+  try {
+    emailResult = await emailManager.sendOrderEmails(orderData);
+    logger.order(orderNumber, "EMAILS_SENT", `Emails sent via ${emailResult.provider}`);
+  } catch (emailError) {
+    logger.error("enhanced-checkout", emailError);
+    logger.order(orderNumber, "EMAIL_FAILED", emailError.message);
+    emailResult = {
+      success: false,
+      provider: "none",
+      error: emailError.message,
+    };
+  }
+
+  // Prepare success response
+  const responseData = {
+    orderId: orderId || orderNumber,
+    orderNumber,
+    orderDate,
+    customerInfo: {
+      name: `${customerInfo.firstName} ${customerInfo.lastName || ""}`,
+      email: customerInfo.email,
+    },
+    totalAmount,
+    paymentStatus: "pending",
+    transactionId: paymentInfo.transactionId,
+    emailDelivery: {
+      success: emailResult.success,
+      provider: emailResult.provider,
+      messageId: emailResult.messageId,
+      details: emailResult.details || emailResult.error,
+    },
+  };
+
+  const response = errorHandler.createSuccessResponse(responseData, {
+    processingTime: Date.now() - startTime,
+    orderNumber,
+    emailProvider: emailResult.provider,
+  });
+
+  logger.api("/api/enhanced-checkout", "POST", "COMPLETED", `Order ${orderNumber} processed successfully in ${Date.now() - startTime}ms`);
+  logger.order(orderNumber, "COMPLETED", "Order processing completed");
+
+  res.status(200).json(response);
+}
+
+// Secure Checkout Handler (Legacy)
+async function handleSecureCheckout(req, res, startTime) {
+  // Import the existing secure checkout logic
+  const secureCheckout = require("./secure-checkout.js");
+  return await secureCheckout(req, res);
+}
+
+// Contact Handler
+async function handleContact(req, res, startTime) {
+  const enhancedContact = require("./enhanced-contact.js");
+  return await enhancedContact(req, res);
+}
+
+// Commission Handler
+async function handleCommission(req, res, startTime) {
+  const enhancedCommission = require("./enhanced-commission.js");
+  return await enhancedCommission(req, res);
+}
+
+// Test Gmail Handler
+async function handleTestGmail(req, res, startTime) {
+  const testGmail = require("./test-gmail.js");
+  return await testGmail(req, res);
+}
