@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Test - Art with Heart & Gifts</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .test-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fafafa;
+      }
+      .test-section h2 {
+        color: #666;
+        margin-top: 0;
+      }
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 5px;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+      .result {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 5px;
+        font-family: monospace;
+        white-space: pre-wrap;
+      }
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      textarea {
+        height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Email Functionality Test</h1>
+      <p style="text-align: center; color: #666">
+        Test your email configuration with the new app password:
+        <strong>kojwcewyyfonggnv</strong>
+      </p>
+
+      <!-- SMTP Test Section -->
+      <div class="test-section">
+        <h2>1. SMTP Connection Test</h2>
+        <p>
+          This will test the basic SMTP connection with Gmail using your new app
+          password.
+        </p>
+        <button onclick="testSMTP()" id="smtpBtn">Test SMTP Connection</button>
+        <div id="smtpResult" class="result" style="display: none"></div>
+      </div>
+
+      <!-- Contact Form Test Section -->
+      <div class="test-section">
+        <h2>2. Contact Form Test</h2>
+        <p>Test the contact form functionality with sample data.</p>
+
+        <div class="form-group">
+          <label for="testName">Name:</label>
+          <input type="text" id="testName" value="Test User" />
+        </div>
+
+        <div class="form-group">
+          <label for="testEmail">Email:</label>
+          <input type="email" id="testEmail" value="test@example.com" />
+        </div>
+
+        <div class="form-group">
+          <label for="testPhone">Phone:</label>
+          <input type="tel" id="testPhone" value="(239) 555-0123" />
+        </div>
+
+        <div class="form-group">
+          <label for="testSubject">Subject:</label>
+          <select id="testSubject">
+            <option value="general">General Question</option>
+            <option value="commission">Commission Inquiry</option>
+            <option value="purchase">Purchase Question</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="testMessage">Message:</label>
+          <textarea id="testMessage">
+This is a test message to verify the contact form email functionality is working correctly with the new Gmail app password.</textarea
+          >
+        </div>
+
+        <button onclick="testContactForm()" id="contactBtn">
+          Test Contact Form
+        </button>
+        <div id="contactResult" class="result" style="display: none"></div>
+      </div>
+
+      <!-- Commission Form Test Section -->
+      <div class="test-section">
+        <h2>3. Commission Form Test</h2>
+        <p>Test the commission form functionality with sample data.</p>
+
+        <div class="form-group">
+          <label for="commissionName">Name:</label>
+          <input type="text" id="commissionName" value="Commission Test User" />
+        </div>
+
+        <div class="form-group">
+          <label for="commissionEmail">Email:</label>
+          <input
+            type="email"
+            id="commissionEmail"
+            value="commission@example.com"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="commissionType">Project Type:</label>
+          <select id="commissionType">
+            <option value="canvas">Canvas Original</option>
+            <option value="mural">Wall Mural</option>
+            <option value="print">Custom Print</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="commissionDescription">Description:</label>
+          <textarea id="commissionDescription">
+This is a test commission request to verify the commission form email functionality is working correctly with the new Gmail app password.</textarea
+          >
+        </div>
+
+        <button onclick="testCommissionForm()" id="commissionBtn">
+          Test Commission Form
+        </button>
+        <div id="commissionResult" class="result" style="display: none"></div>
+      </div>
+
+      <!-- Instructions -->
+      <div class="test-section">
+        <h2>Instructions</h2>
+        <ol>
+          <li>
+            <strong>First, run the SMTP Test</strong> to verify your Gmail
+            connection is working
+          </li>
+          <li>
+            <strong>Then test the Contact Form</strong> to ensure contact form
+            emails are being sent
+          </li>
+          <li>
+            <strong>Finally test the Commission Form</strong> to ensure
+            commission requests are working
+          </li>
+          <li>
+            <strong>Check your email</strong> (both the business email and
+            recipient email) to confirm emails are being received
+          </li>
+        </ol>
+        <p><strong>Expected Results:</strong></p>
+        <ul>
+          <li>SMTP Test should show "SMTP connection verified successfully"</li>
+          <li>
+            Contact Form Test should send emails to both business and customer
+          </li>
+          <li>Commission Form Test should send commission request emails</li>
+          <li>
+            You should receive confirmation emails at the test email addresses
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      async function testSMTP() {
+        const btn = document.getElementById("smtpBtn");
+        const result = document.getElementById("smtpResult");
+
+        btn.disabled = true;
+        btn.textContent = "Testing...";
+        result.style.display = "block";
+        result.className = "result info";
+        result.textContent = "Testing SMTP connection...";
+
+        try {
+          const response = await fetch("/api/test-gmail", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({}),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            result.className = "result success";
+            result.textContent = `✅ SUCCESS!\n\nMessage: ${data.message}\nMessage ID: ${data.messageId}\nFrom: ${data.from}\nTo: ${data.to}\n\nCheck your email inbox for the test message!`;
+          } else {
+            result.className = "result error";
+            result.textContent = `❌ FAILED!\n\nError: ${
+              data.error
+            }\nDetails: ${data.details || "No details available"}\nCode: ${
+              data.code || "No code"
+            }`;
+          }
+        } catch (error) {
+          result.className = "result error";
+          result.textContent = `❌ CONNECTION ERROR!\n\nError: ${error.message}\n\nThis might mean:\n- The server is not running\n- The API endpoint is not accessible\n- Network connectivity issues`;
+        }
+
+        btn.disabled = false;
+        btn.textContent = "Test SMTP Connection";
+      }
+
+      async function testContactForm() {
+        const btn = document.getElementById("contactBtn");
+        const result = document.getElementById("contactResult");
+
+        const testData = {
+          name: document.getElementById("testName").value,
+          email: document.getElementById("testEmail").value,
+          phone: document.getElementById("testPhone").value,
+          subject: document.getElementById("testSubject").value,
+          message: document.getElementById("testMessage").value,
+        };
+
+        btn.disabled = true;
+        btn.textContent = "Sending...";
+        result.style.display = "block";
+        result.className = "result info";
+        result.textContent = "Sending contact form test...";
+
+        try {
+          const response = await fetch("/api/contact", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(testData),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            result.className = "result success";
+            result.textContent = `✅ CONTACT FORM SUCCESS!\n\nMessage: ${data.message}\n\nCheck both emails:\n- Business email (${testData.email})\n- Customer confirmation email\n\nBoth should have received messages!`;
+          } else {
+            result.className = "result error";
+            result.textContent = `❌ CONTACT FORM FAILED!\n\nError: ${
+              data.error
+            }\nDetails: ${data.details || "No details available"}`;
+          }
+        } catch (error) {
+          result.className = "result error";
+          result.textContent = `❌ CONTACT FORM ERROR!\n\nError: ${error.message}`;
+        }
+
+        btn.disabled = false;
+        btn.textContent = "Test Contact Form";
+      }
+
+      async function testCommissionForm() {
+        const btn = document.getElementById("commissionBtn");
+        const result = document.getElementById("commissionResult");
+
+        const testData = {
+          name: document.getElementById("commissionName").value,
+          email: document.getElementById("commissionEmail").value,
+          projectType: document.getElementById("commissionType").value,
+          description: document.getElementById("commissionDescription").value,
+          size: "Test Size",
+          budget: "Test Budget",
+          timeline: "Test Timeline",
+        };
+
+        btn.disabled = true;
+        btn.textContent = "Sending...";
+        result.style.display = "block";
+        result.className = "result info";
+        result.textContent = "Sending commission form test...";
+
+        try {
+          const response = await fetch("/api/commission", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(testData),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            result.className = "result success";
+            result.textContent = `✅ COMMISSION FORM SUCCESS!\n\nMessage: ${data.message}\n\nCheck both emails:\n- Business commission request email\n- Customer confirmation email (${testData.email})\n\nBoth should have received messages!`;
+          } else {
+            result.className = "result error";
+            result.textContent = `❌ COMMISSION FORM FAILED!\n\nError: ${
+              data.error
+            }\nDetails: ${data.details || "No details available"}`;
+          }
+        } catch (error) {
+          result.className = "result error";
+          result.textContent = `❌ COMMISSION FORM ERROR!\n\nError: ${error.message}`;
+        }
+
+        btn.disabled = false;
+        btn.textContent = "Test Commission Form";
+      }
+    </script>
+  </body>
+</html>

@@ -60,9 +60,9 @@ async function handleCheckoutSubmit(event) {
       email: formData.get("customerEmail"),
       phone: formData.get("customerPhone"),
       address: formData.get("shippingAddress"),
-      city: formData.get("shippingCity"),
-      state: formData.get("shippingState"),
-      zipCode: formData.get("shippingZip"),
+      city: formData.get("city"),
+      state: formData.get("state"),
+      zipCode: formData.get("zipCode"),
     };
 
     const payment = {
@@ -79,6 +79,9 @@ async function handleCheckoutSubmit(event) {
     if (!cart || cart.items.length === 0) {
       throw new Error("Your cart is empty");
     }
+
+    console.log("Cart items:", cart.items);
+    console.log("Cart total:", cart.getTotal());
 
     const order = {
       items: cart.items,
@@ -99,13 +102,34 @@ async function handleCheckoutSubmit(event) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        customer,
-        payment,
-        order,
+        customerInfo: {
+          firstName: customer.name.split(" ")[0] || customer.name,
+          lastName: customer.name.split(" ").slice(1).join(" ") || "",
+          email: customer.email,
+          phone: customer.phone,
+          address: customer.address,
+          city: customer.city,
+          state: customer.state,
+          zipCode: customer.zipCode,
+          specialInstructions: formData.get("specialInstructions"),
+        },
+        cartItems: cart.items,
+        totalAmount: cart.getTotal(),
+        paymentInfo: {
+          cardholderName: payment.cardholderName,
+          cardNumber: payment.cardNumber,
+          expirationDate: payment.expirationDate,
+          cvv: payment.cvv,
+          saveCard: payment.saveCard,
+          method: "Credit Card",
+        },
+        orderId: null, // Let the API generate one
+        referenceNumber: formData.get("referenceNumber") || null,
       }),
     });
 
     const result = await response.json();
+    console.log("Checkout response:", result);
 
     if (result.success) {
       // Clear cart

@@ -35,7 +35,7 @@
       <div class="brand">
         <a href="/"
           ><img
-            src="/public/images/Logo.png"
+            src="/images/Logo.png"
             alt="Art with Heart & Gifts logo"
             class="site-logo"
         /></a>
@@ -114,56 +114,6 @@
         raw emotion into immersive visual storytelling.
       </p>
 
-      <!-- Basement Studio Slideshow Section -->
-      <section class="basement-studio">
-        <h2>My Creative Basement Studio</h2>
-        <p class="basement-intro">
-          Step into my creative sanctuary—the basement studio where magic
-          happens. This is where I transform ideas into reality, where every
-          brushstroke tells a story, and where healing art comes to life. Browse
-          through 28 photos of my workspace and basement studio below.
-        </p>
-
-        <div class="basement-slideshow-container">
-          <div class="basement-slideshow" id="basementSlideshow">
-            <!-- Slides will be populated by JavaScript -->
-          </div>
-
-          <div class="slideshow-controls">
-            <button
-              class="slideshow-btn prev-btn"
-              id="prevBtn"
-              aria-label="Previous image"
-            >
-              <span>‹</span>
-            </button>
-            <button
-              class="slideshow-btn next-btn"
-              id="nextBtn"
-              aria-label="Next image"
-            >
-              <span>›</span>
-            </button>
-          </div>
-
-          <div class="slideshow-indicators" id="slideshowIndicators">
-            <!-- Indicators will be populated by JavaScript -->
-          </div>
-        </div>
-
-        <div class="basement-description">
-          <p>
-            From the early morning light filtering through the windows to the
-            late-night sessions when inspiration strikes, this basement studio
-            has witnessed countless moments of creation. It's here that I've
-            painted through pain, celebrated breakthroughs, and discovered the
-            healing power of art. The slideshow above shows 28 carefully
-            selected photos from my creative workspace, capturing the essence of
-            my artistic journey.
-          </p>
-        </div>
-      </section>
-
       <h2>Becoming "Art with Heart"</h2>
       <div class="about-photo-section">
         <div class="about-photo-content">
@@ -178,7 +128,7 @@
         </div>
         <div class="about-photo">
           <img
-            src="/public/images/charmintimwedding.jpg"
+            src="/images/charmin-99.jpg"
             alt="Charmin at her wedding"
             loading="lazy"
           />
@@ -189,7 +139,7 @@
       <div class="about-photo-section reverse">
         <div class="about-photo">
           <img
-            src="/public/images/Charminwpaintings.jpg"
+            src="/images/charmin-100.jpg"
             alt="Charmin with her paintings"
             loading="lazy"
           />
@@ -223,7 +173,7 @@
         </div>
         <div class="about-photo">
           <img
-            src="/public/images/Charminandherpuppies.jpg"
+            src="/images/charmin-1.jpg"
             alt="Charmin with her puppies"
             loading="lazy"
           />
@@ -283,117 +233,6 @@
       <p class="legal">© <span id="year"></span> Art with Heart and Gifts.</p>
     </footer>
     <script type="module" src="/src/js/app.js"></script>
-    <script>
-      // Basement Slideshow Functionality
-      document.addEventListener("DOMContentLoaded", function () {
-        const slideshow = document.getElementById("basementSlideshow");
-        const indicators = document.getElementById("slideshowIndicators");
-        const prevBtn = document.getElementById("prevBtn");
-        const nextBtn = document.getElementById("nextBtn");
-
-        if (!slideshow) return;
-
-        // List of specific basement and workspace photos
-        const basementPhotos = [
-          "/images/funinthebasement.jpg",
-          "/images/workspace1.jpg",
-          "/images/workspace2.jpg",
-          "/images/workspace3.jpg",
-          "/images/workspace4.jpg",
-          "/images/workspace5.jpg",
-          "/images/workspace6.jpg",
-          "/images/workspace7.jpg",
-          "/images/workspace8.jpg",
-          "/images/basement1.jpg",
-          "/images/Basement2.jpg",
-          "/images/Basement3.jpg",
-          "/images/Basement4.jpg",
-          "/images/basement5.jpg",
-          "/images/Basement6.jpg",
-          "/images/Basement7.jpg",
-          "/images/Basement9.jpg",
-          "/images/basement10.jpg",
-          "/images/basement11.jpg",
-          "/images/basement12.jpg",
-          "/images/basement13.jpg",
-          "/images/basement14.jpg",
-          "/images/basement15.jpg",
-          "/images/basement16.jpg",
-          "/images/basement17.jpg",
-          "/images/basement18.jpg",
-          "/images/basement19.jpg",
-          "/images/canvas.jpg",
-        ];
-
-        let currentSlide = 0;
-
-        // Create slides with responsive images
-        basementPhotos.forEach((photo, index) => {
-          const slide = document.createElement("div");
-          slide.className = `basement-slide ${index === 0 ? "active" : ""}`;
-          // Use responsive picture elements for better quality
-          const baseName = photo.split("/").pop().split(".")[0];
-          slide.innerHTML = `
-            <picture>
-              <source type="image/webp" srcset="/images/${baseName}-1200.webp" media="(min-width: 1200px)">
-              <source type="image/jpeg" srcset="/images/${baseName}-1200.jpg" media="(min-width: 1200px)">
-              <source type="image/webp" srcset="/images/${baseName}-800.webp" media="(min-width: 800px)">
-              <source type="image/jpeg" srcset="/images/${baseName}-800.jpg" media="(min-width: 800px)">
-              <img src="${photo}" alt="Basement studio photo ${
-            index + 1
-          }" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
-            </picture>
-          `;
-          slideshow.appendChild(slide);
-
-          // Create indicators
-          const indicator = document.createElement("div");
-          indicator.className = `indicator ${index === 0 ? "active" : ""}`;
-          indicator.addEventListener("click", () => goToSlide(index));
-          indicators.appendChild(indicator);
-        });
-
-        function showSlide(index) {
-          const slides = slideshow.querySelectorAll(".basement-slide");
-          const dots = indicators.querySelectorAll(".indicator");
-
-          slides.forEach((slide) => slide.classList.remove("active"));
-          dots.forEach((dot) => dot.classList.remove("active"));
-
-          slides[index].classList.add("active");
-          dots[index].classList.add("active");
-        }
-
-        function goToSlide(index) {
-          currentSlide = index;
-          showSlide(currentSlide);
-        }
-
-        function nextSlide() {
-          currentSlide = (currentSlide + 1) % basementPhotos.length;
-          showSlide(currentSlide);
-        }
-
-        function prevSlide() {
-          currentSlide =
-            (currentSlide - 1 + basementPhotos.length) % basementPhotos.length;
-          showSlide(currentSlide);
-        }
-
-        // Event listeners
-        nextBtn.addEventListener("click", nextSlide);
-        prevBtn.addEventListener("click", prevSlide);
-
-        // Auto-advance slideshow every 5 seconds
-        setInterval(nextSlide, 5000);
-
-        // Keyboard navigation
-        document.addEventListener("keydown", function (e) {
-          if (e.key === "ArrowLeft") prevSlide();
-          if (e.key === "ArrowRight") nextSlide();
-        });
-      });
-    </script>
 
     <!-- Cart Modal -->
     <div id="cart-modal" class="cart-modal">

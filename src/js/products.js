@@ -2,7 +2,8 @@ export async function loadProducts() {
   if (window.__PRODUCT_CACHE) return window.__PRODUCT_CACHE;
 
   try {
-    const response = await fetch("/data.json");
+    const cacheParam = `?v=${Date.now()}`;
+    const response = await fetch(`/data.json${cacheParam}`);
     if (!response.ok) {
       console.error("Failed to load data.json:", response.status);
       return [];
@@ -11,7 +12,7 @@ export async function loadProducts() {
 
     let story = [];
     try {
-      const storyResponse = await fetch("/data-story.json");
+      const storyResponse = await fetch(`/data-story.json${cacheParam}`);
       if (storyResponse.ok) {
         story = await storyResponse.json();
       }
@@ -21,7 +22,7 @@ export async function loadProducts() {
 
     let gallery = [];
     try {
-      const galleryResponse = await fetch("/data-gallery.json");
+      const galleryResponse = await fetch(`/data-gallery.json${cacheParam}`);
       if (galleryResponse.ok) {
         gallery = await galleryResponse.json();
       }

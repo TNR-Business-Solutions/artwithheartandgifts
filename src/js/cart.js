@@ -212,62 +212,15 @@ class ShoppingCart {
       .join("");
   }
 
-  // Checkout with Swipe Simple
-  async checkout() {
+  // Checkout - redirect to checkout page
+  checkout() {
     if (this.items.length === 0) {
       alert("Your cart is empty!");
       return;
     }
 
-    try {
-      // Show loading state
-      const checkoutBtn = document.querySelector(".checkout-btn");
-      if (checkoutBtn) {
-        checkoutBtn.textContent = "Processing...";
-        checkoutBtn.disabled = true;
-      }
-
-      // Prepare order data
-      const customer = this.getCustomerInfo();
-      const orderData = {
-        items: this.items,
-        customer: customer,
-        shippingMethod: "standard",
-      };
-
-      console.log("Submitting order:", orderData);
-
-      // Submit order to backend
-      const response = await fetch("/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderData),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        // Order created successfully
-        console.log("Order created:", result);
-
-        // Redirect to secure checkout form
-        window.location.href = `${window.location.origin}/checkout.html`;
-      } else {
-        throw new Error(result.error || "Order creation failed");
-      }
-    } catch (error) {
-      console.error("Checkout error:", error);
-      alert(`Checkout failed: ${error.message}`);
-
-      // Reset button
-      const checkoutBtn = document.querySelector(".checkout-btn");
-      if (checkoutBtn) {
-        checkoutBtn.textContent = "Checkout with Swipe Simple";
-        checkoutBtn.disabled = false;
-      }
-    }
+    // Redirect to secure checkout form
+    window.location.href = `${window.location.origin}/checkout.html`;
   }
 
   // Get customer information (in production, this would come from a form)

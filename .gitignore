@@ -110,3 +110,4 @@ Thumbs.db
 *.csv
 !SwipeSimple_Catalog_CORRECTED.csv
 !SwipeSimple_Detailed_Catalog_GoogleSheets.csv
+.env*.local

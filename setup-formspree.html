@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Setup New Formspree Forms</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .form-section { margin: 30px 0; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        input, textarea, select { width: 100%; padding: 10px; margin: 5px 0; }
+        button { background: #007cba; color: white; padding: 15px 30px; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #005a87; }
+        .instructions { background: #f0f0f0; padding: 15px; margin: 20px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Setup New Formspree Forms</h1>
+    
+    <div class="instructions">
+        <h3>Instructions:</h3>
+        <p>1. Go to <a href="https://formspree.io" target="_blank">formspree.io</a> and create a free account</p>
+        <p>2. Create 3 new forms with these settings:</p>
+        <ul>
+            <li><strong>Contact Form</strong> - Email: artwithheartandgiftsllc@gmail.com</li>
+            <li><strong>Commission Form</strong> - Email: artwithheartandgiftsllc@gmail.com</li>
+            <li><strong>Checkout Form</strong> - Email: artwithheartandgiftsllc@gmail.com</li>
+        </ul>
+        <p>3. Copy the endpoint URLs (like https://formspree.io/f/xxxxxxxx) and test them below</p>
+        <p>4. Once working, I'll update the website code with the new endpoints</p>
+    </div>
+
+    <div class="form-section">
+        <h2>Test Contact Form</h2>
+        <form action="https://formspree.io/f/NEW_CONTACT_ENDPOINT" method="POST">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <input type="tel" name="phone" placeholder="Your Phone">
+            <input type="text" name="subject" placeholder="Subject">
+            <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+            <button type="submit">Test Contact Form</button>
+        </form>
+    </div>
+
+    <div class="form-section">
+        <h2>Test Commission Form</h2>
+        <form action="https://formspree.io/f/NEW_COMMISSION_ENDPOINT" method="POST">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <input type="tel" name="phone" placeholder="Your Phone">
+            <select name="project_type" required>
+                <option value="">Select Project Type</option>
+                <option value="painting">Custom Painting</option>
+                <option value="portrait">Portrait</option>
+                <option value="landscape">Landscape</option>
+                <option value="abstract">Abstract</option>
+                <option value="other">Other</option>
+            </select>
+            <input type="text" name="size" placeholder="Dimensions (e.g., 16x20)">
+            <input type="text" name="budget" placeholder="Budget Range">
+            <input type="text" name="timeline" placeholder="Timeline">
+            <input type="text" name="location" placeholder="Location">
+            <textarea name="description" placeholder="Project Description" rows="3" required></textarea>
+            <textarea name="inspiration" placeholder="Inspiration/References" rows="2"></textarea>
+            <button type="submit">Test Commission Form</button>
+        </form>
+    </div>
+
+    <div class="form-section">
+        <h2>Test Checkout Form</h2>
+        <form action="https://formspree.io/f/NEW_CHECKOUT_ENDPOINT" method="POST">
+            <input type="text" name="order_id" placeholder="Order ID" value="TEST-ORDER-123" required>
+            <input type="text" name="customer_name" placeholder="Customer Name" required>
+            <input type="email" name="customer_email" placeholder="Customer Email" required>
+            <input type="tel" name="customer_phone" placeholder="Customer Phone">
+            <input type="text" name="total_amount" placeholder="Total Amount" value="42.39" required>
+            <textarea name="order_items" placeholder="Order Items" rows="3" required>Test Product (Qty: 1) - $40.00</textarea>
+            <input type="text" name="card_last4" placeholder="Card Last 4 Digits" value="1111">
+            <textarea name="message" placeholder="Special Instructions" rows="2"></textarea>
+            <button type="submit">Test Checkout Form</button>
+        </form>
+    </div>
+
+    <div class="instructions">
+        <h3>After Testing:</h3>
+        <p>If the forms work and you receive emails, provide me with the 3 working endpoint URLs and I'll update the website immediately!</p>
+    </div>
+</body>
+</html>

@@ -1,19 +1,21 @@
 {
-  "name": "artwithheartandgifts",
+  "name": "artwithheartandgifts-public",
   "version": "1.0.0",
   "description": "Art with Heart & Gifts - Handcrafted Art & Gifts",
   "scripts": {
-    "dev": "vercel dev",
-    "start": "vercel dev",
+    "dev": "node server.js",
+    "start": "node server.js",
     "build": "echo 'Static site - no build required'",
     "deploy": "vercel --prod"
   },
   "dependencies": {
-    "nodemailer": "^6.9.7",
-    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^6.10.1",
     "uuid": "^9.0.1"
   },
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   }
 }
