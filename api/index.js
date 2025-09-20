@@ -23,32 +23,32 @@ module.exports = async function handler(req, res) {
   try {
     const startTime = Date.now();
     const { method } = req;
-    const url = req.url || req.path || '';
+    const url = req.url || req.path || "";
 
     console.log(`[VERCEL] ${method} ${url}`);
 
     // Route based on URL path and method
-    if (method === 'GET' && (url.includes('health') || url === '/')) {
+    if (method === "GET" && (url.includes("health") || url === "/")) {
       return await handleHealth(req, res, startTime);
     }
-    
-    if (method === 'POST' && url.includes('enhanced-checkout')) {
+
+    if (method === "POST" && url.includes("enhanced-checkout")) {
       return await handleEnhancedCheckout(req, res, startTime);
     }
-    
-    if (method === 'POST' && url.includes('secure-checkout')) {
+
+    if (method === "POST" && url.includes("secure-checkout")) {
       return await handleSecureCheckout(req, res, startTime);
     }
-    
-    if (method === 'POST' && url.includes('contact')) {
+
+    if (method === "POST" && url.includes("contact")) {
       return await handleContact(req, res, startTime);
     }
-    
-    if (method === 'POST' && url.includes('commission')) {
+
+    if (method === "POST" && url.includes("commission")) {
       return await handleCommission(req, res, startTime);
     }
-    
-    if (method === 'POST' && url.includes('test-gmail')) {
+
+    if (method === "POST" && url.includes("test-gmail")) {
       return await handleTestGmail(req, res, startTime);
     }
 
@@ -58,21 +58,20 @@ module.exports = async function handler(req, res) {
       message: "Art with Heart & Gifts API",
       availableEndpoints: [
         "GET /api/health",
-        "POST /api/enhanced-checkout", 
+        "POST /api/enhanced-checkout",
         "POST /api/secure-checkout",
         "POST /api/contact",
         "POST /api/commission",
-        "POST /api/test-gmail"
+        "POST /api/test-gmail",
       ],
       method: method,
-      url: url
+      url: url,
     });
-
   } catch (error) {
     console.error("API Error:", error);
     return res.status(500).json({
       success: false,
-      error: { message: "Internal server error", details: error.message }
+      error: { message: "Internal server error", details: error.message },
     });
   }
 };
@@ -124,7 +123,9 @@ async function handleHealth(req, res, startTime) {
     },
   };
 
-  const healthyProviders = Object.values(providerTests).filter((p) => p.success).length;
+  const healthyProviders = Object.values(providerTests).filter(
+    (p) => p.success
+  ).length;
   if (healthyProviders === 0) {
     overallHealth.status = "critical";
   } else if (healthyProviders < enabledProviders.length) {
@@ -143,7 +144,12 @@ async function handleHealth(req, res, startTime) {
     }
   );
 
-  logger.api("/api/health", "GET", "COMPLETED", `Health check completed in ${Date.now() - startTime}ms`);
+  logger.api(
+    "/api/health",
+    "GET",
+    "COMPLETED",
+    `Health check completed in ${Date.now() - startTime}ms`
+  );
 
   const statusCode = overallHealth.status === "critical" ? 503 : 200;
   res.status(statusCode).json(response);
@@ -151,7 +157,12 @@ async function handleHealth(req, res, startTime) {
 
 // Enhanced Checkout Handler
 async function handleEnhancedCheckout(req, res, startTime) {
-  logger.api("/api/enhanced-checkout", "POST", "STARTED", "Enhanced checkout request received");
+  logger.api(
+    "/api/enhanced-checkout",
+    "POST",
+    "STARTED",
+    "Enhanced checkout request received"
+  );
 
   // Parse request body
   let body;
@@ -169,11 +180,23 @@ async function handleEnhancedCheckout(req, res, startTime) {
   // Validate request
   const validation = errorHandler.validateCheckoutRequest(body);
   if (!validation.valid) {
-    logger.api("/api/enhanced-checkout", "POST", "VALIDATION_FAILED", "Invalid request data");
+    logger.api(
+      "/api/enhanced-checkout",
+      "POST",
+      "VALIDATION_FAILED",
+      "Invalid request data"
+    );
     return res.status(validation.error.error.code).json(validation.error);
   }
 
-  const { customerInfo, cartItems, paymentInfo, totalAmount, orderId, referenceNumber } = body;
+  const {
+    customerInfo,
+    cartItems,
+    paymentInfo,
+    totalAmount,
+    orderId,
+    referenceNumber,
+  } = body;
 
   // Generate order details
   const orderNumber = `AWH-${uuidv4().substring(0, 8).toUpperCase()}`;
@@ -185,7 +208,11 @@ async function handleEnhancedCheckout(req, res, startTime) {
     minute: "2-digit",
   });
 
-  logger.order(orderNumber, "CREATED", `Order created for ${customerInfo.firstName} ${customerInfo.lastName || ""}`);
+  logger.order(
+    orderNumber,
+    "CREATED",
+    `Order created for ${customerInfo.firstName} ${customerInfo.lastName || ""}`
+  );
 
   // Prepare order data for email manager
   const orderData = {
@@ -205,7 +232,11 @@ async function handleEnhancedCheckout(req, res, startTime) {
 
   try {
     emailResult = await emailManager.sendOrderEmails(orderData);
-    logger.order(orderNumber, "EMAILS_SENT", `Emails sent via ${emailResult.provider}`);
+    logger.order(
+      orderNumber,
+      "EMAILS_SENT",
+      `Emails sent via ${emailResult.provider}`
+    );
   } catch (emailError) {
     logger.error("enhanced-checkout", emailError);
     logger.order(orderNumber, "EMAIL_FAILED", emailError.message);
@@ -242,7 +273,12 @@ async function handleEnhancedCheckout(req, res, startTime) {
     emailProvider: emailResult.provider,
   });
 
-  logger.api("/api/enhanced-checkout", "POST", "COMPLETED", `Order ${orderNumber} processed successfully in ${Date.now() - startTime}ms`);
+  logger.api(
+    "/api/enhanced-checkout",
+    "POST",
+    "COMPLETED",
+    `Order ${orderNumber} processed successfully in ${Date.now() - startTime}ms`
+  );
   logger.order(orderNumber, "COMPLETED", "Order processing completed");
 
   res.status(200).json(response);
@@ -251,7 +287,7 @@ async function handleEnhancedCheckout(req, res, startTime) {
 // Secure Checkout Handler (Legacy)
 async function handleSecureCheckout(req, res, startTime) {
   const nodemailer = require("nodemailer");
-  
+
   // Parse request body
   let body;
   if (req.body) {
@@ -265,7 +301,14 @@ async function handleSecureCheckout(req, res, startTime) {
     body = JSON.parse(rawBody);
   }
 
-  const { customerInfo, cartItems, paymentInfo, totalAmount, orderId, referenceNumber } = body;
+  const {
+    customerInfo,
+    cartItems,
+    paymentInfo,
+    totalAmount,
+    orderId,
+    referenceNumber,
+  } = body;
 
   // Validate required fields
   if (!customerInfo || !cartItems || !totalAmount || !paymentInfo) {
@@ -283,7 +326,7 @@ async function handleSecureCheckout(req, res, startTime) {
   const orderNumber = `AWH-${uuidv4().substring(0, 8).toUpperCase()}`;
   const orderDate = new Date().toLocaleDateString("en-US", {
     year: "numeric",
-    month: "long", 
+    month: "long",
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
@@ -292,14 +335,11 @@ async function handleSecureCheckout(req, res, startTime) {
   // Create transporter
   const transporter = nodemailer.createTransporter({
     host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
+    port: 465,
+    secure: true, // Use SSL
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
-    },
-    tls: {
-      rejectUnauthorized: false,
     },
   });
 
@@ -312,7 +352,9 @@ async function handleSecureCheckout(req, res, startTime) {
       html: `
         <h2>New Order Received</h2>
         <p><strong>Order Number:</strong> ${orderNumber}</p>
-        <p><strong>Customer:</strong> ${customerInfo.firstName} ${customerInfo.lastName}</p>
+        <p><strong>Customer:</strong> ${customerInfo.firstName} ${
+        customerInfo.lastName
+      }</p>
         <p><strong>Email:</strong> ${customerInfo.email}</p>
         <p><strong>Total:</strong> $${totalAmount.toFixed(2)}</p>
         <p><strong>Items:</strong> ${cartItems.length} item(s)</p>
@@ -356,7 +398,7 @@ async function handleContact(req, res, startTime) {
   if (!customerInfo || !message) {
     return res.status(400).json({
       success: false,
-      error: { message: "Missing required fields", code: 400 }
+      error: { message: "Missing required fields", code: 400 },
     });
   }
 
@@ -365,8 +407,12 @@ async function handleContact(req, res, startTime) {
   let emailResult;
 
   try {
-    const gmailProvider = emailManager.providers.find((p) => p.name === "gmail");
-    const formsubmitProvider = emailManager.providers.find((p) => p.name === "formsubmit");
+    const gmailProvider = emailManager.providers.find(
+      (p) => p.name === "gmail"
+    );
+    const formsubmitProvider = emailManager.providers.find(
+      (p) => p.name === "formsubmit"
+    );
 
     if (gmailProvider && gmailProvider.enabled) {
       try {
@@ -399,24 +445,32 @@ async function handleContact(req, res, startTime) {
       throw new Error("No email providers available");
     }
 
-    const response = errorHandler.createSuccessResponse({
-      messageId: emailResult.messageId,
-      customerInfo: {
-        name: customerInfo.name,
-        email: customerInfo.email,
-      },
-      emailDelivery: {
-        success: emailResult.success,
-        provider: emailResult.provider,
+    const response = errorHandler.createSuccessResponse(
+      {
         messageId: emailResult.messageId,
-        details: emailResult.details,
+        customerInfo: {
+          name: customerInfo.name,
+          email: customerInfo.email,
+        },
+        emailDelivery: {
+          success: emailResult.success,
+          provider: emailResult.provider,
+          messageId: emailResult.messageId,
+          details: emailResult.details,
+        },
       },
-    }, {
-      processingTime: Date.now() - startTime,
-      emailProvider: emailResult.provider,
-    });
+      {
+        processingTime: Date.now() - startTime,
+        emailProvider: emailResult.provider,
+      }
+    );
 
-    logger.api("/api/contact", "POST", "COMPLETED", `Contact form processed successfully`);
+    logger.api(
+      "/api/contact",
+      "POST",
+      "COMPLETED",
+      `Contact form processed successfully`
+    );
     res.status(200).json(response);
   } catch (error) {
     logger.error("contact", error);
@@ -427,7 +481,12 @@ async function handleContact(req, res, startTime) {
 
 // Commission Handler
 async function handleCommission(req, res, startTime) {
-  logger.api("/api/commission", "POST", "STARTED", "Commission request received");
+  logger.api(
+    "/api/commission",
+    "POST",
+    "STARTED",
+    "Commission request received"
+  );
 
   // Parse request body
   let body;
@@ -448,7 +507,7 @@ async function handleCommission(req, res, startTime) {
   if (!customerInfo || !projectDetails) {
     return res.status(400).json({
       success: false,
-      error: { message: "Missing required fields", code: 400 }
+      error: { message: "Missing required fields", code: 400 },
     });
   }
 
@@ -457,8 +516,12 @@ async function handleCommission(req, res, startTime) {
   let emailResult;
 
   try {
-    const gmailProvider = emailManager.providers.find((p) => p.name === "gmail");
-    const formsubmitProvider = emailManager.providers.find((p) => p.name === "formsubmit");
+    const gmailProvider = emailManager.providers.find(
+      (p) => p.name === "gmail"
+    );
+    const formsubmitProvider = emailManager.providers.find(
+      (p) => p.name === "formsubmit"
+    );
 
     if (gmailProvider && gmailProvider.enabled) {
       try {
@@ -488,29 +551,37 @@ async function handleCommission(req, res, startTime) {
       throw new Error("No email providers available");
     }
 
-    const response = errorHandler.createSuccessResponse({
-      messageId: emailResult.messageId,
-      customerInfo: {
-        name: customerInfo.name,
-        email: customerInfo.email,
-      },
-      projectDetails: {
-        type: projectDetails.type,
-        size: projectDetails.size,
-        budget: projectDetails.budget,
-      },
-      emailDelivery: {
-        success: emailResult.success,
-        provider: emailResult.provider,
+    const response = errorHandler.createSuccessResponse(
+      {
         messageId: emailResult.messageId,
-        details: emailResult.details,
+        customerInfo: {
+          name: customerInfo.name,
+          email: customerInfo.email,
+        },
+        projectDetails: {
+          type: projectDetails.type,
+          size: projectDetails.size,
+          budget: projectDetails.budget,
+        },
+        emailDelivery: {
+          success: emailResult.success,
+          provider: emailResult.provider,
+          messageId: emailResult.messageId,
+          details: emailResult.details,
+        },
       },
-    }, {
-      processingTime: Date.now() - startTime,
-      emailProvider: emailResult.provider,
-    });
+      {
+        processingTime: Date.now() - startTime,
+        emailProvider: emailResult.provider,
+      }
+    );
 
-    logger.api("/api/commission", "POST", "COMPLETED", `Commission form processed successfully`);
+    logger.api(
+      "/api/commission",
+      "POST",
+      "COMPLETED",
+      `Commission form processed successfully`
+    );
     res.status(200).json(response);
   } catch (error) {
     logger.error("commission", error);
@@ -522,20 +593,17 @@ async function handleCommission(req, res, startTime) {
 // Test Gmail Handler
 async function handleTestGmail(req, res, startTime) {
   const nodemailer = require("nodemailer");
-  
+
   try {
     console.log("Testing Gmail SMTP connection...");
-    
+
     const transporter = nodemailer.createTransporter({
       host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
+      port: 465,
+      secure: true, // Use SSL
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
-      },
-      tls: {
-        rejectUnauthorized: false,
       },
     });
 
