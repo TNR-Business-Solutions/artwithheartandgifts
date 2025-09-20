@@ -8,6 +8,7 @@ const emailConfig = require("./config/email-config");
 const errorHandler = new ErrorHandler();
 
 module.exports = async function handler(req, res) {
+  // Ensure this is properly recognized as a Vercel function
   // Set CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -20,44 +21,59 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const { url, method } = req;
     const startTime = Date.now();
+    const { method } = req;
+    const url = req.url || req.path || '';
 
-    // Route based on URL path
-    if (url.includes('/api/health') && method === 'GET') {
+    console.log(`[VERCEL] ${method} ${url}`);
+
+    // Route based on URL path and method
+    if (method === 'GET' && (url.includes('health') || url === '/')) {
       return await handleHealth(req, res, startTime);
     }
     
-    if (url.includes('/api/enhanced-checkout') && method === 'POST') {
+    if (method === 'POST' && url.includes('enhanced-checkout')) {
       return await handleEnhancedCheckout(req, res, startTime);
     }
     
-    if (url.includes('/api/secure-checkout') && method === 'POST') {
+    if (method === 'POST' && url.includes('secure-checkout')) {
       return await handleSecureCheckout(req, res, startTime);
     }
     
-    if (url.includes('/api/contact') && method === 'POST') {
+    if (method === 'POST' && url.includes('contact')) {
       return await handleContact(req, res, startTime);
     }
     
-    if (url.includes('/api/commission') && method === 'POST') {
+    if (method === 'POST' && url.includes('commission')) {
       return await handleCommission(req, res, startTime);
     }
     
-    if (url.includes('/api/test-gmail') && method === 'POST') {
+    if (method === 'POST' && url.includes('test-gmail')) {
       return await handleTestGmail(req, res, startTime);
     }
 
-    // Default 404 for unknown endpoints
-    return res.status(404).json({
-      success: false,
-      error: { message: "API endpoint not found", code: 404 }
+    // Default response for unknown endpoints
+    return res.status(200).json({
+      success: true,
+      message: "Art with Heart & Gifts API",
+      availableEndpoints: [
+        "GET /api/health",
+        "POST /api/enhanced-checkout", 
+        "POST /api/secure-checkout",
+        "POST /api/contact",
+        "POST /api/commission",
+        "POST /api/test-gmail"
+      ],
+      method: method,
+      url: url
     });
 
   } catch (error) {
-    logger.error("api-router", error);
-    const errorResponse = errorHandler.handleSystemError(error);
-    res.status(500).json(errorResponse);
+    console.error("API Error:", error);
+    return res.status(500).json({
+      success: false,
+      error: { message: "Internal server error", details: error.message }
+    });
   }
 };
 
