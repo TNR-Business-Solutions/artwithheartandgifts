@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enhanced API Debug Tool</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      h2 {
+        color: #555;
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+      }
+      .button-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 20px 0;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      button.secondary {
+        background: #6c757d;
+      }
+      button.secondary:hover {
+        background: #545b62;
+      }
+      button.danger {
+        background: #dc3545;
+      }
+      button.danger:hover {
+        background: #c82333;
+      }
+      button.success {
+        background: #28a745;
+      }
+      button.success:hover {
+        background: #218838;
+      }
+      .result {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 5px;
+        display: none;
+        max-height: 500px;
+        overflow-y: auto;
+      }
+      .success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .loading {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+      }
+      .info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+      pre {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+      }
+      .status-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+      }
+      .status-card {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #007bff;
+      }
+      .status-card.healthy {
+        border-left-color: #28a745;
+      }
+      .status-card.degraded {
+        border-left-color: #ffc107;
+      }
+      .status-card.critical {
+        border-left-color: #dc3545;
+      }
+      .form-section {
+        margin: 20px 0;
+        padding: 20px;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        background: #f8f9fa;
+      }
+      .form-group {
+        margin: 15px 0;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      textarea {
+        height: 100px;
+        resize: vertical;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 Enhanced API Debug Tool</h1>
+      <p>
+        This tool tests the new enhanced email system with provider fallback and
+        improved error handling.
+      </p>
+
+      <!-- System Health -->
+      <h2>📊 System Health</h2>
+      <div class="button-group">
+        <button onclick="checkSystemHealth()">Check System Health</button>
+        <button onclick="testAllProviders()" class="secondary">
+          Test All Providers
+        </button>
+      </div>
+      <div id="healthResult" class="result"></div>
+
+      <!-- Enhanced Checkout Testing -->
+      <h2>🛒 Enhanced Checkout Testing</h2>
+      <div class="button-group">
+        <button onclick="testEnhancedCheckout()" class="success">
+          Test Enhanced Checkout
+        </button>
+        <button onclick="testCheckoutWithInvalidData()" class="danger">
+          Test Invalid Data
+        </button>
+      </div>
+      <div id="checkoutResult" class="result"></div>
+
+      <!-- Enhanced Contact Testing -->
+      <h2>📧 Enhanced Contact Testing</h2>
+      <div class="form-section">
+        <div class="form-group">
+          <label for="contactName">Name:</label>
+          <input type="text" id="contactName" value="Test User" />
+        </div>
+        <div class="form-group">
+          <label for="contactEmail">Email:</label>
+          <input
+            type="email"
+            id="contactEmail"
+            value="royturner1489@gmail.com"
+          />
+        </div>
+        <div class="form-group">
+          <label for="contactPhone">Phone:</label>
+          <input type="text" id="contactPhone" value="555-123-4567" />
+        </div>
+        <div class="form-group">
+          <label for="contactSubject">Subject:</label>
+          <select id="contactSubject">
+            <option value="General Question">General Question</option>
+            <option value="Order Inquiry">Order Inquiry</option>
+            <option value="Custom Request">Custom Request</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="contactMessage">Message:</label>
+          <textarea id="contactMessage">
+This is a test message to verify the enhanced contact form email functionality is working correctly with the new email provider system.</textarea
+          >
+        </div>
+        <div class="button-group">
+          <button onclick="testEnhancedContact()" class="success">
+            Test Enhanced Contact
+          </button>
+          <button onclick="testContactWithInvalidData()" class="danger">
+            Test Invalid Data
+          </button>
+        </div>
+      </div>
+      <div id="contactResult" class="result"></div>
+
+      <!-- Enhanced Commission Testing -->
+      <h2>🎨 Enhanced Commission Testing</h2>
+      <div class="form-section">
+        <div class="form-group">
+          <label for="commissionName">Name:</label>
+          <input type="text" id="commissionName" value="Commission Test User" />
+        </div>
+        <div class="form-group">
+          <label for="commissionEmail">Email:</label>
+          <input
+            type="email"
+            id="commissionEmail"
+            value="royturner1489@gmail.com"
+          />
+        </div>
+        <div class="form-group">
+          <label for="commissionPhone">Phone:</label>
+          <input type="text" id="commissionPhone" value="555-987-6543" />
+        </div>
+        <div class="form-group">
+          <label for="commissionType">Project Type:</label>
+          <select id="commissionType">
+            <option value="Canvas Original">Canvas Original</option>
+            <option value="Print">Print</option>
+            <option value="Digital Art">Digital Art</option>
+            <option value="Custom Design">Custom Design</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="commissionSize">Size:</label>
+          <input type="text" id="commissionSize" value="12x16" />
+        </div>
+        <div class="form-group">
+          <label for="commissionBudget">Budget:</label>
+          <input type="text" id="commissionBudget" value="500-1000" />
+        </div>
+        <div class="form-group">
+          <label for="commissionDescription">Description:</label>
+          <textarea id="commissionDescription">
+This is a test commission request to verify the enhanced commission form email functionality is working correctly with the new email provider system. I would like a custom artwork featuring nature scenes.</textarea
+          >
+        </div>
+        <div class="button-group">
+          <button onclick="testEnhancedCommission()" class="success">
+            Test Enhanced Commission
+          </button>
+          <button onclick="testCommissionWithInvalidData()" class="danger">
+            Test Invalid Data
+          </button>
+        </div>
+      </div>
+      <div id="commissionResult" class="result"></div>
+
+      <!-- Clear Results -->
+      <div class="button-group">
+        <button onclick="clearAllResults()" class="secondary">
+          Clear All Results
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const BASE_URL =
+        "https://artwithheartandgifts-g0bdvxmf8-tnr-business-solutions-projects.vercel.app";
+
+      function showResult(elementId, message, type = "info") {
+        const result = document.getElementById(elementId);
+        result.className = `result ${type}`;
+        result.innerHTML = message;
+        result.style.display = "block";
+      }
+
+      async function checkSystemHealth() {
+        showResult("healthResult", "Checking system health...", "loading");
+
+        try {
+          const response = await fetch(`${BASE_URL}/api/health`);
+          const result = await response.json();
+
+          if (result.success) {
+            const health = result.data.overall;
+            const providers = result.data.providers;
+
+            let healthHtml = `
+              <h3>🏥 System Health Status: ${health.status.toUpperCase()}</h3>
+              <div class="status-grid">
+                <div class="status-card ${health.status}">
+                  <h4>Overall Status</h4>
+                  <p><strong>Status:</strong> ${health.status}</p>
+                  <p><strong>Uptime:</strong> ${Math.round(health.uptime)}s</p>
+                  <p><strong>Environment:</strong> ${health.environment}</p>
+                </div>
+                <div class="status-card">
+                  <h4>Email Providers</h4>
+                  <p><strong>Total:</strong> ${health.providers.total}</p>
+                  <p><strong>Enabled:</strong> ${health.providers.enabled}</p>
+                  <p><strong>Healthy:</strong> ${health.providers.healthy}</p>
+                </div>
+              </div>
+              
+              <h4>Provider Status:</h4>
+              <div class="status-grid">
+            `;
+
+            Object.entries(providers).forEach(([name, provider]) => {
+              const statusClass = provider.success ? "healthy" : "critical";
+              healthHtml += `
+                <div class="status-card ${statusClass}">
+                  <h4>${name.toUpperCase()}</h4>
+                  <p><strong>Status:</strong> ${
+                    provider.success ? "✅ Healthy" : "❌ Failed"
+                  }</p>
+                  <p><strong>Response Time:</strong> ${
+                    provider.responseTime
+                  }ms</p>
+                  ${
+                    provider.error
+                      ? `<p><strong>Error:</strong> ${provider.error}</p>`
+                      : ""
+                  }
+                </div>
+              `;
+            });
+
+            healthHtml += `
+              </div>
+              
+              <h4>Configuration:</h4>
+              <ul>
+                <li><strong>Fallback Enabled:</strong> ${
+                  health.configuration.fallbackEnabled
+                }</li>
+                <li><strong>Primary Provider:</strong> ${
+                  health.configuration.primaryProvider
+                }</li>
+                <li><strong>Fallback Provider:</strong> ${
+                  health.configuration.fallbackProvider
+                }</li>
+                <li><strong>Retry Attempts:</strong> ${
+                  health.configuration.retryAttempts
+                }</li>
+              </ul>
+              
+              <h4>Full Response:</h4>
+              <pre>${JSON.stringify(result, null, 2)}</pre>
+            `;
+
+            showResult(
+              "healthResult",
+              healthHtml,
+              response.ok ? "success" : "error"
+            );
+          } else {
+            showResult(
+              "healthResult",
+              `
+              <h3>❌ Health Check Failed</h3>
+              <p><strong>Error:</strong> ${
+                result.error?.message || "Unknown error"
+              }</p>
+              <pre>${JSON.stringify(result, null, 2)}</pre>
+            `,
+              "error"
+            );
+          }
+        } catch (error) {
+          showResult(
+            "healthResult",
+            `
+            <h3>❌ Network Error</h3>
+            <p><strong>Error:</strong> ${error.message}</p>
+          `,
+            "error"
+          );
+        }
+      }
+
+      async function testAllProviders() {
+        showResult("healthResult", "Testing all email providers...", "loading");
+
+        try {
+          // Test Gmail
+          const gmailResponse = await fetch(`${BASE_URL}/api/test-gmail`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({}),
+          });
+
+          // Test Enhanced Checkout (which uses the new system)
+          const checkoutResponse = await fetch(
+            `${BASE_URL}/api/enhanced-checkout`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                customerInfo: {
+                  firstName: "Test",
+                  lastName: "User",
+                  email: "test@example.com",
+                  phone: "555-123-4567",
+                  address: "123 Test St",
+                  city: "Test City",
+                  state: "FL",
+                  zipCode: "12345",
+                },
+                cartItems: [
+                  {
+                    id: "test-1",
+                    title: "Test Item",
+                    price: 10.0,
+                    quantity: 1,
+                    type: "Test",
+                    size: "Small",
+                  },
+                ],
+                totalAmount: 10.0,
+                paymentInfo: {
+                  cardholderName: "Test User",
+                  cardNumber: "4111111111111111",
+                  expirationDate: "12/25",
+                  cvv: "123",
+                  transactionId: "TEST-" + Date.now(),
+                },
+              }),
+            }
+          );
+
+          const gmailResult = await gmailResponse.json();
+          const checkoutResult = await checkoutResponse.json();
+
+          let resultHtml = `
+            <h3>🧪 Provider Test Results</h3>
+            <div class="status-grid">
+              <div class="status-card ${
+                gmailResult.success ? "healthy" : "critical"
+              }">
+                <h4>Gmail Direct Test</h4>
+                <p><strong>Status:</strong> ${
+                  gmailResult.success ? "✅ Success" : "❌ Failed"
+                }</p>
+                ${
+                  gmailResult.error
+                    ? `<p><strong>Error:</strong> ${gmailResult.error}</p>`
+                    : ""
+                }
+              </div>
+              <div class="status-card ${
+                checkoutResult.success ? "healthy" : "critical"
+              }">
+                <h4>Enhanced Checkout Test</h4>
+                <p><strong>Status:</strong> ${
+                  checkoutResult.success ? "✅ Success" : "❌ Failed"
+                }</p>
+                <p><strong>Email Provider:</strong> ${
+                  checkoutResult.data?.emailDelivery?.provider || "Unknown"
+                }</p>
+                ${
+                  checkoutResult.error
+                    ? `<p><strong>Error:</strong> ${checkoutResult.error}</p>`
+                    : ""
+                }
+              </div>
+            </div>
+            
+            <h4>Gmail Test Response:</h4>
+            <pre>${JSON.stringify(gmailResult, null, 2)}</pre>
+            
+            <h4>Enhanced Checkout Test Response:</h4>
+            <pre>${JSON.stringify(checkoutResult, null, 2)}</pre>
+          `;
+
+          showResult("healthResult", resultHtml, "info");
+        } catch (error) {
+          showResult(
+            "healthResult",
+            `
+            <h3>❌ Provider Test Failed</h3>
+            <p><strong>Error:</strong> ${error.message}</p>
+          `,
+            "error"
+          );
+        }
+      }
+
+      async function testEnhancedCheckout() {
+        showResult("checkoutResult", "Testing enhanced checkout...", "loading");
+
+        const testData = {
+          customerInfo: {
+            firstName: "Test",
+            lastName: "User",
+            email: "royturner1489@gmail.com",
+            phone: "555-123-4567",
+            address: "123 Test St",
+            city: "Test City",
+            state: "FL",
+            zipCode: "12345",
+            specialInstructions: "Test order with enhanced system",
+          },
+          cartItems: [
+            {
+              id: "test-1",
+              title: "Test Artwork",
+              price: 25.0,
+              quantity: 2,
+              type: "Canvas",
+              size: "8x10",
+            },
+            {
+              id: "test-2",
+              title: "Test Print",
+              price: 15.0,
+              quantity: 1,
+              type: "Print",
+              size: "5x7",
+            },
+          ],
+          totalAmount: 65.0,
+          paymentInfo: {
+            cardholderName: "Test User",
+            cardNumber: "4111111111111111",
+            expirationDate: "12/25",
+            cvv: "123",
+            method: "Credit Card",
+            transactionId: "TEST-" + Date.now(),
+          },
+          orderId: "TEST-" + Date.now(),
+        };
+
+        try {
+          const response = await fetch(`${BASE_URL}/api/enhanced-checkout`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(testData),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            showResult(
+              "checkoutResult",
+              `
+              <h3>✅ Enhanced Checkout Test Successful</h3>
+              <p><strong>Order ID:</strong> ${result.data.orderNumber}</p>
+              <p><strong>Customer:</strong> ${result.data.customerInfo.name}</p>
+              <p><strong>Total:</strong> $${result.data.totalAmount}</p>
+              <p><strong>Email Provider:</strong> ${
+                result.data.emailDelivery.provider
+              }</p>
+              <p><strong>Email Status:</strong> ${
+                result.data.emailDelivery.success ? "✅ Sent" : "❌ Failed"
+              }</p>
+              <p><strong>Processing Time:</strong> ${
+                result.meta.processingTime
+              }ms</p>
+              
+              <h4>Full Response:</h4>
+              <pre>${JSON.stringify(result, null, 2)}</pre>
+            `,
+              "success"
+            );
+          } else {
+            showResult(
+              "checkoutResult",
+              `
+              <h3>❌ Enhanced Checkout Test Failed</h3>
+              <p><strong>Error:</strong> ${
+                result.error?.message || "Unknown error"
+              }</p>
+              <pre>${JSON.stringify(result, null, 2)}</pre>
+            `,
+              "error"
+            );
+          }
+        } catch (error) {
+          showResult(
+            "checkoutResult",
+            `
+            <h3>❌ Network Error</h3>
+            <p><strong>Error:</strong> ${error.message}</p>
+          `,
+            "error"
+          );
+        }
+      }
+
+      async function testCheckoutWithInvalidData() {
+        showResult(
+          "checkoutResult",
+          "Testing enhanced checkout with invalid data...",
+          "loading"
+        );
+
+        const invalidData = {
+          // Missing required fields
+          customerInfo: {
+            firstName: "Test",
+            // Missing email, address, etc.
+          },
+          cartItems: [], // Empty cart
+          // Missing totalAmount and paymentInfo
+        };
+
+        try {
+          const response = await fetch(`${BASE_URL}/api/enhanced-checkout`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(invalidData),
+          });
+
+          const result = await response.json();
+
+          showResult(
+            "checkoutResult",
+            `
+            <h3>🧪 Invalid Data Test Results</h3>
+            <p><strong>Expected:</strong> Validation error</p>
+            <p><strong>Status Code:</strong> ${response.status}</p>
+            <p><strong>Success:</strong> ${
+              result.success ? "❌ Should be false" : "✅ Correctly failed"
+            }</p>
+            <p><strong>Error Type:</strong> ${
+              result.error?.type || "Unknown"
+            }</p>
+            <p><strong>Error Message:</strong> ${
+              result.error?.message || "No message"
+            }</p>
+            
+            <h4>Full Response:</h4>
+            <pre>${JSON.stringify(result, null, 2)}</pre>
+          `,
+            response.status === 400 ? "success" : "error"
+          );
+        } catch (error) {
+          showResult(
+            "checkoutResult",
+            `
+            <h3>❌ Network Error</h3>
+            <p><strong>Error:</strong> ${error.message}</p>
+          `,
+            "error"
+          );
+        }
+      }
+
+      async function testEnhancedContact() {
+        showResult(
+          "contactResult",
+          "Testing enhanced contact form...",
+          "loading"
+        );
+
+        const testData = {
+          customerInfo: {
+            name: document.getElementById("contactName").value,
+            email: document.getElementById("contactEmail").value,
+            phone: document.getElementById("contactPhone").value,
+          },
+          message: document.getElementById("contactMessage").value,
+          subject: document.getElementById("contactSubject").value,
+        };
+
+        try {
+          const response = await fetch(`${BASE_URL}/api/enhanced-contact`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(testData),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            showResult(
+              "contactResult",
+              `
+              <h3>✅ Enhanced Contact Test Successful</h3>
+              <p><strong>Message ID:</strong> ${result.data.messageId}</p>
+              <p><strong>Customer:</strong> ${result.data.customerInfo.name}</p>
+              <p><strong>Email:</strong> ${result.data.customerInfo.email}</p>
+              <p><strong>Email Provider:</strong> ${
+                result.data.emailDelivery.provider
+              }</p>
+              <p><strong>Email Status:</strong> ${
+                result.data.emailDelivery.success ? "✅ Sent" : "❌ Failed"
+              }</p>
+              <p><strong>Processing Time:</strong> ${
+                result.meta.processingTime
+              }ms</p>
+              
+              <h4>Full Response:</h4>
+              <pre>${JSON.stringify(result, null, 2)}</pre>
+            `,
+              "success"
+            );
+          } else {
+            showResult(
+              "contactResult",
+              `
+              <h3>❌ Enhanced Contact Test Failed</h3>
+              <p><strong>Error:</strong> ${
+                result.error?.message || "Unknown error"
+              }</p>
+              <pre>${JSON.stringify(result, null, 2)}</pre>
+            `,
+              "error"
+            );
+          }
+        } catch (error) {
+          showResult(
+            "contactResult",
+            `
+            <h3>❌ Network Error</h3>
+            <p><strong>Error:</strong> ${error.message}</p>
+          `,
+            "error"
+          );
+        }
+      }
+
+      async function testContactWithInvalidData() {
+        showResult(
+          "contactResult",
+          "Testing enhanced contact with invalid data...",
+          "loading"
+        );
+
+        const invalidData = {
+          customerInfo: {
+            name: "Test",
+            // Missing email
+          },
+          // Missing message
+        };
+
+        try {
+          const response = await fetch(`${BASE_URL}/api/enhanced-contact`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(invalidData),
+          });
+
+          const result = await response.json();
+
+          showResult(
+            "contactResult",
+            `
+            <h3>🧪 Invalid Contact Data Test Results</h3>
+            <p><strong>Expected:</strong> Validation error</p>
+            <p><strong>Status Code:</strong> ${response.status}</p>
+            <p><strong>Success:</strong> ${
+              result.success ? "❌ Should be false" : "✅ Correctly failed"
+            }</p>
+            <p><strong>Error Type:</strong> ${
+              result.error?.type || "Unknown"
+            }</p>
+            <p><strong>Error Message:</strong> ${
+              result.error?.message || "No message"
+            }</p>
+            
+            <h4>Full Response:</h4>
+            <pre>${JSON.stringify(result, null, 2)}</pre>
+          `,
+            response.status === 400 ? "success" : "error"
+          );
+        } catch (error) {
+          showResult(
+            "contactResult",
+            `
+            <h3>❌ Network Error</h3>
+            <p><strong>Error:</strong> ${error.message}</p>
+          `,
+            "error"
+          );
+        }
+      }
+
+      async function testEnhancedCommission() {
+        showResult(
+          "commissionResult",
+          "Testing enhanced commission form...",
+          "loading"
+        );
+
+        const testData = {
+          customerInfo: {
+            name: document.getElementById("commissionName").value,
+            email: document.getElementById("commissionEmail").value,
+            phone: document.getElementById("commissionPhone").value,
+          },
+          projectDetails: {
+            type: document.getElementById("commissionType").value,
+            size: document.getElementById("commissionSize").value,
+            budget: document.getElementById("commissionBudget").value,
+            description: document.getElementById("commissionDescription").value,
+            inspiration: "Test inspiration for enhanced system",
+          },
+        };
+
+        try {
+          const response = await fetch(`${BASE_URL}/api/enhanced-commission`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(testData),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            showResult(
+              "commissionResult",
+              `
+              <h3>✅ Enhanced Commission Test Successful</h3>
+              <p><strong>Message ID:</strong> ${result.data.messageId}</p>
+              <p><strong>Customer:</strong> ${result.data.customerInfo.name}</p>
+              <p><strong>Project Type:</strong> ${
+                result.data.projectDetails.type
+              }</p>
+              <p><strong>Project Size:</strong> ${
+                result.data.projectDetails.size
+              }</p>
+              <p><strong>Email Provider:</strong> ${
+                result.data.emailDelivery.provider
+              }</p>
+              <p><strong>Email Status:</strong> ${
+                result.data.emailDelivery.success ? "✅ Sent" : "❌ Failed"
+              }</p>
+              <p><strong>Processing Time:</strong> ${
+                result.meta.processingTime
+              }ms</p>
+              
+              <h4>Full Response:</h4>
+              <pre>${JSON.stringify(result, null, 2)}</pre>
+            `,
+              "success"
+            );
+          } else {
+            showResult(
+              "commissionResult",
+              `
+              <h3>❌ Enhanced Commission Test Failed</h3>
+              <p><strong>Error:</strong> ${
+                result.error?.message || "Unknown error"
+              }</p>
+              <pre>${JSON.stringify(result, null, 2)}</pre>
+            `,
+              "error"
+            );
+          }
+        } catch (error) {
+          showResult(
+            "commissionResult",
+            `
+            <h3>❌ Network Error</h3>
+            <p><strong>Error:</strong> ${error.message}</p>
+          `,
+            "error"
+          );
+        }
+      }
+
+      async function testCommissionWithInvalidData() {
+        showResult(
+          "commissionResult",
+          "Testing enhanced commission with invalid data...",
+          "loading"
+        );
+
+        const invalidData = {
+          customerInfo: {
+            name: "Test",
+            // Missing email
+          },
+          projectDetails: {
+            type: "Test",
+            // Missing description
+          },
+        };
+
+        try {
+          const response = await fetch(`${BASE_URL}/api/enhanced-commission`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(invalidData),
+          });
+
+          const result = await response.json();
+
+          showResult(
+            "commissionResult",
+            `
+            <h3>🧪 Invalid Commission Data Test Results</h3>
+            <p><strong>Expected:</strong> Validation error</p>
+            <p><strong>Status Code:</strong> ${response.status}</p>
+            <p><strong>Success:</strong> ${
+              result.success ? "❌ Should be false" : "✅ Correctly failed"
+            }</p>
+            <p><strong>Error Type:</strong> ${
+              result.error?.type || "Unknown"
+            }</p>
+            <p><strong>Error Message:</strong> ${
+              result.error?.message || "No message"
+            }</p>
+            
+            <h4>Full Response:</h4>
+            <pre>${JSON.stringify(result, null, 2)}</pre>
+          `,
+            response.status === 400 ? "success" : "error"
+          );
+        } catch (error) {
+          showResult(
+            "commissionResult",
+            `
+            <h3>❌ Network Error</h3>
+            <p><strong>Error:</strong> ${error.message}</p>
+          `,
+            "error"
+          );
+        }
+      }
+
+      function clearAllResults() {
+        const results = [
+          "healthResult",
+          "checkoutResult",
+          "contactResult",
+          "commissionResult",
+        ];
+        results.forEach((id) => {
+          document.getElementById(id).style.display = "none";
+        });
+      }
+
+      // Auto-load system health on page load
+      window.onload = function () {
+        checkSystemHealth();
+      };
+    </script>
+  </body>
+</html>

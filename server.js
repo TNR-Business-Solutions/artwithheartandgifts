@@ -24,18 +24,20 @@ app.use(express.static("."));
 // Import API routes
 const secureCheckout = require("./api/secure-checkout.js");
 const testGmail = require("./api/test-gmail.js");
-const contact = require("./api/contact.js");
-const commission = require("./api/commission.js");
-const orders = require("./api/orders.js");
-const paymentComplete = require("./api/payment/complete.js");
+const enhancedCheckout = require("./api/enhanced-checkout.js");
+const reliableCheckout = require("./api/reliable-checkout.js");
+const enhancedContact = require("./api/enhanced-contact.js");
+const enhancedCommission = require("./api/enhanced-commission.js");
+const health = require("./api/health.js");
 
 // API Routes
 app.post("/api/secure-checkout", secureCheckout);
 app.post("/api/test-gmail", testGmail);
-app.post("/api/contact", contact);
-app.post("/api/commission", commission);
-app.post("/api/orders", orders);
-app.post("/api/payment/complete", paymentComplete);
+app.post("/api/enhanced-checkout", enhancedCheckout);
+app.post("/api/reliable-checkout", reliableCheckout);
+app.post("/api/contact", enhancedContact);
+app.post("/api/commission", enhancedCommission);
+app.get("/api/health", health);
 
 // Serve static files
 app.get("*", (req, res) => {

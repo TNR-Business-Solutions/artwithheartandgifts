@@ -1,3 +1,4 @@
+require("dotenv").config();
 const nodemailer = require("nodemailer");
 const { v4: uuidv4 } = require("uuid");
 
@@ -33,7 +34,10 @@ module.exports = async function handler(req, res) {
       body = JSON.parse(rawBody);
     }
 
-    console.log("Received checkout request body:", JSON.stringify(body, null, 2));
+    console.log(
+      "Received checkout request body:",
+      JSON.stringify(body, null, 2)
+    );
 
     const {
       customerInfo,
@@ -59,8 +63,8 @@ module.exports = async function handler(req, res) {
           customerInfo: !!customerInfo,
           cartItems: !!cartItems,
           totalAmount: !!totalAmount,
-          paymentInfo: !!paymentInfo
-        }
+          paymentInfo: !!paymentInfo,
+        },
       });
     }
 
@@ -71,8 +75,8 @@ module.exports = async function handler(req, res) {
         error: "Missing customer email or name",
         details: {
           email: !!customerInfo.email,
-          firstName: !!customerInfo.firstName
-        }
+          firstName: !!customerInfo.firstName,
+        },
       });
     }
 
@@ -311,8 +315,11 @@ module.exports = async function handler(req, res) {
     console.error("Environment variables check:");
     console.error("EMAIL_USER:", process.env.EMAIL_USER ? "SET" : "NOT SET");
     console.error("EMAIL_PASS:", process.env.EMAIL_PASS ? "SET" : "NOT SET");
-    console.error("RECIPIENT_EMAIL:", process.env.RECIPIENT_EMAIL ? "SET" : "NOT SET");
-    
+    console.error(
+      "RECIPIENT_EMAIL:",
+      process.env.RECIPIENT_EMAIL ? "SET" : "NOT SET"
+    );
+
     return res.status(500).json({
       success: false,
       error: "Failed to process order. Please try again later.",

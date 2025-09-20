@@ -158,12 +158,7 @@
         </div>
         <div class="form-group">
           <label for="state">State:</label>
-          <input
-            type="text"
-            id="state"
-            value="FL"
-            placeholder="Enter state"
-          />
+          <input type="text" id="state" value="FL" placeholder="Enter state" />
         </div>
         <div class="form-group">
           <label for="zipCode">ZIP Code:</label>
@@ -178,7 +173,9 @@
 
       <button onclick="testCheckoutAPI()">Test Checkout API</button>
       <button onclick="testDirectEmail()">Test Direct Email</button>
-      <button onclick="debugAPI()" style="background: #dc3545;">🔍 Debug API Issues</button>
+      <button onclick="debugAPI()" style="background: #dc3545">
+        🔍 Debug API Issues
+      </button>
 
       <div id="result" class="result"></div>
     </div>
@@ -196,15 +193,22 @@
 
         const orderData = {
           customerInfo: {
-            firstName: document.getElementById("customerName").value.split(" ")[0],
-            lastName: document.getElementById("customerName").value.split(" ").slice(1).join(" ") || "",
+            firstName: document
+              .getElementById("customerName")
+              .value.split(" ")[0],
+            lastName:
+              document
+                .getElementById("customerName")
+                .value.split(" ")
+                .slice(1)
+                .join(" ") || "",
             email: document.getElementById("customerEmail").value,
             phone: document.getElementById("customerPhone").value,
             address: document.getElementById("shippingAddress").value,
             city: document.getElementById("city").value,
             state: document.getElementById("state").value,
             zipCode: document.getElementById("zipCode").value,
-            specialInstructions: "Test order - please ignore"
+            specialInstructions: "Test order - please ignore",
           },
           cartItems: [
             {
@@ -212,8 +216,8 @@
               name: "Test Artwork",
               price: parseFloat(document.getElementById("totalAmount").value),
               quantity: 1,
-              image: "/images/test.jpg"
-            }
+              image: "/images/test.jpg",
+            },
           ],
           totalAmount: parseFloat(document.getElementById("totalAmount").value),
           paymentInfo: {
@@ -223,15 +227,15 @@
             cvv: "123",
             saveCard: false,
             method: "Credit Card",
-            transactionId: "TEST-" + Date.now()
+            transactionId: "TEST-" + Date.now(),
           },
           orderId: "TEST-" + Date.now(),
-          referenceNumber: null
+          referenceNumber: null,
         };
 
         try {
           console.log("Testing checkout API with data:", orderData);
-          
+
           const response = await fetch(
             "https://artwithheartandgifts-bz7l9nu3w-tnr-business-solutions-projects.vercel.app/api/secure-checkout",
             {
@@ -257,7 +261,9 @@
                         <p><strong>Next Steps:</strong></p>
                         <ul>
                             <li>Check business email: artwithheartandgiftsllc@gmail.com</li>
-                            <li>Check customer email: ${document.getElementById("customerEmail").value}</li>
+                            <li>Check customer email: ${
+                              document.getElementById("customerEmail").value
+                            }</li>
                             <li>Check spam/junk folders</li>
                             <li>Check Vercel function logs for detailed email sending logs</li>
                         </ul>
@@ -270,7 +276,9 @@
               `
                         <h3>❌ Checkout API Test Failed</h3>
                         <p><strong>Error:</strong> ${result.error}</p>
-                        <p><strong>Details:</strong> ${result.details || "No additional details"}</p>
+                        <p><strong>Details:</strong> ${
+                          result.details || "No additional details"
+                        }</p>
                     `,
               "error"
             );
@@ -299,7 +307,7 @@
               },
               body: JSON.stringify({
                 testEmail: document.getElementById("customerEmail").value,
-                message: "Test email for checkout functionality verification"
+                message: "Test email for checkout functionality verification",
               }),
             }
           );
@@ -344,9 +352,9 @@
 
       async function debugAPI() {
         showResult("🔍 Running comprehensive API debug tests...", "loading");
-        
+
         let debugResults = "<h3>🔍 API Debug Results</h3>";
-        
+
         // Test 1: Environment Variables
         try {
           debugResults += "<h4>1. Testing Environment Variables...</h4>";
@@ -357,84 +365,95 @@
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 testEmail: "royturner1489@gmail.com",
-                message: "Debug test for environment variables"
+                message: "Debug test for environment variables",
               }),
             }
           );
-          
+
           const envResult = await envResponse.json();
           debugResults += `<p><strong>Status:</strong> ${envResponse.status}</p>`;
-          debugResults += `<p><strong>Result:</strong> ${envResult.success ? '✅ SUCCESS' : '❌ FAILED'}</p>`;
-          if (envResult.error) debugResults += `<p><strong>Error:</strong> ${envResult.error}</p>`;
-          
+          debugResults += `<p><strong>Result:</strong> ${
+            envResult.success ? "✅ SUCCESS" : "❌ FAILED"
+          }</p>`;
+          if (envResult.error)
+            debugResults += `<p><strong>Error:</strong> ${envResult.error}</p>`;
         } catch (error) {
           debugResults += `<p><strong>❌ Environment Test Failed:</strong> ${error.message}</p>`;
         }
-        
+
         // Test 2: Minimal Checkout
         try {
           debugResults += "<h4>2. Testing Minimal Checkout Data...</h4>";
           const minimalData = {
             customerInfo: {
               firstName: "Test",
-              lastName: "User", 
+              lastName: "User",
               email: "royturner1489@gmail.com",
               phone: "555-123-4567",
               address: "123 Test St",
               city: "Test City",
               state: "FL",
-              zipCode: "12345"
+              zipCode: "12345",
             },
-            cartItems: [{
-              id: "test-1",
-              title: "Test Artwork",
-              price: 10.00,
-              quantity: 1,
-              type: "Canvas",
-              size: "8x10"
-            }],
-            totalAmount: 10.00,
+            cartItems: [
+              {
+                id: "test-1",
+                title: "Test Artwork",
+                price: 10.0,
+                quantity: 1,
+                type: "Canvas",
+                size: "8x10",
+              },
+            ],
+            totalAmount: 10.0,
             paymentInfo: {
               cardholderName: "Test User",
               cardNumber: "4111111111111111",
               expirationDate: "12/25",
               cvv: "123",
               method: "Credit Card",
-              transactionId: "DEBUG-" + Date.now()
+              transactionId: "DEBUG-" + Date.now(),
             },
-            orderId: "DEBUG-" + Date.now()
+            orderId: "DEBUG-" + Date.now(),
           };
-          
+
           console.log("Debug - Sending minimal data:", minimalData);
           const checkoutResponse = await fetch(
             "https://artwithheartandgifts-bz7l9nu3w-tnr-business-solutions-projects.vercel.app/api/secure-checkout",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(minimalData)
+              body: JSON.stringify(minimalData),
             }
           );
-          
+
           const responseText = await checkoutResponse.text();
           console.log("Debug - Raw response:", responseText);
-          
+
           let checkoutResult;
           try {
             checkoutResult = JSON.parse(responseText);
           } catch (e) {
-            checkoutResult = { error: 'Invalid JSON', rawResponse: responseText };
+            checkoutResult = {
+              error: "Invalid JSON",
+              rawResponse: responseText,
+            };
           }
-          
+
           debugResults += `<p><strong>Status:</strong> ${checkoutResponse.status}</p>`;
-          debugResults += `<p><strong>Success:</strong> ${checkoutResult.success ? '✅ YES' : '❌ NO'}</p>`;
-          if (checkoutResult.error) debugResults += `<p><strong>Error:</strong> ${checkoutResult.error}</p>`;
-          if (checkoutResult.details) debugResults += `<p><strong>Details:</strong> ${checkoutResult.details}</p>`;
-          if (checkoutResult.code) debugResults += `<p><strong>Code:</strong> ${checkoutResult.code}</p>`;
-          
+          debugResults += `<p><strong>Success:</strong> ${
+            checkoutResult.success ? "✅ YES" : "❌ NO"
+          }</p>`;
+          if (checkoutResult.error)
+            debugResults += `<p><strong>Error:</strong> ${checkoutResult.error}</p>`;
+          if (checkoutResult.details)
+            debugResults += `<p><strong>Details:</strong> ${checkoutResult.details}</p>`;
+          if (checkoutResult.code)
+            debugResults += `<p><strong>Code:</strong> ${checkoutResult.code}</p>`;
         } catch (error) {
           debugResults += `<p><strong>❌ Minimal Checkout Failed:</strong> ${error.message}</p>`;
         }
-        
+
         // Test 3: API Endpoint Check
         try {
           debugResults += "<h4>3. Testing API Endpoint Availability...</h4>";
@@ -442,21 +461,25 @@
             "https://artwithheartandgifts-bz7l9nu3w-tnr-business-solutions-projects.vercel.app/api/secure-checkout",
             { method: "OPTIONS" }
           );
-          
+
           debugResults += `<p><strong>OPTIONS Status:</strong> ${endpointResponse.status}</p>`;
-          debugResults += `<p><strong>Headers:</strong> ${JSON.stringify(Object.fromEntries(endpointResponse.headers.entries()))}</p>`;
-          
+          debugResults += `<p><strong>Headers:</strong> ${JSON.stringify(
+            Object.fromEntries(endpointResponse.headers.entries())
+          )}</p>`;
         } catch (error) {
           debugResults += `<p><strong>❌ Endpoint Test Failed:</strong> ${error.message}</p>`;
         }
-        
+
         debugResults += "<hr><p><strong>📋 Next Steps:</strong></p>";
         debugResults += "<ul>";
-        debugResults += "<li>Check Vercel function logs for detailed debugging info</li>";
-        debugResults += "<li>Verify environment variables are set correctly</li>";
-        debugResults += "<li>Check if emails are being sent despite API errors</li>";
+        debugResults +=
+          "<li>Check Vercel function logs for detailed debugging info</li>";
+        debugResults +=
+          "<li>Verify environment variables are set correctly</li>";
+        debugResults +=
+          "<li>Check if emails are being sent despite API errors</li>";
         debugResults += "</ul>";
-        
+
         showResult(debugResults, "info");
       }
     </script>
