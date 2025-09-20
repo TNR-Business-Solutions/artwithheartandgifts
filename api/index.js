@@ -234,25 +234,325 @@ async function handleEnhancedCheckout(req, res, startTime) {
 
 // Secure Checkout Handler (Legacy)
 async function handleSecureCheckout(req, res, startTime) {
-  // Import the existing secure checkout logic
-  const secureCheckout = require("./secure-checkout.js");
-  return await secureCheckout(req, res);
+  const nodemailer = require("nodemailer");
+  
+  // Parse request body
+  let body;
+  if (req.body) {
+    body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  } else {
+    const rawBody = await new Promise((resolve) => {
+      let data = "";
+      req.on("data", (chunk) => (data += chunk));
+      req.on("end", () => resolve(data));
+    });
+    body = JSON.parse(rawBody);
+  }
+
+  const { customerInfo, cartItems, paymentInfo, totalAmount, orderId, referenceNumber } = body;
+
+  // Validate required fields
+  if (!customerInfo || !cartItems || !totalAmount || !paymentInfo) {
+    return res.status(400).json({
+      error: "Missing required checkout information",
+      details: {
+        customerInfo: !!customerInfo,
+        cartItems: !!cartItems,
+        totalAmount: !!totalAmount,
+        paymentInfo: !!paymentInfo,
+      },
+    });
+  }
+
+  const orderNumber = `AWH-${uuidv4().substring(0, 8).toUpperCase()}`;
+  const orderDate = new Date().toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long", 
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  // Create transporter
+  const transporter = nodemailer.createTransporter({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+
+  // Try to send emails (simplified version)
+  try {
+    const businessEmailOptions = {
+      from: process.env.EMAIL_USER,
+      to: process.env.RECIPIENT_EMAIL,
+      subject: `New Order #${orderNumber} - $${totalAmount.toFixed(2)}`,
+      html: `
+        <h2>New Order Received</h2>
+        <p><strong>Order Number:</strong> ${orderNumber}</p>
+        <p><strong>Customer:</strong> ${customerInfo.firstName} ${customerInfo.lastName}</p>
+        <p><strong>Email:</strong> ${customerInfo.email}</p>
+        <p><strong>Total:</strong> $${totalAmount.toFixed(2)}</p>
+        <p><strong>Items:</strong> ${cartItems.length} item(s)</p>
+      `,
+    };
+
+    await transporter.sendMail(businessEmailOptions);
+  } catch (error) {
+    console.log("Email failed, but order processed:", error.message);
+  }
+
+  return res.status(200).json({
+    success: true,
+    orderId: orderId || orderNumber,
+    message: "Order processed successfully!",
+    paymentStatus: "pending",
+    transactionId: paymentInfo.transactionId,
+  });
 }
 
 // Contact Handler
 async function handleContact(req, res, startTime) {
-  const enhancedContact = require("./enhanced-contact.js");
-  return await enhancedContact(req, res);
+  logger.api("/api/contact", "POST", "STARTED", "Contact request received");
+
+  // Parse request body
+  let body;
+  if (req.body) {
+    body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  } else {
+    const rawBody = await new Promise((resolve) => {
+      let data = "";
+      req.on("data", (chunk) => (data += chunk));
+      req.on("end", () => resolve(data));
+    });
+    body = JSON.parse(rawBody);
+  }
+
+  const { customerInfo, message, subject } = body;
+
+  // Validate request
+  if (!customerInfo || !message) {
+    return res.status(400).json({
+      success: false,
+      error: { message: "Missing required fields", code: 400 }
+    });
+  }
+
+  // Send email using EmailManager
+  const emailManager = new EmailManager();
+  let emailResult;
+
+  try {
+    const gmailProvider = emailManager.providers.find((p) => p.name === "gmail");
+    const formsubmitProvider = emailManager.providers.find((p) => p.name === "formsubmit");
+
+    if (gmailProvider && gmailProvider.enabled) {
+      try {
+        emailResult = await gmailProvider.handler.sendContactEmail({
+          customerInfo,
+          message,
+          subject,
+        });
+        emailResult.provider = "gmail";
+      } catch (gmailError) {
+        if (formsubmitProvider && formsubmitProvider.enabled) {
+          emailResult = await formsubmitProvider.handler.sendContactEmail({
+            customerInfo,
+            message,
+            subject,
+          });
+          emailResult.provider = "formsubmit";
+        } else {
+          throw gmailError;
+        }
+      }
+    } else if (formsubmitProvider && formsubmitProvider.enabled) {
+      emailResult = await formsubmitProvider.handler.sendContactEmail({
+        customerInfo,
+        message,
+        subject,
+      });
+      emailResult.provider = "formsubmit";
+    } else {
+      throw new Error("No email providers available");
+    }
+
+    const response = errorHandler.createSuccessResponse({
+      messageId: emailResult.messageId,
+      customerInfo: {
+        name: customerInfo.name,
+        email: customerInfo.email,
+      },
+      emailDelivery: {
+        success: emailResult.success,
+        provider: emailResult.provider,
+        messageId: emailResult.messageId,
+        details: emailResult.details,
+      },
+    }, {
+      processingTime: Date.now() - startTime,
+      emailProvider: emailResult.provider,
+    });
+
+    logger.api("/api/contact", "POST", "COMPLETED", `Contact form processed successfully`);
+    res.status(200).json(response);
+  } catch (error) {
+    logger.error("contact", error);
+    const errorResponse = errorHandler.handleSystemError(error);
+    res.status(500).json(errorResponse);
+  }
 }
 
 // Commission Handler
 async function handleCommission(req, res, startTime) {
-  const enhancedCommission = require("./enhanced-commission.js");
-  return await enhancedCommission(req, res);
+  logger.api("/api/commission", "POST", "STARTED", "Commission request received");
+
+  // Parse request body
+  let body;
+  if (req.body) {
+    body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  } else {
+    const rawBody = await new Promise((resolve) => {
+      let data = "";
+      req.on("data", (chunk) => (data += chunk));
+      req.on("end", () => resolve(data));
+    });
+    body = JSON.parse(rawBody);
+  }
+
+  const { customerInfo, projectDetails } = body;
+
+  // Validate request
+  if (!customerInfo || !projectDetails) {
+    return res.status(400).json({
+      success: false,
+      error: { message: "Missing required fields", code: 400 }
+    });
+  }
+
+  // Send email using EmailManager
+  const emailManager = new EmailManager();
+  let emailResult;
+
+  try {
+    const gmailProvider = emailManager.providers.find((p) => p.name === "gmail");
+    const formsubmitProvider = emailManager.providers.find((p) => p.name === "formsubmit");
+
+    if (gmailProvider && gmailProvider.enabled) {
+      try {
+        emailResult = await gmailProvider.handler.sendCommissionEmail({
+          customerInfo,
+          projectDetails,
+        });
+        emailResult.provider = "gmail";
+      } catch (gmailError) {
+        if (formsubmitProvider && formsubmitProvider.enabled) {
+          emailResult = await formsubmitProvider.handler.sendCommissionEmail({
+            customerInfo,
+            projectDetails,
+          });
+          emailResult.provider = "formsubmit";
+        } else {
+          throw gmailError;
+        }
+      }
+    } else if (formsubmitProvider && formsubmitProvider.enabled) {
+      emailResult = await formsubmitProvider.handler.sendCommissionEmail({
+        customerInfo,
+        projectDetails,
+      });
+      emailResult.provider = "formsubmit";
+    } else {
+      throw new Error("No email providers available");
+    }
+
+    const response = errorHandler.createSuccessResponse({
+      messageId: emailResult.messageId,
+      customerInfo: {
+        name: customerInfo.name,
+        email: customerInfo.email,
+      },
+      projectDetails: {
+        type: projectDetails.type,
+        size: projectDetails.size,
+        budget: projectDetails.budget,
+      },
+      emailDelivery: {
+        success: emailResult.success,
+        provider: emailResult.provider,
+        messageId: emailResult.messageId,
+        details: emailResult.details,
+      },
+    }, {
+      processingTime: Date.now() - startTime,
+      emailProvider: emailResult.provider,
+    });
+
+    logger.api("/api/commission", "POST", "COMPLETED", `Commission form processed successfully`);
+    res.status(200).json(response);
+  } catch (error) {
+    logger.error("commission", error);
+    const errorResponse = errorHandler.handleSystemError(error);
+    res.status(500).json(errorResponse);
+  }
 }
 
 // Test Gmail Handler
 async function handleTestGmail(req, res, startTime) {
-  const testGmail = require("./test-gmail.js");
-  return await testGmail(req, res);
+  const nodemailer = require("nodemailer");
+  
+  try {
+    console.log("Testing Gmail SMTP connection...");
+    
+    const transporter = nodemailer.createTransporter({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+
+    await transporter.verify();
+    console.log("SMTP connection verified successfully");
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: process.env.RECIPIENT_EMAIL,
+      subject: "Gmail SMTP Test - " + new Date().toLocaleString(),
+      html: `
+        <h2>Gmail SMTP Test Successful!</h2>
+        <p>This is a test email to verify Gmail SMTP configuration is working.</p>
+        <p><strong>Sent at:</strong> ${new Date().toLocaleString()}</p>
+      `,
+    };
+
+    const result = await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully:", result.messageId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Gmail SMTP test successful!",
+      messageId: result.messageId,
+      from: process.env.EMAIL_USER,
+      to: process.env.RECIPIENT_EMAIL,
+    });
+  } catch (error) {
+    console.error("Gmail SMTP test failed:", error);
+    return res.status(500).json({
+      error: "Gmail SMTP test failed",
+      details: error.message,
+      code: error.code,
+    });
+  }
 }
