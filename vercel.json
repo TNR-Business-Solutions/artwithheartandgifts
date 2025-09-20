@@ -1,5 +1,18 @@
 {
-  "outputDirectory": ".",
+  "functions": {
+    "api/secure-checkout.js": {
+      "maxDuration": 30
+    },
+    "api/enhanced-checkout.js": {
+      "maxDuration": 30
+    },
+    "api/test-gmail.js": {
+      "maxDuration": 30
+    },
+    "api/health.js": {
+      "maxDuration": 10
+    }
+  },
   "headers": [
     {
       "source": "/api/(.*)",
