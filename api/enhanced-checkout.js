@@ -256,7 +256,7 @@ async function handleCheckoutForm(req, res, body) {
 async function sendEmail({ to, subject, html }) {
   // Try Gmail SMTP first
   try {
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
       secure: true,

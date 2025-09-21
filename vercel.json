@@ -1,4 +1,5 @@
 {
+  "outputDirectory": ".",
   "functions": {
     "api/enhanced-checkout.js": {
       "maxDuration": 30

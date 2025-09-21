@@ -82,7 +82,7 @@ module.exports = async function handler(req, res) {
     });
 
     // Create transporter with Gmail SMTP settings for Vercel
-    const transporter = nodemailer.createTransporter({
+    const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
       secure: true, // Use SSL
