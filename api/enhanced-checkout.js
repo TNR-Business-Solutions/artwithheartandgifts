@@ -98,8 +98,8 @@ async function handleContactForm(req, res, body) {
 
   const messageId = `CONTACT-${Date.now()}`;
   
-  // Send email
-  const emailSent = await sendEmail({
+  // Send business notification email
+  const businessEmailSent = await sendEmail({
     to: process.env.RECIPIENT_EMAIL,
     subject: subject || `Contact Form Submission from ${name}`,
     html: `
@@ -115,6 +115,22 @@ async function handleContactForm(req, res, body) {
     `
   });
 
+  // Send customer confirmation email
+  const customerEmailSent = await sendEmail({
+    to: email,
+    subject: `Thank you for contacting Art with Heart & Gifts`,
+    html: `
+      <h2>Thank You for Your Message!</h2>
+      <p>Dear ${name},</p>
+      <p>Thank you for reaching out to Art with Heart & Gifts. We have received your message and will get back to you within 24 hours.</p>
+      <p><strong>Your Message:</strong></p>
+      <p>${message.replace(/\n/g, "<br>")}</p>
+      <hr>
+      <p>Best regards,<br>Art with Heart & Gifts</p>
+      <p><em>This is an automated confirmation. Please do not reply to this email.</em></p>
+    `
+  });
+
   return res.status(200).json({
     success: true,
     messageId: messageId,
@@ -122,7 +138,11 @@ async function handleContactForm(req, res, body) {
       name: name,
       email: email,
     },
-    emailDelivery: emailSent,
+    emailDelivery: {
+      businessEmail: businessEmailSent,
+      customerEmail: customerEmailSent,
+      provider: businessEmailSent.provider || customerEmailSent.provider,
+    },
   });
 }
 
@@ -141,8 +161,8 @@ async function handleCommissionForm(req, res, body) {
 
   const messageId = `COMMISSION-${Date.now()}`;
   
-  // Send email
-  const emailSent = await sendEmail({
+  // Send business notification email
+  const businessEmailSent = await sendEmail({
     to: process.env.RECIPIENT_EMAIL,
     subject: `Commission Request from ${name}`,
     html: `
@@ -171,6 +191,33 @@ async function handleCommissionForm(req, res, body) {
     `
   });
 
+  // Send customer confirmation email
+  const customerEmailSent = await sendEmail({
+    to: email,
+    subject: `Commission Request Received - Art with Heart & Gifts`,
+    html: `
+      <h2>Thank You for Your Commission Request!</h2>
+      <p>Dear ${name},</p>
+      <p>Thank you for your interest in commissioning a custom artwork. We have received your request and will review it carefully.</p>
+      
+      <h3>Your Project Details</h3>
+      <p><strong>Type:</strong> ${projectType || "Not specified"}</p>
+      <p><strong>Size:</strong> ${size || "Not specified"}</p>
+      <p><strong>Budget:</strong> ${budget || "Not specified"}</p>
+      <p><strong>Timeline:</strong> ${timeline || "Not specified"}</p>
+      
+      <h3>Description</h3>
+      <p>${description.replace(/\n/g, "<br>")}</p>
+      
+      <p>We will contact you within 24-48 hours to discuss your project in detail and provide a quote.</p>
+      <p>Thank you for considering Art with Heart & Gifts for your custom artwork needs!</p>
+      
+      <hr>
+      <p>Best regards,<br>Art with Heart & Gifts</p>
+      <p><em>This is an automated confirmation. Please do not reply to this email.</em></p>
+    `
+  });
+
   return res.status(200).json({
     success: true,
     messageId: messageId,
@@ -183,7 +230,11 @@ async function handleCommissionForm(req, res, body) {
       size: size,
       budget: budget,
     },
-    emailDelivery: emailSent,
+    emailDelivery: {
+      businessEmail: businessEmailSent,
+      customerEmail: customerEmailSent,
+      provider: businessEmailSent.provider || customerEmailSent.provider,
+    },
   });
 }
 
