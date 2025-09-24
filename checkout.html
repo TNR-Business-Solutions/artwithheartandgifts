@@ -152,25 +152,27 @@
         // Check authentication - REMOVED: No login required for checkout
         function checkAuth() {
             // Always show checkout form - no login required
-            document.getElementById('checkoutForm').style.display = 'block';
-            document.getElementById('loginPrompt').style.display = 'none';
+            const checkoutForm = document.getElementById('checkoutForm');
+            if (checkoutForm) {
+                checkoutForm.style.display = 'block';
+            }
         }
 
-        // Load cart
-        async function loadCart() {
+        // Load cart from localStorage
+        function loadCart() {
             try {
-                const sessionId = getSessionId();
-                const response = await fetch(`/api/cart/${sessionId}`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    cart = data.cart;
+                const savedCart = localStorage.getItem('artCart');
+                if (savedCart) {
+                    cart = JSON.parse(savedCart);
                     displayOrderSummary();
                 } else {
-                    showError('Failed to load cart');
+                    cart = { items: [], total: 0 };
+                    displayOrderSummary();
                 }
             } catch (error) {
-                showError('Error loading cart: ' + error.message);
+                console.error('Error loading cart:', error);
+                cart = { items: [], total: 0 };
+                displayOrderSummary();
             }
         }
 
@@ -261,7 +263,7 @@
                         method: 'card',
                         transactionId: 'TXN-' + Date.now()
                     },
-                    totalAmount: cart.total + (cart.total * 0.07) + (cart.total > 100 ? 0 : 15),
+                    totalAmount: cart.total + (cart.total * 0.07) + (cart.total >= 100 ? 0 : 8.99),
                     orderId: 'ORD-' + Date.now()
                 };
                 
