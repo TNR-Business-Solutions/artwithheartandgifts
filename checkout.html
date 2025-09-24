@@ -432,7 +432,7 @@
                 `;
         });
 
-        const tax = subtotal * 0.06; // 6% Florida tax
+        const tax = subtotal * 0.07; // 7% (FL 6% + Pasco 1%)
         const shipping = subtotal >= 100 ? 0 : 8.99;
         const total = subtotal + tax + shipping;
 
@@ -442,7 +442,7 @@
                     <span>$${subtotal.toFixed(2)}</span>
                 </div>
                 <div class="cart-item">
-                    <span>Tax (6%)</span>
+                    <span>Tax (7% – FL 6% + Pasco 1%)</span>
                     <span>$${tax.toFixed(2)}</span>
                 </div>
                 <div class="cart-item">
@@ -501,7 +501,7 @@
             });
             console.log(`Cart subtotal: ${subtotal}`);
 
-            const tax = subtotal * 0.06; // 6% Florida tax
+            const tax = subtotal * 0.07; // 7% (FL 6% + Pasco 1%)
             const shipping = subtotal >= 100 ? 0 : 8.99;
             const total = subtotal + tax + shipping;
 

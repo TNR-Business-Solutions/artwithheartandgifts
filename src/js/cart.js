@@ -83,9 +83,9 @@ class ShoppingCart {
     );
   }
 
-  // Get Florida sales tax (6%)
+  // Get Florida + Pasco County sales tax (7%)
   getTax() {
-    return this.getSubtotal() * 0.06;
+    return this.getSubtotal() * 0.07;
   }
 
   // Get shipping cost
