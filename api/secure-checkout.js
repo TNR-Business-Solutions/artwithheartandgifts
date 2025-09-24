@@ -81,6 +81,12 @@ module.exports = async function handler(req, res) {
       minute: "2-digit",
     });
 
+    // Calculate proper pricing breakdown
+    const subtotal = cartItems.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
+    const tax = subtotal * 0.07; // 7% tax (FL 6% + Pasco 1%)
+    const shipping = subtotal >= 100 ? 0 : 8.99; // Free shipping over $100, $8.99 otherwise
+    const calculatedTotal = subtotal + tax + shipping;
+
     // Create transporter with Gmail SMTP settings for Vercel
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -125,9 +131,21 @@ module.exports = async function handler(req, res) {
             ${itemsHtml}
           </tbody>
           <tfoot>
-            <tr style="background-color: #f9f9f9; font-weight: bold;">
-              <td colspan="4">Order Total:</td>
-              <td>$${totalAmount.toFixed(2)}</td>
+            <tr style="background-color: #f8f9fa;">
+              <td colspan="4"><strong>Subtotal:</strong></td>
+              <td>$${subtotal.toFixed(2)}</td>
+            </tr>
+            <tr style="background-color: #f8f9fa;">
+              <td colspan="4"><strong>Tax (7% – FL 6% + Pasco 1%):</strong></td>
+              <td>$${tax.toFixed(2)}</td>
+            </tr>
+            <tr style="background-color: #f8f9fa;">
+              <td colspan="4"><strong>Shipping:</strong></td>
+              <td>${shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2)}</td>
+            </tr>
+            <tr style="background-color: #e9ecef; font-weight: bold; font-size: 1.1em;">
+              <td colspan="4"><strong>Order Total:</strong></td>
+              <td>$${calculatedTotal.toFixed(2)}</td>
             </tr>
           </tfoot>
         </table>
@@ -138,7 +156,7 @@ module.exports = async function handler(req, res) {
     const businessEmailOptions = {
       from: process.env.EMAIL_USER,
       to: process.env.RECIPIENT_EMAIL,
-      subject: `New Secure Order #${orderNumber} - $${totalAmount.toFixed(2)}`,
+      subject: `New Secure Order #${orderNumber} - $${calculatedTotal.toFixed(2)}`,
       html: `
         <h2>New Secure Order Received</h2>
         <p><strong>Order Number:</strong> ${orderNumber}</p>
@@ -158,20 +176,18 @@ module.exports = async function handler(req, res) {
         
         <h3>Shipping Address</h3>
         <p>
-          ${customerInfo.address}<br>
-          ${customerInfo.city}, ${customerInfo.state} ${customerInfo.zipCode}
+          ${customerInfo.address || 'Not provided'}<br>
+          ${customerInfo.city || ''}, ${customerInfo.state || ''} ${customerInfo.zipCode || customerInfo.zip || ''}
         </p>
         
         <h3>Order Items</h3>
         ${generateOrderSummary()}
         
         <h3>Payment Information</h3>
-        <p><strong>Payment Method:</strong> ${
-          paymentInfo.method || "Credit Card"
-        }</p>
-        <p><strong>Cardholder Name:</strong> ${paymentInfo.cardholderName}</p>
-        <p><strong>Card Number:</strong> ${paymentInfo.cardNumber}</p>
-        <p><strong>Expiration:</strong> ${paymentInfo.expirationDate}</p>
+        <p><strong>Payment Method:</strong> ${paymentInfo.method || "Credit Card"}</p>
+        <p><strong>Cardholder Name:</strong> ${paymentInfo.cardholderName || customerInfo.firstName + ' ' + customerInfo.lastName}</p>
+        <p><strong>Card Number:</strong> ${paymentInfo.cardNumber || 'Not provided'}</p>
+        <p><strong>Expiration:</strong> ${paymentInfo.expirationDate || 'Not provided'}</p>
         <p><strong>Transaction ID:</strong> ${paymentInfo.transactionId}</p>
         <p><strong>Status:</strong> Pending Confirmation</p>
         
@@ -189,8 +205,36 @@ module.exports = async function handler(req, res) {
       `,
     };
 
-    // Send email with error handling
+    // Customer confirmation email
+    const customerEmailOptions = {
+      from: process.env.EMAIL_USER,
+      to: customerInfo.email,
+      subject: `Order Confirmation #${orderNumber} - Art with Heart & Gifts`,
+      html: `
+        <h2>Thank You for Your Order!</h2>
+        <p>Dear ${customerInfo.firstName},</p>
+        <p>Your order has been received and is being processed.</p>
+        
+        <h3>Order Details</h3>
+        <p><strong>Order Number:</strong> ${orderNumber}</p>
+        <p><strong>Order Date:</strong> ${orderDate}</p>
+        
+        <h3>Order Items</h3>
+        ${generateOrderSummary()}
+        
+        <h3>Next Steps</h3>
+        <p>We'll contact you within 24 hours with payment and shipping details.</p>
+        <p>Thank you for supporting local art!</p>
+        
+        <hr>
+        <p>Best regards,<br>Art with Heart & Gifts</p>
+        <p><em>This is an automated confirmation. Please do not reply to this email.</em></p>
+      `,
+    };
+
+    // Send emails with error handling
     let businessEmailSent = false;
+    let customerEmailSent = false;
 
     try {
       console.log("Sending business email to:", process.env.RECIPIENT_EMAIL);
@@ -205,9 +249,23 @@ module.exports = async function handler(req, res) {
       console.error("Business email error details:", businessError.message);
     }
 
+    try {
+      console.log("Sending customer email to:", customerInfo.email);
+      const customerResult = await transporter.sendMail(customerEmailOptions);
+      console.log(
+        "Customer email sent successfully:",
+        customerResult.messageId
+      );
+      customerEmailSent = true;
+    } catch (customerError) {
+      console.error("Failed to send customer email:", customerError);
+      console.error("Customer email error details:", customerError.message);
+    }
+
     // Log email sending status
     console.log("Email sending status:", {
       businessEmailSent,
+      customerEmailSent,
       businessEmail: process.env.RECIPIENT_EMAIL,
       customerEmail: customerInfo.email,
     });
@@ -220,6 +278,7 @@ module.exports = async function handler(req, res) {
       transactionId: paymentInfo.transactionId,
       emailDelivery: {
         businessEmailSent,
+        customerEmailSent,
         provider: "gmail",
       },
     });
