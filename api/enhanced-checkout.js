@@ -19,17 +19,37 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    // Parse request body
+    // Parse request body with proper error handling
     let body;
-    if (req.body) {
-      body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
-    } else {
-      const rawBody = await new Promise((resolve) => {
-        let data = "";
-        req.on("data", (chunk) => (data += chunk));
-        req.on("end", () => resolve(data));
+    try {
+      if (req.body) {
+        body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+      } else {
+        const rawBody = await new Promise((resolve) => {
+          let data = "";
+          req.on("data", (chunk) => (data += chunk));
+          req.on("end", () => resolve(data));
+        });
+        body = JSON.parse(rawBody);
+      }
+    } catch (parseError) {
+      console.error("JSON parsing error:", parseError);
+      return res.status(400).json({
+        success: false,
+        error: "Invalid JSON format",
+        details: parseError.message,
+        receivedData: req.body ? String(req.body).substring(0, 200) : "No body received"
       });
-      body = JSON.parse(rawBody);
+    }
+
+    // Validate body exists and is an object
+    if (!body || typeof body !== 'object') {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid request body",
+        details: "Request body must be a valid JSON object",
+        receivedData: typeof body
+      });
     }
 
     console.log("API request received:", JSON.stringify(body, null, 2));

@@ -413,7 +413,7 @@ class ShoppingCart {
         (item) => `
       <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
         <span>${item.title} x${item.quantity}</span>
-        <span>$${(item.price * item.quantity).toFixed(2)}</span>
+        <span>$${((parseFloat(item.price) || 0) * item.quantity).toFixed(2)}</span>
       </div>
     `
       )
@@ -525,7 +525,7 @@ class ShoppingCart {
       .map(
         (item) =>
           `${item.title} (${item.size}) - Qty: ${item.quantity} - $${(
-            item.price * item.quantity
+            (parseFloat(item.price) || 0) * item.quantity
           ).toFixed(2)}`
       )
       .join("\n");
@@ -543,7 +543,7 @@ Subtotal: $${orderData.subtotal.toFixed(2)}
 Shipping: ${
       orderData.shipping === 0 ? "FREE" : "$" + orderData.shipping.toFixed(2)
     }
-Tax (FL 6%): $${orderData.tax.toFixed(2)}
+Tax (7% – FL 6% + Pasco 1%): $${orderData.tax.toFixed(2)}
 TOTAL: $${orderData.total.toFixed(2)}
 
 CUSTOMER INFORMATION:
