@@ -161,9 +161,13 @@
         // Load cart from localStorage
         function loadCart() {
             try {
-                const savedCart = localStorage.getItem('artCart');
+                const savedCart = localStorage.getItem('artwithheartandgifts_cart');
                 if (savedCart) {
-                    cart = JSON.parse(savedCart);
+                    const cartData = JSON.parse(savedCart);
+                    cart = {
+                        items: cartData || [],
+                        total: (cartData || []).reduce((sum, item) => sum + (parseFloat(item.price) || 0) * (item.quantity || 0), 0)
+                    };
                     displayOrderSummary();
                 } else {
                     cart = { items: [], total: 0 };

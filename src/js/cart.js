@@ -93,10 +93,8 @@ class ShoppingCart {
     const subtotal = this.getSubtotal();
     if (subtotal >= 100) {
       return 0; // Free shipping over $100
-    } else if (subtotal >= 50) {
-      return 8.99; // Standard shipping
     } else {
-      return 12.99; // Express shipping for smaller orders
+      return 8.99; // Standard shipping for orders under $100
     }
   }
 
@@ -384,7 +382,7 @@ class ShoppingCart {
                   }</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem; font-size: 0.9rem;">
-                  <span>Tax (FL 6%):</span>
+                  <span>Tax (7% – FL 6% + Pasco 1%):</span>
                   <span id="checkout-tax">$${this.getTax().toFixed(2)}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #ddd; font-weight: 600; font-size: 1.1rem;">
