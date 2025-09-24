@@ -20,7 +20,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!api).*)",
+      "source": "/((?!api|checkout|contact|commissions|gallery|healing|about|privacy|returns|shipping|terms|product|shop|collections).*)",
       "destination": "/index.html"
     }
   ]
