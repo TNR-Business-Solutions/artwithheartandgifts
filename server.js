@@ -19,17 +19,19 @@ app.use((req, res, next) => {
   }
 });
 // JSON parsing with error handling
-app.use(express.json({
-  verify: (req, res, buf) => {
-    try {
-      JSON.parse(buf);
-    } catch (e) {
-      console.error('Invalid JSON received:', buf.toString());
-      res.status(400).json({ error: 'Invalid JSON format' });
-      return false;
-    }
-  }
-}));
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      try {
+        JSON.parse(buf);
+      } catch (e) {
+        console.error("Invalid JSON received:", buf.toString());
+        res.status(400).json({ error: "Invalid JSON format" });
+        return false;
+      }
+    },
+  })
+);
 app.use(express.static("."));
 
 // Import API routes (minimal set for Vercel Hobby limit)
