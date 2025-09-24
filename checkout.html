@@ -40,9 +40,6 @@
         .alert { padding: 15px; border-radius: 8px; margin: 20px 0; }
         .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .login-prompt { background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ffeaa7; }
-        .login-prompt a { color: #667eea; text-decoration: none; font-weight: 600; }
-        .login-prompt a:hover { text-decoration: underline; }
         @media (max-width: 768px) {
             .checkout-container { grid-template-columns: 1fr; }
             .form-row { grid-template-columns: 1fr; }
@@ -72,9 +69,6 @@
                 <div class="checkout-form">
                     <h1>Checkout</h1>
                     
-                    <div id="loginPrompt" class="login-prompt" style="display: none;">
-                        <p>Please <a href="/login.html">login</a> or <a href="/register.html">register</a> to complete your purchase.</p>
-                    </div>
                     
                     <form id="checkoutForm" style="display: none;">
                         <div class="form-section">
@@ -155,27 +149,11 @@
             checkAuth();
         };
 
-        // Check authentication
+        // Check authentication - REMOVED: No login required for checkout
         function checkAuth() {
-            const token = localStorage.getItem('artwithheart_token');
-            if (token) {
-                try {
-                    const payload = JSON.parse(atob(token.split('.')[1]));
-                    user = payload;
-                    document.getElementById('checkoutForm').style.display = 'block';
-                    document.getElementById('loginPrompt').style.display = 'none';
-                } catch (error) {
-                    showLoginPrompt();
-                }
-            } else {
-                showLoginPrompt();
-            }
-        }
-
-        // Show login prompt
-        function showLoginPrompt() {
-            document.getElementById('loginPrompt').style.display = 'block';
-            document.getElementById('checkoutForm').style.display = 'none';
+            // Always show checkout form - no login required
+            document.getElementById('checkoutForm').style.display = 'block';
+            document.getElementById('loginPrompt').style.display = 'none';
         }
 
         // Load cart
@@ -264,38 +242,33 @@
                 const data = Object.fromEntries(formData.entries());
                 
                 const checkoutData = {
-                    sessionId: getSessionId(),
-                    shippingAddress: {
+                    customerInfo: {
                         firstName: data.firstName,
                         lastName: data.lastName,
                         email: data.email,
-                        address: data.address,
-                        city: data.city,
-                        state: data.state,
-                        zip: data.zip
+                        phone: data.phone || '',
+                        address: `${data.address}, ${data.city}, ${data.state} ${data.zip}`
                     },
-                    billingAddress: {
-                        firstName: data.firstName,
-                        lastName: data.lastName,
-                        email: data.email,
-                        address: data.address,
-                        city: data.city,
-                        state: data.state,
-                        zip: data.zip
+                    cartItems: cart.items.map(item => ({
+                        id: item.id,
+                        title: item.title,
+                        price: parseFloat(item.price),
+                        quantity: item.quantity,
+                        type: item.type || 'print',
+                        size: item.size || '9in x 12in'
+                    })),
+                    paymentInfo: {
+                        method: 'card',
+                        transactionId: 'TXN-' + Date.now()
                     },
-                    paymentMethod: {
-                        cardNumber: data.cardNumber,
-                        expiry: data.expiry,
-                        cvv: data.cvv
-                    }
+                    totalAmount: cart.total + (cart.total * 0.07) + (cart.total > 100 ? 0 : 15),
+                    orderId: 'ORD-' + Date.now()
                 };
                 
-                const token = localStorage.getItem('artwithheart_token');
-                const response = await fetch('/api/checkout', {
+                const response = await fetch('/api/secure-checkout', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(checkoutData)
                 });
